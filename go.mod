@@ -16,9 +16,9 @@ require (
 	k8s.io/api v0.21.0
 	k8s.io/apimachinery v0.21.0
 	k8s.io/client-go v0.21.0
-	kmodules.xyz/client-go v0.0.0-20210425191502-3a7296dae084
-	kubeform.dev/apimachinery v0.0.0-20210507050445-8aadb2dc0a84
-	kubeform.dev/provider-linode-api v0.0.0-20210508091551-1a5f34ccca8e
+	kmodules.xyz/client-go v0.0.0-20210514054158-27e164b43474
+	kubeform.dev/apimachinery v0.0.0-20210522083809-de09a8decb97
+	kubeform.dev/provider-linode-api v0.0.0-20210522142628-5a95ae80b9bf
 	sigs.k8s.io/controller-runtime v0.9.0-alpha.1.0.20210409054349-c7c85eb214f0
 )
 
