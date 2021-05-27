@@ -3,6 +3,7 @@ module kubeform.dev/provider-linode-controller
 go 1.16
 
 require (
+	github.com/appscode/go v0.0.0-20201105063637-5613f3b8169f
 	github.com/fatih/structs v1.1.0
 	github.com/go-logr/logr v0.4.0
 	github.com/gobuffalo/flect v0.2.2
@@ -14,6 +15,7 @@ require (
 	github.com/linode/terraform-provider-linode v1.17.0
 	github.com/pkg/errors v0.9.1
 	k8s.io/api v0.21.0
+	k8s.io/apiextensions-apiserver v0.21.0
 	k8s.io/apimachinery v0.21.0
 	k8s.io/client-go v0.21.0
 	kmodules.xyz/client-go v0.0.0-20210514054158-27e164b43474

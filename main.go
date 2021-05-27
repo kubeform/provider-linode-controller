@@ -49,16 +49,13 @@ func main() {
 		os.Exit(1)
 	}
 
-	if os.Getenv("ENABLE_WEBHOOK") == "true" {
-		err := SetupWebhook(mgr)
-		if err != nil {
-			os.Exit(1)
-		}
-	}
+	cfg := mgr.GetConfig()
+	stopCh := make(chan struct{})
+	defer close(stopCh)
 
-	err = SetupManager(mgr)
+	err = watchCRD(cfg, stopCh, mgr)
 	if err != nil {
-		setupLog.Error(err, "unable to start manager")
+		setupLog.Error(err, "unable to watch crds")
 		os.Exit(1)
 	}
 	// +kubebuilder:scaffold:builder
