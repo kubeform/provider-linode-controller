@@ -20,8 +20,8 @@ require (
 	k8s.io/client-go v0.21.0
 	kmodules.xyz/client-go v0.0.0-20210514054158-27e164b43474
 	kubeform.dev/apimachinery v0.0.0-20210522083809-de09a8decb97
-	kubeform.dev/provider-linode-api v0.0.0-20210522142628-5a95ae80b9bf
-	sigs.k8s.io/controller-runtime v0.9.0-alpha.1.0.20210409054349-c7c85eb214f0
+	kubeform.dev/provider-linode-api v0.0.0-20210527141413-7a9171c5217c
+	sigs.k8s.io/controller-runtime v0.9.0-beta.5
 )
 
 replace k8s.io/apimachinery => github.com/kmodules/apimachinery v0.21.0-rc.0.0.20210405112358-ad4c2289ba4c
