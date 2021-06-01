@@ -18,6 +18,7 @@ require (
 	k8s.io/apiextensions-apiserver v0.21.0
 	k8s.io/apimachinery v0.21.0
 	k8s.io/client-go v0.21.0
+	k8s.io/klog/v2 v2.8.0
 	kmodules.xyz/client-go v0.0.0-20210514054158-27e164b43474
 	kubeform.dev/apimachinery v0.0.0-20210522083809-de09a8decb97
 	kubeform.dev/provider-linode-api v0.0.0-20210527141413-7a9171c5217c
