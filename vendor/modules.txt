@@ -580,7 +580,7 @@ kmodules.xyz/client-go/meta
 # kubeform.dev/apimachinery v0.0.0-20210522083809-de09a8decb97
 ## explicit
 kubeform.dev/apimachinery/api/v1alpha1
-# kubeform.dev/provider-linode-api v0.0.0-20210527141413-7a9171c5217c
+# kubeform.dev/provider-linode-api v0.0.0-20210602122311-94a089af5e5c
 ## explicit
 kubeform.dev/provider-linode-api/apis/domain
 kubeform.dev/provider-linode-api/apis/domain/v1alpha1
@@ -590,6 +590,7 @@ kubeform.dev/provider-linode-api/apis/image
 kubeform.dev/provider-linode-api/apis/image/v1alpha1
 kubeform.dev/provider-linode-api/apis/instance
 kubeform.dev/provider-linode-api/apis/instance/v1alpha1
+kubeform.dev/provider-linode-api/apis/linode
 kubeform.dev/provider-linode-api/apis/lke
 kubeform.dev/provider-linode-api/apis/lke/v1alpha1
 kubeform.dev/provider-linode-api/apis/nodebalancer

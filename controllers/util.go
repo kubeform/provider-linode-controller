@@ -27,6 +27,7 @@ import (
 	kmapi "kmodules.xyz/client-go/api/v1"
 	"kmodules.xyz/client-go/meta"
 	base "kubeform.dev/apimachinery/api/v1alpha1"
+	"kubeform.dev/provider-linode-api/apis/linode"
 	"reflect"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"strconv"
@@ -82,7 +83,7 @@ func reconcile(rClient client.Client, provider *tfschema.Provider, ctx context.C
 	}
 
 	// Set ProviderMeta
-	err = setProviderMeta(rClient, provider, ctx, unstructuredObj, server)
+	err = setProviderMeta(rClient, provider, ctx, unstructuredObj, server, jsonit)
 	if err != nil {
 		return err
 	}
@@ -984,7 +985,7 @@ func processSensitiveFields(r reflect.Type, v reflect.Value, tfkey string, data 
 	return nil
 }
 
-func setProviderMeta(rClient client.Client, provider *tfschema.Provider, ctx context.Context, unstructuredObj *unstructured.Unstructured, server *tfschema.GRPCProviderServer) error {
+func setProviderMeta(rClient client.Client, provider *tfschema.Provider, ctx context.Context, unstructuredObj *unstructured.Unstructured, server *tfschema.GRPCProviderServer, jsonit jsoniter.API) error {
 	providerSecretData, err := getProviderSecretData(rClient, ctx, unstructuredObj)
 	if err != nil {
 		return err
@@ -998,19 +999,35 @@ func setProviderMeta(rClient client.Client, provider *tfschema.Provider, ctx con
 		return fmt.Errorf("missing provider schema")
 	}
 
-	for key := range providerSchema.Provider.Attributes {
-		if _, ok := providerSecretData[key]; !ok {
-			providerSecretData[key] = UnknownIdValue
+	providerSecretTypeData := &linode.LinodeSpec{}
+	reflectType := reflect.TypeOf(providerSecretTypeData)
+	reflectValue := reflect.New(reflectType)
+	reflectValue.Elem().Set(reflect.ValueOf(providerSecretTypeData))
+
+	for key, value := range providerSecretData {
+		fieldsName := strings.Split(key, ".")
+
+		field := reflectValue.Elem()
+		for _, f := range fieldsName {
+			if index, err := strconv.Atoi(f); err == nil {
+				field = field.Index(index)
+				continue
+			}
+			field = reflect.Indirect(field).FieldByName(flect.Capitalize(flect.Camelize(f)))
 		}
+		field.Set(reflect.ValueOf(&value))
+	}
+	str, err := jsonit.Marshal(reflectValue.Interface())
+	if err != nil {
+		return err
+	}
+	pbSecret := make(map[string]interface{})
+	err = json.Unmarshal(str, &pbSecret)
+	if err != nil {
+		return err
 	}
 
-	for key := range providerSchema.Provider.BlockTypes {
-		if _, ok := providerSecretData[key]; !ok {
-			providerSecretData[key] = UnknownIdValue
-		}
-	}
-
-	configRaw := HCL2ValueFromConfigValue(providerSecretData)
+	configRaw := HCL2ValueFromConfigValue(pbSecret)
 	configPlan, err := msgpack.Marshal(configRaw, providerSchema.Provider.ImpliedType())
 	if err != nil {
 		return err
