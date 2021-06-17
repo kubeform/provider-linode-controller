@@ -90,7 +90,11 @@ func (in *StackscriptList) DeepCopyObject() runtime.Object {
 func (in *StackscriptSpec) DeepCopyInto(out *StackscriptSpec) {
 	*out = *in
 	in.StackscriptSpec2.DeepCopyInto(&out.StackscriptSpec2)
-	in.KubeformOutput.DeepCopyInto(&out.KubeformOutput)
+	if in.KubeformOutput != nil {
+		in, out := &in.KubeformOutput, &out.KubeformOutput
+		*out = new(StackscriptSpec2)
+		(*in).DeepCopyInto(*out)
+	}
 	return
 }
 

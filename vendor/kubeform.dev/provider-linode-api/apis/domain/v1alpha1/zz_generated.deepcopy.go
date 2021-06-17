@@ -90,7 +90,11 @@ func (in *DomainList) DeepCopyObject() runtime.Object {
 func (in *DomainSpec) DeepCopyInto(out *DomainSpec) {
 	*out = *in
 	in.DomainSpec2.DeepCopyInto(&out.DomainSpec2)
-	in.KubeformOutput.DeepCopyInto(&out.KubeformOutput)
+	if in.KubeformOutput != nil {
+		in, out := &in.KubeformOutput, &out.KubeformOutput
+		*out = new(DomainSpec2)
+		(*in).DeepCopyInto(*out)
+	}
 	return
 }
 
@@ -274,7 +278,11 @@ func (in *RecordList) DeepCopyObject() runtime.Object {
 func (in *RecordSpec) DeepCopyInto(out *RecordSpec) {
 	*out = *in
 	in.RecordSpec2.DeepCopyInto(&out.RecordSpec2)
-	in.KubeformOutput.DeepCopyInto(&out.KubeformOutput)
+	if in.KubeformOutput != nil {
+		in, out := &in.KubeformOutput, &out.KubeformOutput
+		*out = new(RecordSpec2)
+		(*in).DeepCopyInto(*out)
+	}
 	return
 }
 

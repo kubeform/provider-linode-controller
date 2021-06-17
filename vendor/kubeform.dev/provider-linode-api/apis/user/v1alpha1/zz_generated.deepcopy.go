@@ -90,7 +90,11 @@ func (in *UserList) DeepCopyObject() runtime.Object {
 func (in *UserSpec) DeepCopyInto(out *UserSpec) {
 	*out = *in
 	in.UserSpec2.DeepCopyInto(&out.UserSpec2)
-	in.KubeformOutput.DeepCopyInto(&out.KubeformOutput)
+	if in.KubeformOutput != nil {
+		in, out := &in.KubeformOutput, &out.KubeformOutput
+		*out = new(UserSpec2)
+		(*in).DeepCopyInto(*out)
+	}
 	return
 }
 

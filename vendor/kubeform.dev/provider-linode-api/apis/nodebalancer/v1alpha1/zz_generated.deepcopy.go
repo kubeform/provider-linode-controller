@@ -91,7 +91,11 @@ func (in *ConfigList) DeepCopyObject() runtime.Object {
 func (in *ConfigSpec) DeepCopyInto(out *ConfigSpec) {
 	*out = *in
 	in.ConfigSpec2.DeepCopyInto(&out.ConfigSpec2)
-	in.KubeformOutput.DeepCopyInto(&out.KubeformOutput)
+	if in.KubeformOutput != nil {
+		in, out := &in.KubeformOutput, &out.KubeformOutput
+		*out = new(ConfigSpec2)
+		(*in).DeepCopyInto(*out)
+	}
 	return
 }
 
@@ -338,7 +342,11 @@ func (in *NodeList) DeepCopyObject() runtime.Object {
 func (in *NodeSpec) DeepCopyInto(out *NodeSpec) {
 	*out = *in
 	in.NodeSpec2.DeepCopyInto(&out.NodeSpec2)
-	in.KubeformOutput.DeepCopyInto(&out.KubeformOutput)
+	if in.KubeformOutput != nil {
+		in, out := &in.KubeformOutput, &out.KubeformOutput
+		*out = new(NodeSpec2)
+		(*in).DeepCopyInto(*out)
+	}
 	return
 }
 
@@ -492,7 +500,11 @@ func (in *NodebalancerList) DeepCopyObject() runtime.Object {
 func (in *NodebalancerSpec) DeepCopyInto(out *NodebalancerSpec) {
 	*out = *in
 	in.NodebalancerSpec2.DeepCopyInto(&out.NodebalancerSpec2)
-	in.KubeformOutput.DeepCopyInto(&out.KubeformOutput)
+	if in.KubeformOutput != nil {
+		in, out := &in.KubeformOutput, &out.KubeformOutput
+		*out = new(NodebalancerSpec2)
+		(*in).DeepCopyInto(*out)
+	}
 	return
 }
 

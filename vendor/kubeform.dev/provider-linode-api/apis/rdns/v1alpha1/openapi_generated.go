@@ -14316,6 +14316,12 @@ func schema_provider_linode_api_apis_rdns_v1alpha1_RdnsSpec(ref common.Reference
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
+					"updatePolicy": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
 					"terminationPolicy": {
 						SchemaProps: spec.SchemaProps{
 							Type:   []string{"string"},
@@ -14350,8 +14356,7 @@ func schema_provider_linode_api_apis_rdns_v1alpha1_RdnsSpec(ref common.Reference
 					},
 					"kubeformOutput": {
 						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("kubeform.dev/provider-linode-api/apis/rdns/v1alpha1.RdnsSpec2"),
+							Ref: ref("kubeform.dev/provider-linode-api/apis/rdns/v1alpha1.RdnsSpec2"),
 						},
 					},
 				},
@@ -14369,6 +14374,12 @@ func schema_provider_linode_api_apis_rdns_v1alpha1_RdnsSpec2(ref common.Referenc
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
+					"updatePolicy": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
 					"terminationPolicy": {
 						SchemaProps: spec.SchemaProps{
 							Type:   []string{"string"},

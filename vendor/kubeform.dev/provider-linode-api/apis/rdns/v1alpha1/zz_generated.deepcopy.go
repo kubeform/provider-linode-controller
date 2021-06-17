@@ -90,7 +90,11 @@ func (in *RdnsList) DeepCopyObject() runtime.Object {
 func (in *RdnsSpec) DeepCopyInto(out *RdnsSpec) {
 	*out = *in
 	in.RdnsSpec2.DeepCopyInto(&out.RdnsSpec2)
-	in.KubeformOutput.DeepCopyInto(&out.KubeformOutput)
+	if in.KubeformOutput != nil {
+		in, out := &in.KubeformOutput, &out.KubeformOutput
+		*out = new(RdnsSpec2)
+		(*in).DeepCopyInto(*out)
+	}
 	return
 }
 

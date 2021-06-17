@@ -3,11 +3,12 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"github.com/appscode/go/log"
 	"github.com/linode/terraform-provider-linode/linode"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime/schema"
-	"k8s.io/client-go/rest"
 	"k8s.io/client-go/tools/cache"
 	controllersdomain "kubeform.dev/provider-linode-controller/controllers/domain"
 	controllersfirewall "kubeform.dev/provider-linode-controller/controllers/firewall"
@@ -25,6 +26,7 @@ import (
 	controllersvolume "kubeform.dev/provider-linode-controller/controllers/volume"
 	"os"
 	"strings"
+	"sync"
 	"time"
 
 	domainv1alpha1 "kubeform.dev/provider-linode-api/apis/domain/v1alpha1"
@@ -42,18 +44,20 @@ import (
 	vlanv1alpha1 "kubeform.dev/provider-linode-api/apis/vlan/v1alpha1"
 	volumev1alpha1 "kubeform.dev/provider-linode-api/apis/volume/v1alpha1"
 
+	arv1 "k8s.io/api/admissionregistration/v1"
 	"k8s.io/apiextensions-apiserver/pkg/client/clientset/clientset"
 	informers "k8s.io/apiextensions-apiserver/pkg/client/informers/externalversions"
+	admissionregistrationv1 "k8s.io/client-go/kubernetes/typed/admissionregistration/v1"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/manager"
 )
 
-func watchCRD(cfg *rest.Config, stopCh <-chan struct{}, mgr manager.Manager) error {
-	crdClient, err := clientset.NewForConfig(cfg)
-	if err != nil {
-		return err
-	}
+var runningControllers = struct {
+	sync.RWMutex
+	mp map[schema.GroupVersionKind]bool
+}{mp: make(map[schema.GroupVersionKind]bool)}
 
+func watchCRD(crdClient *clientset.Clientset, vwcClient *admissionregistrationv1.AdmissionregistrationV1Client, stopCh <-chan struct{}, mgr manager.Manager) error {
 	informerFactory := informers.NewSharedInformerFactory(crdClient, time.Second*30)
 	i := informerFactory.Apiextensions().V1beta1().CustomResourceDefinitions().Informer()
 	l := informerFactory.Apiextensions().V1beta1().CustomResourceDefinitions().Lister()
@@ -61,8 +65,8 @@ func watchCRD(cfg *rest.Config, stopCh <-chan struct{}, mgr manager.Manager) err
 	i.AddEventHandler(cache.ResourceEventHandlerFuncs{
 		AddFunc: func(obj interface{}) {
 			var key string
-
-			if key, err = cache.MetaNamespaceKeyFunc(obj); err != nil {
+			key, err := cache.MetaNamespaceKeyFunc(obj)
+			if err != nil {
 				log.Error(err)
 				return
 			}
@@ -85,24 +89,126 @@ func watchCRD(cfg *rest.Config, stopCh <-chan struct{}, mgr manager.Manager) err
 					Kind:    crd.Spec.Names.Kind,
 				}
 
-				if os.Getenv("ENABLE_WEBHOOK") == "true" {
-					err := SetupWebhook(mgr, gvk)
+				// check whether this gvk came before, if no then start the controller
+				runningControllers.RLock()
+				_, ok := runningControllers.mp[gvk]
+				runningControllers.RUnlock()
+
+				if !ok {
+					runningControllers.Lock()
+					runningControllers.mp[gvk] = true
+					runningControllers.Unlock()
+
+					if enableValidatingWebhook == true {
+						// add dynamic ValidatingWebhookConfiguration
+
+						// create empty VWC if the group has come for the first time
+						err := createEmptyVWC(vwcClient, gvk)
+						if err != nil {
+							log.Error(err)
+							return
+						}
+
+						// update
+						err = updateVWC(vwcClient, gvk)
+						if err != nil {
+							log.Error(err)
+							return
+						}
+
+						err = SetupWebhook(mgr, gvk)
+						if err != nil {
+							setupLog.Error(err, "unable to enable webhook")
+							os.Exit(1)
+						}
+					}
+
+					err = SetupManager(mgr, gvk)
 					if err != nil {
-						setupLog.Error(err, "unable to enable webhook")
+						setupLog.Error(err, "unable to start manager")
 						os.Exit(1)
 					}
-				}
-
-				err = SetupManager(mgr, gvk)
-				if err != nil {
-					setupLog.Error(err, "unable to start manager")
-					os.Exit(1)
 				}
 			}
 		},
 	})
 
 	informerFactory.Start(stopCh)
+
+	return nil
+}
+
+func createEmptyVWC(vwcClient *admissionregistrationv1.AdmissionregistrationV1Client, gvk schema.GroupVersionKind) error {
+	vwcName := strings.ReplaceAll(strings.ToLower(gvk.Group), ".", "-") + "-vwc"
+	_, err := vwcClient.ValidatingWebhookConfigurations().Get(context.TODO(), vwcName, metav1.GetOptions{})
+	if err == nil {
+		return err
+	}
+
+	emptyVWC := &arv1.ValidatingWebhookConfiguration{
+		TypeMeta: metav1.TypeMeta{
+			Kind:       "ValidatingWebhookConfiguration",
+			APIVersion: "admissionregistration.k8s.io/v1",
+		},
+		ObjectMeta: metav1.ObjectMeta{
+			Name: strings.ReplaceAll(strings.ToLower(gvk.Group), ".", "-") + "-vwc",
+		},
+	}
+	_, err = vwcClient.ValidatingWebhookConfigurations().Create(context.TODO(), emptyVWC, metav1.CreateOptions{})
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func updateVWC(vwcClient *admissionregistrationv1.AdmissionregistrationV1Client, gvk schema.GroupVersionKind) error {
+	vwcName := strings.ReplaceAll(strings.ToLower(gvk.Group), ".", "-") + "-vwc"
+	vwc, err := vwcClient.ValidatingWebhookConfigurations().Get(context.TODO(), vwcName, metav1.GetOptions{})
+	if err != nil {
+		return err
+	}
+
+	path := "/validate-" + strings.ReplaceAll(strings.ToLower(gvk.Group), ".", "-") + "-v1alpha1-" + strings.ToLower(gvk.Kind)
+	fail := arv1.Fail
+	sideEffects := arv1.SideEffectClassNone
+	admissionReviewVersions := []string{"v1"}
+	rules := []arv1.RuleWithOperations{
+		{
+			Operations: []arv1.OperationType{
+				arv1.Create,
+				arv1.Update,
+				arv1.Delete,
+			},
+			Rule: arv1.Rule{
+				APIGroups:   []string{strings.ToLower(gvk.Group)},
+				APIVersions: []string{gvk.Version},
+				Resources:   []string{strings.ToLower(gvk.Kind)},
+			},
+		},
+	}
+
+	newWebhook := arv1.ValidatingWebhook{
+		Name: strings.ToLower(gvk.Kind) + "." + gvk.Group,
+		ClientConfig: arv1.WebhookClientConfig{
+			Service: &arv1.ServiceReference{
+				Namespace: webhookName,
+				Name:      webhookNamespace,
+				Path:      &path,
+			},
+		},
+		Rules:                   rules,
+		FailurePolicy:           &fail,
+		SideEffects:             &sideEffects,
+		AdmissionReviewVersions: admissionReviewVersions,
+	}
+
+	vwc.Webhooks = append(vwc.Webhooks, newWebhook)
+
+	_, err = vwcClient.ValidatingWebhookConfigurations().Update(context.TODO(), vwc, metav1.UpdateOptions{})
+	if err != nil {
+		return err
+	}
 
 	return nil
 }

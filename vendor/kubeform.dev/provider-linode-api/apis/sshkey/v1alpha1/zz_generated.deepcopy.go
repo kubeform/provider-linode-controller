@@ -90,7 +90,11 @@ func (in *SshkeyList) DeepCopyObject() runtime.Object {
 func (in *SshkeySpec) DeepCopyInto(out *SshkeySpec) {
 	*out = *in
 	in.SshkeySpec2.DeepCopyInto(&out.SshkeySpec2)
-	in.KubeformOutput.DeepCopyInto(&out.KubeformOutput)
+	if in.KubeformOutput != nil {
+		in, out := &in.KubeformOutput, &out.KubeformOutput
+		*out = new(SshkeySpec2)
+		(*in).DeepCopyInto(*out)
+	}
 	return
 }
 

@@ -90,7 +90,11 @@ func (in *FirewallList) DeepCopyObject() runtime.Object {
 func (in *FirewallSpec) DeepCopyInto(out *FirewallSpec) {
 	*out = *in
 	in.FirewallSpec2.DeepCopyInto(&out.FirewallSpec2)
-	in.KubeformOutput.DeepCopyInto(&out.KubeformOutput)
+	if in.KubeformOutput != nil {
+		in, out := &in.KubeformOutput, &out.KubeformOutput
+		*out = new(FirewallSpec2)
+		(*in).DeepCopyInto(*out)
+	}
 	return
 }
 

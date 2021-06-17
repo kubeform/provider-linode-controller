@@ -93,7 +93,11 @@ func (in *InstanceList) DeepCopyObject() runtime.Object {
 func (in *InstanceSpec) DeepCopyInto(out *InstanceSpec) {
 	*out = *in
 	in.InstanceSpec2.DeepCopyInto(&out.InstanceSpec2)
-	in.KubeformOutput.DeepCopyInto(&out.KubeformOutput)
+	if in.KubeformOutput != nil {
+		in, out := &in.KubeformOutput, &out.KubeformOutput
+		*out = new(InstanceSpec2)
+		(*in).DeepCopyInto(*out)
+	}
 	return
 }
 
@@ -977,7 +981,11 @@ func (in *IpList) DeepCopyObject() runtime.Object {
 func (in *IpSpec) DeepCopyInto(out *IpSpec) {
 	*out = *in
 	in.IpSpec2.DeepCopyInto(&out.IpSpec2)
-	in.KubeformOutput.DeepCopyInto(&out.KubeformOutput)
+	if in.KubeformOutput != nil {
+		in, out := &in.KubeformOutput, &out.KubeformOutput
+		*out = new(IpSpec2)
+		(*in).DeepCopyInto(*out)
+	}
 	return
 }
 

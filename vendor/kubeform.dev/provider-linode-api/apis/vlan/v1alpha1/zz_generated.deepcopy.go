@@ -90,7 +90,11 @@ func (in *VlanList) DeepCopyObject() runtime.Object {
 func (in *VlanSpec) DeepCopyInto(out *VlanSpec) {
 	*out = *in
 	in.VlanSpec2.DeepCopyInto(&out.VlanSpec2)
-	in.KubeformOutput.DeepCopyInto(&out.KubeformOutput)
+	if in.KubeformOutput != nil {
+		in, out := &in.KubeformOutput, &out.KubeformOutput
+		*out = new(VlanSpec2)
+		(*in).DeepCopyInto(*out)
+	}
 	return
 }
 

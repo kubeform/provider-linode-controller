@@ -92,7 +92,11 @@ func (in *VolumeList) DeepCopyObject() runtime.Object {
 func (in *VolumeSpec) DeepCopyInto(out *VolumeSpec) {
 	*out = *in
 	in.VolumeSpec2.DeepCopyInto(&out.VolumeSpec2)
-	in.KubeformOutput.DeepCopyInto(&out.KubeformOutput)
+	if in.KubeformOutput != nil {
+		in, out := &in.KubeformOutput, &out.KubeformOutput
+		*out = new(VolumeSpec2)
+		(*in).DeepCopyInto(*out)
+	}
 	return
 }
 

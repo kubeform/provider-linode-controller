@@ -92,7 +92,11 @@ func (in *ImageList) DeepCopyObject() runtime.Object {
 func (in *ImageSpec) DeepCopyInto(out *ImageSpec) {
 	*out = *in
 	in.ImageSpec2.DeepCopyInto(&out.ImageSpec2)
-	in.KubeformOutput.DeepCopyInto(&out.KubeformOutput)
+	if in.KubeformOutput != nil {
+		in, out := &in.KubeformOutput, &out.KubeformOutput
+		*out = new(ImageSpec2)
+		(*in).DeepCopyInto(*out)
+	}
 	return
 }
 

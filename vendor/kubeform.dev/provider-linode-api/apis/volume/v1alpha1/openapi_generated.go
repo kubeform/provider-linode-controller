@@ -14316,6 +14316,12 @@ func schema_provider_linode_api_apis_volume_v1alpha1_VolumeSpec(ref common.Refer
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
+					"updatePolicy": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
 					"terminationPolicy": {
 						SchemaProps: spec.SchemaProps{
 							Type:   []string{"string"},
@@ -14398,8 +14404,7 @@ func schema_provider_linode_api_apis_volume_v1alpha1_VolumeSpec(ref common.Refer
 					},
 					"kubeformOutput": {
 						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("kubeform.dev/provider-linode-api/apis/volume/v1alpha1.VolumeSpec2"),
+							Ref: ref("kubeform.dev/provider-linode-api/apis/volume/v1alpha1.VolumeSpec2"),
 						},
 					},
 				},
@@ -14417,6 +14422,12 @@ func schema_provider_linode_api_apis_volume_v1alpha1_VolumeSpec2(ref common.Refe
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
+					"updatePolicy": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
 					"terminationPolicy": {
 						SchemaProps: spec.SchemaProps{
 							Type:   []string{"string"},

@@ -91,7 +91,11 @@ func (in *StorageBucketList) DeepCopyObject() runtime.Object {
 func (in *StorageBucketSpec) DeepCopyInto(out *StorageBucketSpec) {
 	*out = *in
 	in.StorageBucketSpec2.DeepCopyInto(&out.StorageBucketSpec2)
-	in.KubeformOutput.DeepCopyInto(&out.KubeformOutput)
+	if in.KubeformOutput != nil {
+		in, out := &in.KubeformOutput, &out.KubeformOutput
+		*out = new(StorageBucketSpec2)
+		(*in).DeepCopyInto(*out)
+	}
 	return
 }
 
@@ -386,7 +390,11 @@ func (in *StorageKeyList) DeepCopyObject() runtime.Object {
 func (in *StorageKeySpec) DeepCopyInto(out *StorageKeySpec) {
 	*out = *in
 	in.StorageKeySpec2.DeepCopyInto(&out.StorageKeySpec2)
-	in.KubeformOutput.DeepCopyInto(&out.KubeformOutput)
+	if in.KubeformOutput != nil {
+		in, out := &in.KubeformOutput, &out.KubeformOutput
+		*out = new(StorageKeySpec2)
+		(*in).DeepCopyInto(*out)
+	}
 	return
 }
 
@@ -568,7 +576,11 @@ func (in *StorageObjectList) DeepCopyObject() runtime.Object {
 func (in *StorageObjectSpec) DeepCopyInto(out *StorageObjectSpec) {
 	*out = *in
 	in.StorageObjectSpec2.DeepCopyInto(&out.StorageObjectSpec2)
-	in.KubeformOutput.DeepCopyInto(&out.KubeformOutput)
+	if in.KubeformOutput != nil {
+		in, out := &in.KubeformOutput, &out.KubeformOutput
+		*out = new(StorageObjectSpec2)
+		(*in).DeepCopyInto(*out)
+	}
 	return
 }
 

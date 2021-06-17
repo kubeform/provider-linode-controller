@@ -6,12 +6,14 @@ import (
 	"flag"
 	"os"
 
+	"k8s.io/apiextensions-apiserver/pkg/client/clientset/clientset"
 	clientgoscheme "k8s.io/client-go/kubernetes/scheme"
 	kscheme "k8s.io/client-go/kubernetes/scheme"
 	_ "k8s.io/client-go/plugin/pkg/client/auth/gcp"
 	"k8s.io/klog/v2/klogr"
 	ctrl "sigs.k8s.io/controller-runtime"
 
+	admissionregistrationv1 "k8s.io/client-go/kubernetes/typed/admissionregistration/v1"
 	linodescheme "kubeform.dev/provider-linode-api/client/clientset/versioned/scheme"
 	// +kubebuilder:scaffold:imports
 )
@@ -20,6 +22,10 @@ var (
 	scheme   = kscheme.Scheme
 	setupLog = ctrl.Log.WithName("setup")
 )
+
+var enableValidatingWebhook bool
+var webhookName string
+var webhookNamespace string
 
 func init() {
 	_ = clientgoscheme.AddToScheme(scheme)
@@ -35,6 +41,9 @@ func main() {
 	flag.BoolVar(&enableLeaderElection, "enable-leader-election", false,
 		"Enable leader election for controller manager. "+
 			"Enabling this will ensure there is only one active controller manager.")
+	flag.BoolVar(&enableValidatingWebhook, "enable-validating-webhook", true, "Enable validating webhook")
+	flag.StringVar(&webhookName, "webhook-name", "Nameless", "Webhook name")
+	flag.StringVar(&webhookNamespace, "webhook-namespace", "default", "Webhook namespace")
 	flag.Parse()
 
 	ctrl.SetLogger(klogr.New())
@@ -53,7 +62,10 @@ func main() {
 	stopCh := make(chan struct{})
 	defer close(stopCh)
 
-	err = watchCRD(cfg, stopCh, mgr)
+	crdClient := clientset.NewForConfigOrDie(cfg)
+	vwcClient := admissionregistrationv1.NewForConfigOrDie(cfg)
+
+	err = watchCRD(crdClient, vwcClient, stopCh, mgr)
 	if err != nil {
 		setupLog.Error(err, "unable to watch crds")
 		os.Exit(1)

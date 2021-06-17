@@ -9,7 +9,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/fatih/structs"
-	"github.com/gobuffalo/flect"
 	"github.com/hashicorp/go-cty/cty"
 	"github.com/hashicorp/go-cty/cty/msgpack"
 	"github.com/hashicorp/terraform-plugin-go/tfprotov5"
@@ -26,17 +25,17 @@ import (
 	"k8s.io/apimachinery/pkg/types"
 	kmapi "kmodules.xyz/client-go/api/v1"
 	"kmodules.xyz/client-go/meta"
-	base "kubeform.dev/apimachinery/api/v1alpha1"
 	"kubeform.dev/provider-linode-api/apis/linode"
 	"reflect"
+	"sigs.k8s.io/cli-utils/pkg/kstatus/status"
 	"sigs.k8s.io/controller-runtime/pkg/client"
-	"strconv"
 	"strings"
 )
 
 const (
-	KFCFinalizer   = "linode.kubeform.com/finalizer"
-	UnknownIdValue = "4856ec62-a372-11eb-bcbc-0242ac130002"
+	KFCFinalizer       = "linode.kubeform.com/finalizer"
+	UnknownIdValue     = "4856ec62-a372-11eb-bcbc-0242ac130002"
+	UpdateNotSupported = "doesn't support update"
 )
 
 func StartProcess(rClient client.Client, provider *tfschema.Provider, ctx context.Context, res *tfschema.Resource, gv schema.GroupVersion, unstructuredObj *unstructured.Unstructured, tName string, jsonit jsoniter.API) error {
@@ -54,11 +53,7 @@ func StartProcess(rClient client.Client, provider *tfschema.Provider, ctx contex
 		return err
 	}
 
-	err = finalUpdateStatus(rClient, ctx, gv, unstructuredObj, false)
-	if err != nil {
-		return err
-	}
-	return finalUpdateStatus(rClient, ctx, gv, unstructuredObj, true)
+	return finalUpdateStatus(rClient, ctx, gv, unstructuredObj)
 }
 
 func reconcile(rClient client.Client, provider *tfschema.Provider, ctx context.Context, res *tfschema.Resource, gv schema.GroupVersion, unstructuredObj *unstructured.Unstructured, tName string, jsonit jsoniter.API) error {
@@ -116,7 +111,7 @@ func reconcile(rClient client.Client, provider *tfschema.Provider, ctx context.C
 
 	if hasFinalizer(unstructuredObj.GetFinalizers(), KFCFinalizer) {
 		if unstructuredObj.GetDeletionTimestamp() != nil {
-			err := updateStatus(rClient, ctx, unstructuredObj, base.PhaseDeleting)
+			err := updateStatus(rClient, ctx, unstructuredObj, status.TerminatingStatus)
 			if err != nil {
 				return err
 			}
@@ -135,7 +130,7 @@ func reconcile(rClient client.Client, provider *tfschema.Provider, ctx context.C
 	}
 
 	if !found {
-		err := updateStatus(rClient, ctx, unstructuredObj, base.PhaseApplying)
+		err := updateStatus(rClient, ctx, unstructuredObj, status.InProgressStatus)
 		if err != nil {
 			return err
 		}
@@ -143,7 +138,7 @@ func reconcile(rClient client.Client, provider *tfschema.Provider, ctx context.C
 		if err != nil {
 			return err
 		}
-		err = updateStatus(rClient, ctx, unstructuredObj, base.PhaseRunning)
+		err = updateStatus(rClient, ctx, unstructuredObj, status.CurrentStatus)
 		if err != nil {
 			return err
 		}
@@ -165,27 +160,27 @@ func reconcile(rClient client.Client, provider *tfschema.Provider, ctx context.C
 		return nil
 	}
 
-	deepCopyrawStatus, combineRaw, err := getCombineRawAndDeepCopyRawStatus(rawStatus, rawSpec)
+	combineRaw, err := getCombineRawAndDeepCopyRawStatus(rawStatus, rawSpec)
 	if err != nil {
 		return err
 	}
 
-	requireNew, priorState, planResp, plannedState, err := checkRequireNewOrNot(combineRaw, deepCopyrawStatus, res, server, tName)
+	requireNew, priorState, planResp, plannedState, err := checkRequireNewOrNot(combineRaw, rawStatus, res, server, tName)
 	if err != nil {
 		return err
 	}
 
 	if requireNew { // Resources is needed to be destroyed because one of the field needs the resource to be replaced
-		err = updateStatus(rClient, ctx, unstructuredObj, base.PhaseDeleting)
+		err = updateStatus(rClient, ctx, unstructuredObj, status.TerminatingStatus)
 		if err != nil {
 			return err
 		}
-		err := destroyTheObject(deepCopyrawStatus, res, server, tName)
+		err := destroyTheObject(rawStatus, res, server, tName)
 		if err != nil {
 			return err
 		}
 
-		err = updateStatus(rClient, ctx, unstructuredObj, base.PhaseApplying)
+		err = updateStatus(rClient, ctx, unstructuredObj, status.InProgressStatus)
 		if err != nil {
 			return err
 		}
@@ -193,7 +188,7 @@ func reconcile(rClient client.Client, provider *tfschema.Provider, ctx context.C
 		if err != nil {
 			return err
 		}
-		err = updateStatus(rClient, ctx, unstructuredObj, base.PhaseRunning)
+		err = updateStatus(rClient, ctx, unstructuredObj, status.CurrentStatus)
 		if err != nil {
 			return err
 		}
@@ -215,27 +210,29 @@ func reconcile(rClient client.Client, provider *tfschema.Provider, ctx context.C
 		return nil
 	}
 
-	newStateVal, err := updateTheObject(priorState, plannedState, planResp, server, res, tName)
+	newStateVal, updated, err := updateTheObject(priorState, plannedState, planResp, server, res, tName)
 	if err != nil {
 		return err
 	}
 
-	//set the id value in unstructuredObj object
-	err = unstructured.SetNestedField(unstructuredObj.Object, newStateVal.GetAttr("id").AsString(), "spec", "id")
-	if err != nil {
-		return err
-	}
+	if updated {
+		//set the id value in unstructuredObj object
+		err = unstructured.SetNestedField(unstructuredObj.Object, newStateVal.GetAttr("id").AsString(), "spec", "id")
+		if err != nil {
+			return err
+		}
 
-	// apply the update of the object
-	if err = rClient.Update(ctx, unstructuredObj); err != nil {
-		return err
-	}
+		// apply the update of the object
+		if err = rClient.Update(ctx, unstructuredObj); err != nil {
+			return err
+		}
 
-	intrfc := terraform.NewResourceConfigShimmed(newStateVal, res.CoreConfigSchema())
+		intrfc := terraform.NewResourceConfigShimmed(newStateVal, res.CoreConfigSchema())
 
-	err = updateStateField(rClient, ctx, intrfc.Raw, gv, unstructuredObj, jsonit)
-	if err != nil {
-		return err
+		err = updateStateField(rClient, ctx, intrfc.Raw, gv, unstructuredObj, jsonit)
+		if err != nil {
+			return err
+		}
 	}
 
 	return nil
@@ -247,25 +244,13 @@ func initialUpdateStatus(rClient client.Client, ctx context.Context, gv schema.G
 		return err
 	}
 
-	data, err := meta.MarshalToJson(obj, gv)
-	if err != nil {
-		return err
-	}
-	typedObj, err := meta.UnmarshalFromJSON(data, gv)
-	if err != nil {
-		return err
-	}
-	s := structs.New(typedObj)
-
-	var phaseVal base.Phase
 	var newCondi []kmapi.Condition
-	statusCondition := s.Field("Status").Field("Conditions").Value().([]kmapi.Condition)
+	phase := status.InProgressStatus
 	if flag {
-		newCondi = kmapi.SetCondition(statusCondition, kmapi.NewCondition("Reconciling", "Kubeform is currently reconciling "+obj.GetKind()+" resource", objGen))
-		phaseVal = base.PhaseApplying
+		newCondi = kmapi.SetCondition(newCondi, kmapi.NewCondition("Reconciling", "Kubeform is currently reconciling "+obj.GetKind()+" resource", objGen))
 	} else {
-		newCondi = kmapi.SetCondition(statusCondition, kmapi.NewCondition("Stalled", er.Error(), objGen))
-		phaseVal = base.PhaseFailed
+		newCondi = kmapi.SetCondition(newCondi, kmapi.NewCondition("Stalled", er.Error(), objGen))
+		phase = status.FailedStatus
 	}
 
 	err = setNestedFieldNoCopy(obj.Object, newCondi, "status", "conditions")
@@ -273,50 +258,28 @@ func initialUpdateStatus(rClient client.Client, ctx context.Context, gv schema.G
 		return err
 	}
 
-	_, found, err := unstructured.NestedString(obj.Object, "status", "phase")
+	err = updateStatus(rClient, ctx, obj, phase)
 	if err != nil {
 		return err
 	}
-	if !found {
-		err := updateStatus(rClient, ctx, obj, phaseVal)
-		if err != nil {
-			return err
-		}
-	}
+
 	return nil
 }
 
-func finalUpdateStatus(rClient client.Client, ctx context.Context, gv schema.GroupVersion, obj *unstructured.Unstructured, flag bool) error {
-	data, err := meta.MarshalToJson(obj, gv)
-	if err != nil {
-		return err
-	}
-	typedObj, err := meta.UnmarshalFromJSON(data, gv)
-	if err != nil {
-		return err
-	}
-	s := structs.New(typedObj)
-
+func finalUpdateStatus(rClient client.Client, ctx context.Context, gv schema.GroupVersion, obj *unstructured.Unstructured) error {
 	var newCondi []kmapi.Condition
-	statusCondition := s.Field("Status").Field("Conditions").Value().([]kmapi.Condition)
-	if flag {
-		newCondi = kmapi.RemoveCondition(statusCondition, "Reconciling")
-	} else {
-		newCondi = kmapi.RemoveCondition(statusCondition, "Stalled")
-	}
-
-	err = setNestedFieldNoCopy(obj.Object, newCondi, "status", "conditions")
+	err := setNestedFieldNoCopy(obj.Object, newCondi, "status", "conditions")
 	if err = rClient.Status().Update(ctx, obj); err != nil {
 		return err
 	}
-	err = updateStatus(rClient, ctx, obj, base.PhaseRunning)
+	err = updateStatus(rClient, ctx, obj, status.CurrentStatus)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func updateStatus(rClient client.Client, ctx context.Context, obj *unstructured.Unstructured, phase base.Phase) error {
+func updateStatus(rClient client.Client, ctx context.Context, obj *unstructured.Unstructured, phase status.Status) error {
 	obsGen, _, err := unstructured.NestedInt64(obj.Object, "metadata", "generation")
 	if err != nil {
 		return err
@@ -365,7 +328,7 @@ func diagToError(d []*tfprotov5.Diagnostic) error {
 	var err error
 	var flag bool
 	for idx, key := range d {
-		if key.Severity.String() == "WARNING" || key.Summary == "Invalid or unknown key" {
+		if key.Severity.String() == "WARNING" || key.Summary == "Invalid or unknown key" || key.Summary == UpdateNotSupported {
 			continue
 		}
 		if !flag {
@@ -377,29 +340,28 @@ func diagToError(d []*tfprotov5.Diagnostic) error {
 	return err
 }
 
-func getCombineRawAndDeepCopyRawStatus(rawStatus map[string]interface{}, rawSpec map[string]interface{}) (map[string]interface{}, map[string]interface{}, error) {
+func getCombineRawAndDeepCopyRawStatus(rawStatus map[string]interface{}, rawSpec map[string]interface{}) (map[string]interface{}, error) {
 	var buf bytes.Buffer
 	enc := gob.NewEncoder(&buf)
 	dec := gob.NewDecoder(&buf)
-	err := enc.Encode(rawStatus)
+	err := enc.Encode(rawSpec)
 	if err != nil {
-		return nil, nil, err
+		return nil, err
 	}
 
-	var copyrawStatus map[string]interface{}
-	err = dec.Decode(&copyrawStatus)
+	var copyrawSpec map[string]interface{}
+	err = dec.Decode(&copyrawSpec)
 	if err != nil {
-		return nil, nil, err
+		return nil, err
 	}
-	if err := mergo.Merge(&rawStatus, rawSpec, mergo.WithOverride); err != nil {
-		return nil, nil, err
+	if err := mergo.Merge(&copyrawSpec, rawStatus); err != nil {
+		return nil, err
 	}
-	combineRaw := rawStatus
 
-	return copyrawStatus, combineRaw, nil
+	return copyrawSpec, nil
 }
 
-func updateTheObject(priorState []byte, plannedState []byte, planResp *tfprotov5.PlanResourceChangeResponse, server *tfschema.GRPCProviderServer, res *tfschema.Resource, tName string) (cty.Value, error) {
+func updateTheObject(priorState []byte, plannedState []byte, planResp *tfprotov5.PlanResourceChangeResponse, server *tfschema.GRPCProviderServer, res *tfschema.Resource, tName string) (cty.Value, bool, error) {
 	applyReq := &tfprotov5.ApplyResourceChangeRequest{
 		TypeName: tName,
 		PriorState: &tfprotov5.DynamicValue{
@@ -416,19 +378,25 @@ func updateTheObject(priorState []byte, plannedState []byte, planResp *tfprotov5
 
 	applyResp, err := server.ApplyResourceChange(context.Background(), applyReq)
 	if err != nil {
-		return cty.Value{}, err
+		return cty.Value{}, false, err
 	}
-	if len(applyResp.Diagnostics) > 0 {
-		return cty.Value{}, diagToError(applyResp.Diagnostics)
+
+	if !isUpdateSupported(applyResp.Diagnostics) {
+		return cty.Value{}, false, err
+	}
+
+	err = diagToError(applyResp.Diagnostics)
+	if err != nil {
+		return cty.Value{}, false, err
 	}
 
 	schma := res.CoreConfigSchema()
 	newStateVal, err := msgpack.Unmarshal(applyResp.NewState.MsgPack, schma.ImpliedType())
 	if err != nil {
-		return cty.Value{}, err
+		return cty.Value{}, false, err
 	}
 
-	return newStateVal, nil
+	return newStateVal, true, nil
 }
 
 func checkRequireNewOrNot(combineRaw map[string]interface{}, copyrawStatus map[string]interface{}, res *tfschema.Resource, server *tfschema.GRPCProviderServer, tName string) (bool, []byte, *tfprotov5.PlanResourceChangeResponse, []byte, error) {
@@ -623,6 +591,7 @@ func getStatusWithSensitiveData(gv schema.GroupVersion, rClient client.Client, c
 		return nil, err
 	}
 
+	secretData := make(map[string]interface{})
 	if secretRef != nil {
 		secretName := typedStruct.Field("Spec").Field("SecretRef").Field("Name").Value()
 
@@ -636,37 +605,11 @@ func getStatusWithSensitiveData(gv schema.GroupVersion, rClient client.Client, c
 				return nil, err
 			}
 
-			for key := range secret.Data {
-				if !strings.Contains(key, "out.") {
-					continue
+			if _, ok := secret.Data["output"]; ok {
+				err = json.Unmarshal(secret.Data["output"], &secretData)
+				if err != nil {
+					return nil, err
 				}
-				value := secret.Data[key]
-				key = strings.ReplaceAll(key, "out.", "")
-				fieldName := strings.Split(key, ".")
-				var tempMap = make(map[string]string)
-				buffer := new(bytes.Buffer)
-				var secretData interface{}
-
-				if err := json.Compact(buffer, value); err != nil {
-					secretData = strings.ReplaceAll(string(value), "\n", "")
-				} else {
-					err = json.Unmarshal(buffer.Bytes(), &tempMap)
-					if err != nil {
-						return nil, err
-					}
-					secretData = tempMap
-				}
-
-				field := statusValue.Elem()
-				for _, f := range fieldName {
-					if index, err := strconv.Atoi(f); err == nil {
-						field = field.Index(index)
-						continue
-					}
-					field = reflect.Indirect(field).FieldByName(flect.Capitalize(flect.Camelize(f)))
-				}
-				sData := reflect.ValueOf(secretData).String()
-				field.Set(reflect.ValueOf(&sData))
 			}
 		}
 	}
@@ -678,6 +621,10 @@ func getStatusWithSensitiveData(gv schema.GroupVersion, rClient client.Client, c
 	rawStatus := make(map[string]interface{})
 	err = json.Unmarshal(str, &rawStatus)
 	if err != nil {
+		return nil, err
+	}
+
+	if err := mergo.Merge(&rawStatus, secretData); err != nil {
 		return nil, err
 	}
 
@@ -706,6 +653,7 @@ func getSpecWithSensitiveData(gv schema.GroupVersion, rClient client.Client, ctx
 		return nil, err
 	}
 
+	secretData := make(map[string]interface{})
 	if secretRef != nil {
 		secretName := typedStruct.Field("Spec").Field("SecretRef").Field("Name").Value()
 
@@ -719,37 +667,11 @@ func getSpecWithSensitiveData(gv schema.GroupVersion, rClient client.Client, ctx
 				return nil, err
 			}
 
-			for key := range secret.Data {
-				if strings.Contains(key, "out.") {
-					continue
+			if _, ok := secret.Data["input"]; ok {
+				err = json.Unmarshal(secret.Data["input"], &secretData)
+				if err != nil {
+					return nil, err
 				}
-				value := secret.Data[key]
-
-				fieldName := strings.Split(key, ".")
-				var tempMap = make(map[string]string)
-				buffer := new(bytes.Buffer)
-				var secretData interface{}
-
-				if err := json.Compact(buffer, value); err != nil {
-					secretData = strings.ReplaceAll(string(value), "\n", "")
-				} else {
-					err = json.Unmarshal(buffer.Bytes(), &tempMap)
-					if err != nil {
-						return nil, err
-					}
-					secretData = tempMap
-				}
-
-				field := specValue.Elem()
-				for _, f := range fieldName {
-					if index, err := strconv.Atoi(f); err == nil {
-						field = field.Index(index)
-						continue
-					}
-					field = reflect.Indirect(field).FieldByName(flect.Capitalize(flect.Camelize(f)))
-				}
-				sData := reflect.ValueOf(secretData).String()
-				field.Set(reflect.ValueOf(&sData))
 			}
 		}
 	}
@@ -764,15 +686,19 @@ func getSpecWithSensitiveData(gv schema.GroupVersion, rClient client.Client, ctx
 		return nil, err
 	}
 
+	if err := mergo.Merge(&rawSpec, secretData); err != nil {
+		return nil, err
+	}
+
 	return rawSpec, nil
 }
 
-func getProviderSecretData(rClient client.Client, ctx context.Context, obj *unstructured.Unstructured) (map[string]string, error) {
+func getProviderSecretData(rClient client.Client, ctx context.Context, obj *unstructured.Unstructured) (map[string][]byte, error) {
 	providerRef, _, err := unstructured.NestedFieldNoCopy(obj.Object, "spec", "providerRef", "name")
 	if err != nil {
 		return nil, err
 	}
-	configData := make(map[string]string)
+	configData := make(map[string][]byte)
 	if providerRef != nil {
 		var secret corev1.Secret
 		req := types.NamespacedName{
@@ -783,9 +709,7 @@ func getProviderSecretData(rClient client.Client, ctx context.Context, obj *unst
 			return nil, err
 		}
 
-		for key := range secret.Data {
-			configData[key] = string(secret.Data[key])
-		}
+		configData = secret.Data
 	}
 	return configData, nil
 }
@@ -860,8 +784,7 @@ func updateStateField(rClient client.Client, ctx context.Context, intrfc map[str
 
 	s := structs.New(typedObj)
 
-	secretData := make(map[string]string)
-	err = processSensitiveFields(reflect.TypeOf(s.Field("Spec").Value()), reflect.ValueOf(s.Field("Spec").Value()), "", &secretData)
+	secretData, err := processSensitiveFields(reflect.TypeOf(s.Field("Spec").Value()).Field(0).Type, reflect.ValueOf(s.Field("Spec").Value()).Field(0))
 	if err != nil {
 		return err
 	}
@@ -877,7 +800,7 @@ func updateStateField(rClient client.Client, ctx context.Context, intrfc map[str
 		if secretRef != nil {
 			secretName = s.Field("Spec").Field("SecretRef").Field("Name").Value().(string)
 		} else {
-			secretName = obj.GetName() + "-" + obj.GetNamespace() + "-" + "sensitive"
+			secretName = obj.GetName() + "-" + "sensitive"
 		}
 
 		var secret corev1.Secret
@@ -903,9 +826,12 @@ func updateStateField(rClient client.Client, ctx context.Context, intrfc map[str
 			secret.Data = make(map[string][]byte)
 		}
 
-		for key := range secretData {
-			secret.Data["out."+key] = []byte(secretData[key])
+		secretByte, err := json.Marshal(secretData)
+		if err != nil {
+			return err
 		}
+		secret.Data["output"] = secretByte
+
 		// apply the update of the object
 		if err = rClient.Update(ctx, &secret); err != nil {
 			return err
@@ -935,57 +861,60 @@ func updateStateField(rClient client.Client, ctx context.Context, intrfc map[str
 	return nil
 }
 
-func processSensitiveFields(r reflect.Type, v reflect.Value, tfkey string, data *map[string]string) error {
-	d := *data
+func processSensitiveFields(r reflect.Type, v reflect.Value) (map[string]interface{}, error) {
+	var err error
+	out := make(map[string]interface{})
 	n := r.NumField()
 	for i := 0; i < n; i++ {
 		field := r.Field(i)
 		value := v.Field(i)
-		tftag := strings.ReplaceAll(field.Tag.Get("tf"), ",omitempty", "")
-		newtfkey := tftag
-		if tfkey != "" {
-			newtfkey = tfkey + "." + tftag
+		tag := strings.ReplaceAll(field.Tag.Get("tf"), ",omitempty", "")
+		if tag == "-" {
+			continue
 		}
 
 		if field.Tag.Get("sensitive") == "true" && value.Kind() == reflect.Ptr && value.Elem().Kind() == reflect.String && value.Elem().String() != "" {
-			d[newtfkey] = value.Elem().String()
+			out[tag] = value.Elem().String()
 		} else if field.Tag.Get("sensitive") == "true" && value.Kind() == reflect.Map && value.Interface().(map[string]string) != nil && len(value.Interface().(map[string]string)) != 0 {
 			secretJson, err := json.Marshal(value.Interface())
 			if err != nil {
-				return err
+				return nil, err
 			} else {
-				d[newtfkey] = string(secretJson)
+				out[tag] = string(secretJson)
 			}
 		}
 		if value.Kind() == reflect.Struct {
-			err := processSensitiveFields(value.Type(), value, newtfkey, &d)
+			out[tag], err = processSensitiveFields(value.Type(), value)
 			if err != nil {
-				return err
+				return nil, err
 			}
 		}
 		if value.Kind() == reflect.Ptr && value.Elem().Kind() == reflect.Struct {
-			err := processSensitiveFields(value.Elem().Type(), value.Elem(), newtfkey, &d)
+			out[tag], err = processSensitiveFields(value.Elem().Type(), value.Elem())
 			if err != nil {
-				return err
+				return nil, err
 			}
 		}
 
 		if value.Kind() == reflect.Slice {
 			n := value.Len()
+			tempMap := make([]map[string]interface{}, n)
 			for i := 0; i < n; i++ {
 				if value.Index(i).Kind() == reflect.Struct {
-					err := processSensitiveFields(value.Index(i).Type(), value.Index(i), newtfkey+"."+strconv.FormatInt(int64(i), 10), &d)
+					tempMap[i], err = processSensitiveFields(value.Index(i).Type(), value.Index(i))
 					if err != nil {
-						return err
+						return nil, err
 					}
 				}
 			}
+			out[tag] = tempMap
 		}
 	}
-	return nil
+	return out, nil
 }
 
 func setProviderMeta(rClient client.Client, provider *tfschema.Provider, ctx context.Context, unstructuredObj *unstructured.Unstructured, server *tfschema.GRPCProviderServer, jsonit jsoniter.API) error {
+	jsonit = GetJSONItr(linode.GetEncoder(), linode.GetDecoder())
 	providerSecretData, err := getProviderSecretData(rClient, ctx, unstructuredObj)
 	if err != nil {
 		return err
@@ -999,35 +928,24 @@ func setProviderMeta(rClient client.Client, provider *tfschema.Provider, ctx con
 		return fmt.Errorf("missing provider schema")
 	}
 
-	providerSecretTypeData := &linode.LinodeSpec{}
-	reflectType := reflect.TypeOf(providerSecretTypeData)
-	reflectValue := reflect.New(reflectType)
-	reflectValue.Elem().Set(reflect.ValueOf(providerSecretTypeData))
-
-	for key, value := range providerSecretData {
-		fieldsName := strings.Split(key, ".")
-
-		field := reflectValue.Elem()
-		for _, f := range fieldsName {
-			if index, err := strconv.Atoi(f); err == nil {
-				field = field.Index(index)
-				continue
-			}
-			field = reflect.Indirect(field).FieldByName(flect.Capitalize(flect.Camelize(f)))
-		}
-		field.Set(reflect.ValueOf(&value))
-	}
-	str, err := jsonit.Marshal(reflectValue.Interface())
-	if err != nil {
-		return err
-	}
-	pbSecret := make(map[string]interface{})
-	err = json.Unmarshal(str, &pbSecret)
+	providerSpec := &linode.LinodeSpec{}
+	err = jsonit.Unmarshal(providerSecretData["provider"], providerSpec)
 	if err != nil {
 		return err
 	}
 
-	configRaw := HCL2ValueFromConfigValue(pbSecret)
+	providerDataByte, err := jsonit.Marshal(providerSpec)
+	if err != nil {
+		return err
+	}
+
+	mapData := make(map[string]interface{})
+	err = jsonit.Unmarshal(providerDataByte, &mapData)
+	if err != nil {
+		return err
+	}
+
+	configRaw := HCL2ValueFromConfigValue(mapData)
 	configPlan, err := msgpack.Marshal(configRaw, providerSchema.Provider.ImpliedType())
 	if err != nil {
 		return err
@@ -1098,3 +1016,32 @@ func HCL2ValueFromConfigValue(v interface{}) cty.Value {
 		panic(fmt.Errorf("can't convert %#v to cty.Value", v))
 	}
 }
+
+func isUpdateSupported(diags []*tfprotov5.Diagnostic) bool {
+	for _, diag := range diags {
+		if diag.Summary == UpdateNotSupported {
+			return false
+		}
+	}
+
+	return true
+}
+
+//func convertCamelToSnakeCase(in map[string]interface{}) map[string]interface{} {
+//	out := make(map[string]interface{})
+//	for key, val := range in {
+//		switch val.(type) {
+//		case map[string]interface{}:
+//			out[key] = convertCamelToSnakeCase(val.(map[string]interface{}))
+//		case []map[string]interface{}:
+//			tempMap := make([]map[string]interface{}, len(val.([]map[string]interface{})))
+//			for i := range val.([]map[string]interface{}) {
+//				tempMap[i] = convertCamelToSnakeCase(val.([]map[string]interface{})[i])
+//			}
+//			out[key] = tempMap
+//		default:
+//			out[key] = val
+//		}
+//	}
+//	return out
+//}

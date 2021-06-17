@@ -24,6 +24,7 @@ import (
 	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	kmapi "kmodules.xyz/client-go/api/v1"
+	"sigs.k8s.io/cli-utils/pkg/kstatus/status"
 )
 
 // +genclient
@@ -43,7 +44,7 @@ type Instance struct {
 type InstanceSpec struct {
 	InstanceSpec2 `json:",inline"`
 	// +optional
-	KubeformOutput InstanceSpec2 `json:"kubeformOutput,omitempty" tf:"-"`
+	KubeformOutput *InstanceSpec2 `json:"kubeformOutput,omitempty" tf:"-"`
 }
 
 type InstanceSpecAlerts struct {
@@ -293,6 +294,8 @@ type InstanceSpecSpecs struct {
 }
 
 type InstanceSpec2 struct {
+	UpdatePolicy base.UpdatePolicy `json:"updatePolicy,omitempty" tf:"-"`
+
 	TerminationPolicy base.TerminationPolicy `json:"terminationPolicy,omitempty" tf:"-"`
 
 	Timeouts *base.ResourceTimeout `json:"timeouts,omitempty" tf:"timeouts"`
@@ -387,7 +390,7 @@ type InstanceStatus struct {
 	// +optional
 	ObservedGeneration int64 `json:"observedGeneration,omitempty"`
 	// +optional
-	Phase base.Phase `json:"phase,omitempty"`
+	Phase status.Status `json:"phase,omitempty"`
 	// +optional
 	Conditions []kmapi.Condition `json:"conditions,omitempty"`
 }

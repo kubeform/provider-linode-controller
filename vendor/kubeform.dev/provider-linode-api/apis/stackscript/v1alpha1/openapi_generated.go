@@ -14317,6 +14317,12 @@ func schema_provider_linode_api_apis_stackscript_v1alpha1_StackscriptSpec(ref co
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
+					"updatePolicy": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
 					"terminationPolicy": {
 						SchemaProps: spec.SchemaProps{
 							Type:   []string{"string"},
@@ -14443,8 +14449,7 @@ func schema_provider_linode_api_apis_stackscript_v1alpha1_StackscriptSpec(ref co
 					},
 					"kubeformOutput": {
 						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("kubeform.dev/provider-linode-api/apis/stackscript/v1alpha1.StackscriptSpec2"),
+							Ref: ref("kubeform.dev/provider-linode-api/apis/stackscript/v1alpha1.StackscriptSpec2"),
 						},
 					},
 				},
@@ -14462,6 +14467,12 @@ func schema_provider_linode_api_apis_stackscript_v1alpha1_StackscriptSpec2(ref c
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
+					"updatePolicy": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
 					"terminationPolicy": {
 						SchemaProps: spec.SchemaProps{
 							Type:   []string{"string"},

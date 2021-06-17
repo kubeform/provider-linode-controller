@@ -14319,6 +14319,12 @@ func schema_provider_linode_api_apis_firewall_v1alpha1_FirewallSpec(ref common.R
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
+					"updatePolicy": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
 					"terminationPolicy": {
 						SchemaProps: spec.SchemaProps{
 							Type:   []string{"string"},
@@ -14446,8 +14452,7 @@ func schema_provider_linode_api_apis_firewall_v1alpha1_FirewallSpec(ref common.R
 					},
 					"kubeformOutput": {
 						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("kubeform.dev/provider-linode-api/apis/firewall/v1alpha1.FirewallSpec2"),
+							Ref: ref("kubeform.dev/provider-linode-api/apis/firewall/v1alpha1.FirewallSpec2"),
 						},
 					},
 				},
@@ -14465,6 +14470,12 @@ func schema_provider_linode_api_apis_firewall_v1alpha1_FirewallSpec2(ref common.
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
+					"updatePolicy": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
 					"terminationPolicy": {
 						SchemaProps: spec.SchemaProps{
 							Type:   []string{"string"},

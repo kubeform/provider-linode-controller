@@ -91,7 +91,11 @@ func (in *TokenList) DeepCopyObject() runtime.Object {
 func (in *TokenSpec) DeepCopyInto(out *TokenSpec) {
 	*out = *in
 	in.TokenSpec2.DeepCopyInto(&out.TokenSpec2)
-	in.KubeformOutput.DeepCopyInto(&out.KubeformOutput)
+	if in.KubeformOutput != nil {
+		in, out := &in.KubeformOutput, &out.KubeformOutput
+		*out = new(TokenSpec2)
+		(*in).DeepCopyInto(*out)
+	}
 	return
 }
 

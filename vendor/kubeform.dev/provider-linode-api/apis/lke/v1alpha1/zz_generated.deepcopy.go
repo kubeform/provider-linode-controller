@@ -93,7 +93,11 @@ func (in *ClusterList) DeepCopyObject() runtime.Object {
 func (in *ClusterSpec) DeepCopyInto(out *ClusterSpec) {
 	*out = *in
 	in.ClusterSpec2.DeepCopyInto(&out.ClusterSpec2)
-	in.KubeformOutput.DeepCopyInto(&out.KubeformOutput)
+	if in.KubeformOutput != nil {
+		in, out := &in.KubeformOutput, &out.KubeformOutput
+		*out = new(ClusterSpec2)
+		(*in).DeepCopyInto(*out)
+	}
 	return
 }
 

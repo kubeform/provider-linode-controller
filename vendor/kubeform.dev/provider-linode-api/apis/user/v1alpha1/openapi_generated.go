@@ -14325,6 +14325,12 @@ func schema_provider_linode_api_apis_user_v1alpha1_UserSpec(ref common.Reference
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
+					"updatePolicy": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
 					"terminationPolicy": {
 						SchemaProps: spec.SchemaProps{
 							Type:   []string{"string"},
@@ -14485,8 +14491,7 @@ func schema_provider_linode_api_apis_user_v1alpha1_UserSpec(ref common.Reference
 					},
 					"kubeformOutput": {
 						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("kubeform.dev/provider-linode-api/apis/user/v1alpha1.UserSpec2"),
+							Ref: ref("kubeform.dev/provider-linode-api/apis/user/v1alpha1.UserSpec2"),
 						},
 					},
 				},
@@ -14504,6 +14509,12 @@ func schema_provider_linode_api_apis_user_v1alpha1_UserSpec2(ref common.Referenc
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
+					"updatePolicy": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
 					"terminationPolicy": {
 						SchemaProps: spec.SchemaProps{
 							Type:   []string{"string"},

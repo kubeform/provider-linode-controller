@@ -14321,6 +14321,12 @@ func schema_provider_linode_api_apis_domain_v1alpha1_DomainSpec(ref common.Refer
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
+					"updatePolicy": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
 					"terminationPolicy": {
 						SchemaProps: spec.SchemaProps{
 							Type:   []string{"string"},
@@ -14456,8 +14462,7 @@ func schema_provider_linode_api_apis_domain_v1alpha1_DomainSpec(ref common.Refer
 					},
 					"kubeformOutput": {
 						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("kubeform.dev/provider-linode-api/apis/domain/v1alpha1.DomainSpec2"),
+							Ref: ref("kubeform.dev/provider-linode-api/apis/domain/v1alpha1.DomainSpec2"),
 						},
 					},
 				},
@@ -14475,6 +14480,12 @@ func schema_provider_linode_api_apis_domain_v1alpha1_DomainSpec2(ref common.Refe
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
+					"updatePolicy": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
 					"terminationPolicy": {
 						SchemaProps: spec.SchemaProps{
 							Type:   []string{"string"},
@@ -14758,6 +14769,12 @@ func schema_provider_linode_api_apis_domain_v1alpha1_RecordSpec(ref common.Refer
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
+					"updatePolicy": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
 					"terminationPolicy": {
 						SchemaProps: spec.SchemaProps{
 							Type:   []string{"string"},
@@ -14855,8 +14872,7 @@ func schema_provider_linode_api_apis_domain_v1alpha1_RecordSpec(ref common.Refer
 					},
 					"kubeformOutput": {
 						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("kubeform.dev/provider-linode-api/apis/domain/v1alpha1.RecordSpec2"),
+							Ref: ref("kubeform.dev/provider-linode-api/apis/domain/v1alpha1.RecordSpec2"),
 						},
 					},
 				},
@@ -14874,6 +14890,12 @@ func schema_provider_linode_api_apis_domain_v1alpha1_RecordSpec2(ref common.Refe
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
+					"updatePolicy": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
 					"terminationPolicy": {
 						SchemaProps: spec.SchemaProps{
 							Type:   []string{"string"},
