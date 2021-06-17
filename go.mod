@@ -12,6 +12,8 @@ require (
 	github.com/imdario/mergo v0.3.12
 	github.com/json-iterator/go v1.1.11
 	github.com/linode/terraform-provider-linode v1.17.0
+	github.com/onsi/ginkgo v1.16.4
+	github.com/onsi/gomega v1.13.0
 	github.com/pkg/errors v0.9.1
 	k8s.io/api v0.21.1
 	k8s.io/apiextensions-apiserver v0.21.1
@@ -19,6 +21,7 @@ require (
 	k8s.io/client-go v0.21.1
 	k8s.io/klog/v2 v2.8.0
 	kmodules.xyz/client-go v0.0.0-20210514054158-27e164b43474
+	kmodules.xyz/constants v0.0.0-20210218100002-2c304bfda278
 	kubeform.dev/provider-linode-api v0.0.0-20210617050532-e448227cc491
 	sigs.k8s.io/cli-utils v0.25.0
 	sigs.k8s.io/controller-runtime v0.9.0
