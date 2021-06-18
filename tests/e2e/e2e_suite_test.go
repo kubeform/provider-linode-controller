@@ -2,8 +2,9 @@ package e2e_test
 
 import (
 	"github.com/linode/terraform-provider-linode/linode"
+	. "github.com/onsi/ginkgo"
 	"github.com/onsi/ginkgo/reporters"
-	"github.com/onsi/gomega/gexec"
+	. "github.com/onsi/gomega"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/client-go/kubernetes"
 	clientSetScheme "k8s.io/client-go/kubernetes/scheme"
@@ -19,9 +20,6 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/envtest"
 	"testing"
 	"time"
-
-	. "github.com/onsi/ginkgo"
-	. "github.com/onsi/gomega"
 )
 
 var (
@@ -46,7 +44,7 @@ var _ = BeforeSuite(func() {
 		CRDDirectoryPaths:     []string{filepath.Join("..", "config", "crds")},
 		ErrorIfCRDPathMissing: true,
 	}
-
+	testEnv.ControlPlaneStopTimeout = 2 * time.Minute
 	cfg, err := testEnv.Start()
 	Expect(err).NotTo(HaveOccurred())
 	Expect(cfg).NotTo(BeNil())
@@ -108,7 +106,6 @@ var _ = AfterSuite(func() {
 	Expect(err).NotTo(HaveOccurred())
 
 	By("tearing down the test environment")
-	gexec.KillAndWait(5 * time.Second)
 	err = testEnv.Stop()
 	Expect(err).NotTo(HaveOccurred())
 })

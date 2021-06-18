@@ -49,7 +49,7 @@ func (f *Framework) CreateInstance(obj *v1alpha1.Instance) error {
 }
 
 func (f *Framework) DeleteInstance(meta metav1.ObjectMeta) error {
-	return f.linodeClient.InstanceV1alpha1().Instances(meta.Namespace).Delete(context.TODO(), meta.Name, meta_util.DeleteInForeground())
+	return f.linodeClient.InstanceV1alpha1().Instances(meta.Namespace).Delete(context.TODO(), meta.Name, meta_util.DeleteInBackground())
 }
 
 func (f *Framework) EventuallyInstanceRunning(meta metav1.ObjectMeta) GomegaAsyncAssertion {
