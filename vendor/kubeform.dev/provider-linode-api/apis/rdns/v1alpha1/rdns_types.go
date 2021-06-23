@@ -42,18 +42,18 @@ type Rdns struct {
 }
 
 type RdnsSpec struct {
-	RdnsSpec2 `json:",inline"`
-	// +optional
-	KubeformOutput *RdnsSpec2 `json:"kubeformOutput,omitempty" tf:"-"`
-}
+	KubeformOutput *RdnsSpecResource `json:"kubeformOutput,omitempty" tf:"-"`
 
-type RdnsSpec2 struct {
+	Resource RdnsSpecResource `json:"resource" tf:"resource"`
+
 	UpdatePolicy base.UpdatePolicy `json:"updatePolicy,omitempty" tf:"-"`
 
 	TerminationPolicy base.TerminationPolicy `json:"terminationPolicy,omitempty" tf:"-"`
 
 	ProviderRef core.LocalObjectReference `json:"providerRef" tf:"-"`
+}
 
+type RdnsSpecResource struct {
 	ID string `json:"id,omitempty" tf:"id,omitempty"`
 
 	// The public Linode IPv4 or IPv6 address to operate on.

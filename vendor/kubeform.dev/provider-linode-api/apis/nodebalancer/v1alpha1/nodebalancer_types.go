@@ -41,12 +41,6 @@ type Nodebalancer struct {
 	Status            NodebalancerStatus `json:"status,omitempty"`
 }
 
-type NodebalancerSpec struct {
-	NodebalancerSpec2 `json:",inline"`
-	// +optional
-	KubeformOutput *NodebalancerSpec2 `json:"kubeformOutput,omitempty" tf:"-"`
-}
-
 type NodebalancerSpecTransfer struct {
 	// The total transfer, in MB, used by this NodeBalancer this month
 	// +optional
@@ -59,13 +53,19 @@ type NodebalancerSpecTransfer struct {
 	Total *float64 `json:"total,omitempty" tf:"total"`
 }
 
-type NodebalancerSpec2 struct {
+type NodebalancerSpec struct {
+	KubeformOutput *NodebalancerSpecResource `json:"kubeformOutput,omitempty" tf:"-"`
+
+	Resource NodebalancerSpecResource `json:"resource" tf:"resource"`
+
 	UpdatePolicy base.UpdatePolicy `json:"updatePolicy,omitempty" tf:"-"`
 
 	TerminationPolicy base.TerminationPolicy `json:"terminationPolicy,omitempty" tf:"-"`
 
 	ProviderRef core.LocalObjectReference `json:"providerRef" tf:"-"`
+}
 
+type NodebalancerSpecResource struct {
 	ID string `json:"id,omitempty" tf:"id,omitempty"`
 
 	// Throttle connections per second (0-20). Set to 0 (zero) to disable throttling.

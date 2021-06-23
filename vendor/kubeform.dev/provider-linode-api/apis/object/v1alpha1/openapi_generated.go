@@ -297,7 +297,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubeform.dev/provider-linode-api/apis/object/v1alpha1.StorageBucket":                            schema_provider_linode_api_apis_object_v1alpha1_StorageBucket(ref),
 		"kubeform.dev/provider-linode-api/apis/object/v1alpha1.StorageBucketList":                        schema_provider_linode_api_apis_object_v1alpha1_StorageBucketList(ref),
 		"kubeform.dev/provider-linode-api/apis/object/v1alpha1.StorageBucketSpec":                        schema_provider_linode_api_apis_object_v1alpha1_StorageBucketSpec(ref),
-		"kubeform.dev/provider-linode-api/apis/object/v1alpha1.StorageBucketSpec2":                       schema_provider_linode_api_apis_object_v1alpha1_StorageBucketSpec2(ref),
 		"kubeform.dev/provider-linode-api/apis/object/v1alpha1.StorageBucketSpecCert":                    schema_provider_linode_api_apis_object_v1alpha1_StorageBucketSpecCert(ref),
 		"kubeform.dev/provider-linode-api/apis/object/v1alpha1.StorageBucketSpecCertCodec":               schema_provider_linode_api_apis_object_v1alpha1_StorageBucketSpecCertCodec(ref),
 		"kubeform.dev/provider-linode-api/apis/object/v1alpha1.StorageBucketSpecLifecycleRule":           schema_provider_linode_api_apis_object_v1alpha1_StorageBucketSpecLifecycleRule(ref),
@@ -305,17 +304,18 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubeform.dev/provider-linode-api/apis/object/v1alpha1.StorageBucketSpecLifecycleRuleExpirationCodec":                  schema_provider_linode_api_apis_object_v1alpha1_StorageBucketSpecLifecycleRuleExpirationCodec(ref),
 		"kubeform.dev/provider-linode-api/apis/object/v1alpha1.StorageBucketSpecLifecycleRuleNoncurrentVersionExpiration":      schema_provider_linode_api_apis_object_v1alpha1_StorageBucketSpecLifecycleRuleNoncurrentVersionExpiration(ref),
 		"kubeform.dev/provider-linode-api/apis/object/v1alpha1.StorageBucketSpecLifecycleRuleNoncurrentVersionExpirationCodec": schema_provider_linode_api_apis_object_v1alpha1_StorageBucketSpecLifecycleRuleNoncurrentVersionExpirationCodec(ref),
+		"kubeform.dev/provider-linode-api/apis/object/v1alpha1.StorageBucketSpecResource":                                      schema_provider_linode_api_apis_object_v1alpha1_StorageBucketSpecResource(ref),
 		"kubeform.dev/provider-linode-api/apis/object/v1alpha1.StorageBucketStatus":                                            schema_provider_linode_api_apis_object_v1alpha1_StorageBucketStatus(ref),
 		"kubeform.dev/provider-linode-api/apis/object/v1alpha1.StorageKey":                                                     schema_provider_linode_api_apis_object_v1alpha1_StorageKey(ref),
 		"kubeform.dev/provider-linode-api/apis/object/v1alpha1.StorageKeyList":                                                 schema_provider_linode_api_apis_object_v1alpha1_StorageKeyList(ref),
 		"kubeform.dev/provider-linode-api/apis/object/v1alpha1.StorageKeySpec":                                                 schema_provider_linode_api_apis_object_v1alpha1_StorageKeySpec(ref),
-		"kubeform.dev/provider-linode-api/apis/object/v1alpha1.StorageKeySpec2":                                                schema_provider_linode_api_apis_object_v1alpha1_StorageKeySpec2(ref),
 		"kubeform.dev/provider-linode-api/apis/object/v1alpha1.StorageKeySpecBucketAccess":                                     schema_provider_linode_api_apis_object_v1alpha1_StorageKeySpecBucketAccess(ref),
+		"kubeform.dev/provider-linode-api/apis/object/v1alpha1.StorageKeySpecResource":                                         schema_provider_linode_api_apis_object_v1alpha1_StorageKeySpecResource(ref),
 		"kubeform.dev/provider-linode-api/apis/object/v1alpha1.StorageKeyStatus":                                               schema_provider_linode_api_apis_object_v1alpha1_StorageKeyStatus(ref),
 		"kubeform.dev/provider-linode-api/apis/object/v1alpha1.StorageObject":                                                  schema_provider_linode_api_apis_object_v1alpha1_StorageObject(ref),
 		"kubeform.dev/provider-linode-api/apis/object/v1alpha1.StorageObjectList":                                              schema_provider_linode_api_apis_object_v1alpha1_StorageObjectList(ref),
 		"kubeform.dev/provider-linode-api/apis/object/v1alpha1.StorageObjectSpec":                                              schema_provider_linode_api_apis_object_v1alpha1_StorageObjectSpec(ref),
-		"kubeform.dev/provider-linode-api/apis/object/v1alpha1.StorageObjectSpec2":                                             schema_provider_linode_api_apis_object_v1alpha1_StorageObjectSpec2(ref),
+		"kubeform.dev/provider-linode-api/apis/object/v1alpha1.StorageObjectSpecResource":                                      schema_provider_linode_api_apis_object_v1alpha1_StorageObjectSpecResource(ref),
 		"kubeform.dev/provider-linode-api/apis/object/v1alpha1.StorageObjectStatus":                                            schema_provider_linode_api_apis_object_v1alpha1_StorageObjectStatus(ref),
 	}
 }
@@ -14334,121 +14334,17 @@ func schema_provider_linode_api_apis_object_v1alpha1_StorageBucketSpec(ref commo
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
-					"updatePolicy": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
-						},
-					},
-					"terminationPolicy": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
-						},
-					},
-					"providerRef": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("k8s.io/api/core/v1.LocalObjectReference"),
-						},
-					},
-					"id": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
-						},
-					},
-					"secretRef": {
-						SchemaProps: spec.SchemaProps{
-							Ref: ref("k8s.io/api/core/v1.LocalObjectReference"),
-						},
-					},
-					"accessKey": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
-						},
-					},
-					"acl": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The Access Control Level of the bucket using a canned ACL string.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"cert": {
-						SchemaProps: spec.SchemaProps{
-							Ref: ref("kubeform.dev/provider-linode-api/apis/object/v1alpha1.StorageBucketSpecCert"),
-						},
-					},
-					"cluster": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The cluster of the Linode Object Storage Bucket.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"corsEnabled": {
-						SchemaProps: spec.SchemaProps{
-							Description: "If true, the bucket will be created with CORS enabled for all origins.",
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
-					"label": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The label of the Linode Object Storage Bucket.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"lifecycleRule": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Lifecycle rules to be applied to the bucket.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubeform.dev/provider-linode-api/apis/object/v1alpha1.StorageBucketSpecLifecycleRule"),
-									},
-								},
-							},
-						},
-					},
-					"secretKey": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
-						},
-					},
-					"versioning": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Whether to enable versioning.",
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
 					"kubeformOutput": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("kubeform.dev/provider-linode-api/apis/object/v1alpha1.StorageBucketSpec2"),
+							Ref: ref("kubeform.dev/provider-linode-api/apis/object/v1alpha1.StorageBucketSpecResource"),
 						},
 					},
-				},
-				Required: []string{"providerRef", "cluster", "label"},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "kubeform.dev/provider-linode-api/apis/object/v1alpha1.StorageBucketSpec2", "kubeform.dev/provider-linode-api/apis/object/v1alpha1.StorageBucketSpecCert", "kubeform.dev/provider-linode-api/apis/object/v1alpha1.StorageBucketSpecLifecycleRule"},
-	}
-}
-
-func schema_provider_linode_api_apis_object_v1alpha1_StorageBucketSpec2(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
+					"resource": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubeform.dev/provider-linode-api/apis/object/v1alpha1.StorageBucketSpecResource"),
+						},
+					},
 					"updatePolicy": {
 						SchemaProps: spec.SchemaProps{
 							Type:   []string{"string"},
@@ -14467,89 +14363,17 @@ func schema_provider_linode_api_apis_object_v1alpha1_StorageBucketSpec2(ref comm
 							Ref:     ref("k8s.io/api/core/v1.LocalObjectReference"),
 						},
 					},
-					"id": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
-						},
-					},
 					"secretRef": {
 						SchemaProps: spec.SchemaProps{
 							Ref: ref("k8s.io/api/core/v1.LocalObjectReference"),
 						},
 					},
-					"accessKey": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
-						},
-					},
-					"acl": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The Access Control Level of the bucket using a canned ACL string.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"cert": {
-						SchemaProps: spec.SchemaProps{
-							Ref: ref("kubeform.dev/provider-linode-api/apis/object/v1alpha1.StorageBucketSpecCert"),
-						},
-					},
-					"cluster": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The cluster of the Linode Object Storage Bucket.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"corsEnabled": {
-						SchemaProps: spec.SchemaProps{
-							Description: "If true, the bucket will be created with CORS enabled for all origins.",
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
-					"label": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The label of the Linode Object Storage Bucket.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"lifecycleRule": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Lifecycle rules to be applied to the bucket.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubeform.dev/provider-linode-api/apis/object/v1alpha1.StorageBucketSpecLifecycleRule"),
-									},
-								},
-							},
-						},
-					},
-					"secretKey": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
-						},
-					},
-					"versioning": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Whether to enable versioning.",
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
 				},
-				Required: []string{"providerRef", "cluster", "label"},
+				Required: []string{"resource", "providerRef"},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "kubeform.dev/provider-linode-api/apis/object/v1alpha1.StorageBucketSpecCert", "kubeform.dev/provider-linode-api/apis/object/v1alpha1.StorageBucketSpecLifecycleRule"},
+			"k8s.io/api/core/v1.LocalObjectReference", "kubeform.dev/provider-linode-api/apis/object/v1alpha1.StorageBucketSpecResource"},
 	}
 }
 
@@ -14701,6 +14525,93 @@ func schema_provider_linode_api_apis_object_v1alpha1_StorageBucketSpecLifecycleR
 	}
 }
 
+func schema_provider_linode_api_apis_object_v1alpha1_StorageBucketSpecResource(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"id": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"accessKey": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"acl": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The Access Control Level of the bucket using a canned ACL string.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"cert": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubeform.dev/provider-linode-api/apis/object/v1alpha1.StorageBucketSpecCert"),
+						},
+					},
+					"cluster": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The cluster of the Linode Object Storage Bucket.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"corsEnabled": {
+						SchemaProps: spec.SchemaProps{
+							Description: "If true, the bucket will be created with CORS enabled for all origins.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"label": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The label of the Linode Object Storage Bucket.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"lifecycleRule": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Lifecycle rules to be applied to the bucket.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubeform.dev/provider-linode-api/apis/object/v1alpha1.StorageBucketSpecLifecycleRule"),
+									},
+								},
+							},
+						},
+					},
+					"secretKey": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"versioning": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Whether to enable versioning.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"cluster", "label"},
+			},
+		},
+		Dependencies: []string{
+			"kubeform.dev/provider-linode-api/apis/object/v1alpha1.StorageBucketSpecCert", "kubeform.dev/provider-linode-api/apis/object/v1alpha1.StorageBucketSpecLifecycleRule"},
+	}
+}
+
 func schema_provider_linode_api_apis_object_v1alpha1_StorageBucketStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -14842,89 +14753,17 @@ func schema_provider_linode_api_apis_object_v1alpha1_StorageKeySpec(ref common.R
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
-					"updatePolicy": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
-						},
-					},
-					"terminationPolicy": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
-						},
-					},
-					"providerRef": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("k8s.io/api/core/v1.LocalObjectReference"),
-						},
-					},
-					"id": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
-						},
-					},
-					"secretRef": {
-						SchemaProps: spec.SchemaProps{
-							Ref: ref("k8s.io/api/core/v1.LocalObjectReference"),
-						},
-					},
-					"accessKey": {
-						SchemaProps: spec.SchemaProps{
-							Description: "This keypair's access key. This is not secret.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"bucketAccess": {
-						SchemaProps: spec.SchemaProps{
-							Type: []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubeform.dev/provider-linode-api/apis/object/v1alpha1.StorageKeySpecBucketAccess"),
-									},
-								},
-							},
-						},
-					},
-					"label": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The label given to this key. For display purposes only.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"limited": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Whether or not this key is a limited access key.",
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
 					"kubeformOutput": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("kubeform.dev/provider-linode-api/apis/object/v1alpha1.StorageKeySpec2"),
+							Ref: ref("kubeform.dev/provider-linode-api/apis/object/v1alpha1.StorageKeySpecResource"),
 						},
 					},
-				},
-				Required: []string{"providerRef", "label"},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "kubeform.dev/provider-linode-api/apis/object/v1alpha1.StorageKeySpec2", "kubeform.dev/provider-linode-api/apis/object/v1alpha1.StorageKeySpecBucketAccess"},
-	}
-}
-
-func schema_provider_linode_api_apis_object_v1alpha1_StorageKeySpec2(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
+					"resource": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubeform.dev/provider-linode-api/apis/object/v1alpha1.StorageKeySpecResource"),
+						},
+					},
 					"updatePolicy": {
 						SchemaProps: spec.SchemaProps{
 							Type:   []string{"string"},
@@ -14943,57 +14782,17 @@ func schema_provider_linode_api_apis_object_v1alpha1_StorageKeySpec2(ref common.
 							Ref:     ref("k8s.io/api/core/v1.LocalObjectReference"),
 						},
 					},
-					"id": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
-						},
-					},
 					"secretRef": {
 						SchemaProps: spec.SchemaProps{
 							Ref: ref("k8s.io/api/core/v1.LocalObjectReference"),
 						},
 					},
-					"accessKey": {
-						SchemaProps: spec.SchemaProps{
-							Description: "This keypair's access key. This is not secret.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"bucketAccess": {
-						SchemaProps: spec.SchemaProps{
-							Type: []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubeform.dev/provider-linode-api/apis/object/v1alpha1.StorageKeySpecBucketAccess"),
-									},
-								},
-							},
-						},
-					},
-					"label": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The label given to this key. For display purposes only.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"limited": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Whether or not this key is a limited access key.",
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
 				},
-				Required: []string{"providerRef", "label"},
+				Required: []string{"resource", "providerRef"},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "kubeform.dev/provider-linode-api/apis/object/v1alpha1.StorageKeySpecBucketAccess"},
+			"k8s.io/api/core/v1.LocalObjectReference", "kubeform.dev/provider-linode-api/apis/object/v1alpha1.StorageKeySpecResource"},
 	}
 }
 
@@ -15028,6 +14827,61 @@ func schema_provider_linode_api_apis_object_v1alpha1_StorageKeySpecBucketAccess(
 				Required: []string{"bucketName", "cluster", "permissions"},
 			},
 		},
+	}
+}
+
+func schema_provider_linode_api_apis_object_v1alpha1_StorageKeySpecResource(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"id": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"accessKey": {
+						SchemaProps: spec.SchemaProps{
+							Description: "This keypair's access key. This is not secret.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"bucketAccess": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubeform.dev/provider-linode-api/apis/object/v1alpha1.StorageKeySpecBucketAccess"),
+									},
+								},
+							},
+						},
+					},
+					"label": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The label given to this key. For display purposes only.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"limited": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Whether or not this key is a limited access key.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"label"},
+			},
+		},
+		Dependencies: []string{
+			"kubeform.dev/provider-linode-api/apis/object/v1alpha1.StorageKeySpecBucketAccess"},
 	}
 }
 
@@ -15172,6 +15026,17 @@ func schema_provider_linode_api_apis_object_v1alpha1_StorageObjectSpec(ref commo
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
+					"kubeformOutput": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubeform.dev/provider-linode-api/apis/object/v1alpha1.StorageObjectSpecResource"),
+						},
+					},
+					"resource": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubeform.dev/provider-linode-api/apis/object/v1alpha1.StorageObjectSpecResource"),
+						},
+					},
 					"updatePolicy": {
 						SchemaProps: spec.SchemaProps{
 							Type:   []string{"string"},
@@ -15190,173 +15055,21 @@ func schema_provider_linode_api_apis_object_v1alpha1_StorageObjectSpec(ref commo
 							Ref:     ref("k8s.io/api/core/v1.LocalObjectReference"),
 						},
 					},
-					"id": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
-						},
-					},
-					"accessKey": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
-						},
-					},
-					"acl": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
-						},
-					},
-					"bucket": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
-						},
-					},
-					"cacheControl": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
-						},
-					},
-					"cluster": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
-						},
-					},
-					"content": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
-						},
-					},
-					"contentBase64": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
-						},
-					},
-					"contentDisposition": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
-						},
-					},
-					"contentEncoding": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
-						},
-					},
-					"contentLanguage": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
-						},
-					},
-					"contentType": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
-						},
-					},
-					"etag": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
-						},
-					},
-					"forceDestroy": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"boolean"},
-							Format: "",
-						},
-					},
-					"key": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
-						},
-					},
-					"metadata": {
-						SchemaProps: spec.SchemaProps{
-							Type: []string{"object"},
-							AdditionalProperties: &spec.SchemaOrBool{
-								Allows: true,
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: "",
-										Type:    []string{"string"},
-										Format:  "",
-									},
-								},
-							},
-						},
-					},
-					"secretKey": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
-						},
-					},
-					"source": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
-						},
-					},
-					"versionID": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
-						},
-					},
-					"websiteRedirect": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
-						},
-					},
-					"kubeformOutput": {
-						SchemaProps: spec.SchemaProps{
-							Ref: ref("kubeform.dev/provider-linode-api/apis/object/v1alpha1.StorageObjectSpec2"),
-						},
-					},
 				},
-				Required: []string{"providerRef", "accessKey", "bucket", "cluster", "key", "secretKey"},
+				Required: []string{"resource", "providerRef"},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "kubeform.dev/provider-linode-api/apis/object/v1alpha1.StorageObjectSpec2"},
+			"k8s.io/api/core/v1.LocalObjectReference", "kubeform.dev/provider-linode-api/apis/object/v1alpha1.StorageObjectSpecResource"},
 	}
 }
 
-func schema_provider_linode_api_apis_object_v1alpha1_StorageObjectSpec2(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_provider_linode_api_apis_object_v1alpha1_StorageObjectSpecResource(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
-					"updatePolicy": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
-						},
-					},
-					"terminationPolicy": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
-						},
-					},
-					"providerRef": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("k8s.io/api/core/v1.LocalObjectReference"),
-						},
-					},
 					"id": {
 						SchemaProps: spec.SchemaProps{
 							Type:   []string{"string"},
@@ -15487,11 +15200,9 @@ func schema_provider_linode_api_apis_object_v1alpha1_StorageObjectSpec2(ref comm
 						},
 					},
 				},
-				Required: []string{"providerRef", "accessKey", "bucket", "cluster", "key", "secretKey"},
+				Required: []string{"accessKey", "bucket", "cluster", "key", "secretKey"},
 			},
 		},
-		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference"},
 	}
 }
 

@@ -42,18 +42,18 @@ type Node struct {
 }
 
 type NodeSpec struct {
-	NodeSpec2 `json:",inline"`
-	// +optional
-	KubeformOutput *NodeSpec2 `json:"kubeformOutput,omitempty" tf:"-"`
-}
+	KubeformOutput *NodeSpecResource `json:"kubeformOutput,omitempty" tf:"-"`
 
-type NodeSpec2 struct {
+	Resource NodeSpecResource `json:"resource" tf:"resource"`
+
 	UpdatePolicy base.UpdatePolicy `json:"updatePolicy,omitempty" tf:"-"`
 
 	TerminationPolicy base.TerminationPolicy `json:"terminationPolicy,omitempty" tf:"-"`
 
 	ProviderRef core.LocalObjectReference `json:"providerRef" tf:"-"`
+}
 
+type NodeSpecResource struct {
 	ID string `json:"id,omitempty" tf:"id,omitempty"`
 
 	// The private IP Address and port (IP:PORT) where this backend can be reached. This must be a private IP address.

@@ -297,18 +297,18 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubeform.dev/provider-linode-api/apis/nodebalancer/v1alpha1.Config":                   schema_provider_linode_api_apis_nodebalancer_v1alpha1_Config(ref),
 		"kubeform.dev/provider-linode-api/apis/nodebalancer/v1alpha1.ConfigList":               schema_provider_linode_api_apis_nodebalancer_v1alpha1_ConfigList(ref),
 		"kubeform.dev/provider-linode-api/apis/nodebalancer/v1alpha1.ConfigSpec":               schema_provider_linode_api_apis_nodebalancer_v1alpha1_ConfigSpec(ref),
-		"kubeform.dev/provider-linode-api/apis/nodebalancer/v1alpha1.ConfigSpec2":              schema_provider_linode_api_apis_nodebalancer_v1alpha1_ConfigSpec2(ref),
 		"kubeform.dev/provider-linode-api/apis/nodebalancer/v1alpha1.ConfigSpecNodeStatus":     schema_provider_linode_api_apis_nodebalancer_v1alpha1_ConfigSpecNodeStatus(ref),
+		"kubeform.dev/provider-linode-api/apis/nodebalancer/v1alpha1.ConfigSpecResource":       schema_provider_linode_api_apis_nodebalancer_v1alpha1_ConfigSpecResource(ref),
 		"kubeform.dev/provider-linode-api/apis/nodebalancer/v1alpha1.ConfigStatus":             schema_provider_linode_api_apis_nodebalancer_v1alpha1_ConfigStatus(ref),
 		"kubeform.dev/provider-linode-api/apis/nodebalancer/v1alpha1.Node":                     schema_provider_linode_api_apis_nodebalancer_v1alpha1_Node(ref),
 		"kubeform.dev/provider-linode-api/apis/nodebalancer/v1alpha1.NodeList":                 schema_provider_linode_api_apis_nodebalancer_v1alpha1_NodeList(ref),
 		"kubeform.dev/provider-linode-api/apis/nodebalancer/v1alpha1.NodeSpec":                 schema_provider_linode_api_apis_nodebalancer_v1alpha1_NodeSpec(ref),
-		"kubeform.dev/provider-linode-api/apis/nodebalancer/v1alpha1.NodeSpec2":                schema_provider_linode_api_apis_nodebalancer_v1alpha1_NodeSpec2(ref),
+		"kubeform.dev/provider-linode-api/apis/nodebalancer/v1alpha1.NodeSpecResource":         schema_provider_linode_api_apis_nodebalancer_v1alpha1_NodeSpecResource(ref),
 		"kubeform.dev/provider-linode-api/apis/nodebalancer/v1alpha1.NodeStatus":               schema_provider_linode_api_apis_nodebalancer_v1alpha1_NodeStatus(ref),
 		"kubeform.dev/provider-linode-api/apis/nodebalancer/v1alpha1.Nodebalancer":             schema_provider_linode_api_apis_nodebalancer_v1alpha1_Nodebalancer(ref),
 		"kubeform.dev/provider-linode-api/apis/nodebalancer/v1alpha1.NodebalancerList":         schema_provider_linode_api_apis_nodebalancer_v1alpha1_NodebalancerList(ref),
 		"kubeform.dev/provider-linode-api/apis/nodebalancer/v1alpha1.NodebalancerSpec":         schema_provider_linode_api_apis_nodebalancer_v1alpha1_NodebalancerSpec(ref),
-		"kubeform.dev/provider-linode-api/apis/nodebalancer/v1alpha1.NodebalancerSpec2":        schema_provider_linode_api_apis_nodebalancer_v1alpha1_NodebalancerSpec2(ref),
+		"kubeform.dev/provider-linode-api/apis/nodebalancer/v1alpha1.NodebalancerSpecResource": schema_provider_linode_api_apis_nodebalancer_v1alpha1_NodebalancerSpecResource(ref),
 		"kubeform.dev/provider-linode-api/apis/nodebalancer/v1alpha1.NodebalancerSpecTransfer": schema_provider_linode_api_apis_nodebalancer_v1alpha1_NodebalancerSpecTransfer(ref),
 		"kubeform.dev/provider-linode-api/apis/nodebalancer/v1alpha1.NodebalancerStatus":       schema_provider_linode_api_apis_nodebalancer_v1alpha1_NodebalancerStatus(ref),
 	}
@@ -14328,180 +14328,17 @@ func schema_provider_linode_api_apis_nodebalancer_v1alpha1_ConfigSpec(ref common
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
-					"updatePolicy": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
-						},
-					},
-					"terminationPolicy": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
-						},
-					},
-					"providerRef": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("k8s.io/api/core/v1.LocalObjectReference"),
-						},
-					},
-					"id": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
-						},
-					},
-					"secretRef": {
-						SchemaProps: spec.SchemaProps{
-							Ref: ref("k8s.io/api/core/v1.LocalObjectReference"),
-						},
-					},
-					"algorithm": {
-						SchemaProps: spec.SchemaProps{
-							Description: "What algorithm this NodeBalancer should use for routing traffic to backends: roundrobin, leastconn, source",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"check": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The type of check to perform against backends to ensure they are serving requests. This is used to determine if backends are up or down. If none no check is performed. connection requires only a connection to the backend to succeed. http and http_body rely on the backend serving HTTP, and that the response returned matches what is expected.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"checkAttempts": {
-						SchemaProps: spec.SchemaProps{
-							Description: "How many times to attempt a check before considering a backend to be down. (1-30)",
-							Type:        []string{"integer"},
-							Format:      "int64",
-						},
-					},
-					"checkBody": {
-						SchemaProps: spec.SchemaProps{
-							Description: "This value must be present in the response body of the check in order for it to pass. If this value is not present in the response body of a check request, the backend is considered to be down",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"checkInterval": {
-						SchemaProps: spec.SchemaProps{
-							Description: "How often, in seconds, to check that backends are up and serving requests.",
-							Type:        []string{"integer"},
-							Format:      "int64",
-						},
-					},
-					"checkPassive": {
-						SchemaProps: spec.SchemaProps{
-							Description: "If true, any response from this backend with a 5xx status code will be enough for it to be considered unhealthy and taken out of rotation.",
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
-					"checkPath": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The URL path to check on each backend. If the backend does not respond to this request it is considered to be down.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"checkTimeout": {
-						SchemaProps: spec.SchemaProps{
-							Description: "How long, in seconds, to wait for a check attempt before considering it failed. (1-30)",
-							Type:        []string{"integer"},
-							Format:      "int64",
-						},
-					},
-					"cipherSuite": {
-						SchemaProps: spec.SchemaProps{
-							Description: "What ciphers to use for SSL connections served by this NodeBalancer. `legacy` is considered insecure and should only be used if necessary.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"nodeStatus": {
-						SchemaProps: spec.SchemaProps{
-							Type: []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubeform.dev/provider-linode-api/apis/nodebalancer/v1alpha1.ConfigSpecNodeStatus"),
-									},
-								},
-							},
-						},
-					},
-					"nodebalancerID": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The ID of the NodeBalancer to access.",
-							Type:        []string{"integer"},
-							Format:      "int64",
-						},
-					},
-					"port": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The TCP port this Config is for. These values must be unique across configs on a single NodeBalancer (you can't have two configs for port 80, for example). While some ports imply some protocols, no enforcement is done and you may configure your NodeBalancer however is useful to you. For example, while port 443 is generally used for HTTPS, you do not need SSL configured to have a NodeBalancer listening on port 443.",
-							Type:        []string{"integer"},
-							Format:      "int64",
-						},
-					},
-					"protocol": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The protocol this port is configured to serve. If this is set to https you must include an ssl_cert and an ssl_key.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"proxyProtocol": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The version of ProxyProtocol to use for the underlying NodeBalancer. This requires protocol to be `tcp`. Valid values are `none`, `v1`, and `v2`.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"sslCommonname": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The read-only common name automatically derived from the SSL certificate assigned to this NodeBalancerConfig. Please refer to this field to verify that the appropriate certificate is assigned to your NodeBalancerConfig.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"sslFingerprint": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The read-only fingerprint automatically derived from the SSL certificate assigned to this NodeBalancerConfig. Please refer to this field to verify that the appropriate certificate is assigned to your NodeBalancerConfig.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"stickiness": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Controls how session stickiness is handled on this port: 'none', 'table', 'http_cookie'",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
 					"kubeformOutput": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("kubeform.dev/provider-linode-api/apis/nodebalancer/v1alpha1.ConfigSpec2"),
+							Ref: ref("kubeform.dev/provider-linode-api/apis/nodebalancer/v1alpha1.ConfigSpecResource"),
 						},
 					},
-				},
-				Required: []string{"providerRef", "nodebalancerID"},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "kubeform.dev/provider-linode-api/apis/nodebalancer/v1alpha1.ConfigSpec2", "kubeform.dev/provider-linode-api/apis/nodebalancer/v1alpha1.ConfigSpecNodeStatus"},
-	}
-}
-
-func schema_provider_linode_api_apis_nodebalancer_v1alpha1_ConfigSpec2(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
+					"resource": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubeform.dev/provider-linode-api/apis/nodebalancer/v1alpha1.ConfigSpecResource"),
+						},
+					},
 					"updatePolicy": {
 						SchemaProps: spec.SchemaProps{
 							Type:   []string{"string"},
@@ -14520,148 +14357,17 @@ func schema_provider_linode_api_apis_nodebalancer_v1alpha1_ConfigSpec2(ref commo
 							Ref:     ref("k8s.io/api/core/v1.LocalObjectReference"),
 						},
 					},
-					"id": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
-						},
-					},
 					"secretRef": {
 						SchemaProps: spec.SchemaProps{
 							Ref: ref("k8s.io/api/core/v1.LocalObjectReference"),
 						},
 					},
-					"algorithm": {
-						SchemaProps: spec.SchemaProps{
-							Description: "What algorithm this NodeBalancer should use for routing traffic to backends: roundrobin, leastconn, source",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"check": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The type of check to perform against backends to ensure they are serving requests. This is used to determine if backends are up or down. If none no check is performed. connection requires only a connection to the backend to succeed. http and http_body rely on the backend serving HTTP, and that the response returned matches what is expected.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"checkAttempts": {
-						SchemaProps: spec.SchemaProps{
-							Description: "How many times to attempt a check before considering a backend to be down. (1-30)",
-							Type:        []string{"integer"},
-							Format:      "int64",
-						},
-					},
-					"checkBody": {
-						SchemaProps: spec.SchemaProps{
-							Description: "This value must be present in the response body of the check in order for it to pass. If this value is not present in the response body of a check request, the backend is considered to be down",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"checkInterval": {
-						SchemaProps: spec.SchemaProps{
-							Description: "How often, in seconds, to check that backends are up and serving requests.",
-							Type:        []string{"integer"},
-							Format:      "int64",
-						},
-					},
-					"checkPassive": {
-						SchemaProps: spec.SchemaProps{
-							Description: "If true, any response from this backend with a 5xx status code will be enough for it to be considered unhealthy and taken out of rotation.",
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
-					"checkPath": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The URL path to check on each backend. If the backend does not respond to this request it is considered to be down.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"checkTimeout": {
-						SchemaProps: spec.SchemaProps{
-							Description: "How long, in seconds, to wait for a check attempt before considering it failed. (1-30)",
-							Type:        []string{"integer"},
-							Format:      "int64",
-						},
-					},
-					"cipherSuite": {
-						SchemaProps: spec.SchemaProps{
-							Description: "What ciphers to use for SSL connections served by this NodeBalancer. `legacy` is considered insecure and should only be used if necessary.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"nodeStatus": {
-						SchemaProps: spec.SchemaProps{
-							Type: []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubeform.dev/provider-linode-api/apis/nodebalancer/v1alpha1.ConfigSpecNodeStatus"),
-									},
-								},
-							},
-						},
-					},
-					"nodebalancerID": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The ID of the NodeBalancer to access.",
-							Type:        []string{"integer"},
-							Format:      "int64",
-						},
-					},
-					"port": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The TCP port this Config is for. These values must be unique across configs on a single NodeBalancer (you can't have two configs for port 80, for example). While some ports imply some protocols, no enforcement is done and you may configure your NodeBalancer however is useful to you. For example, while port 443 is generally used for HTTPS, you do not need SSL configured to have a NodeBalancer listening on port 443.",
-							Type:        []string{"integer"},
-							Format:      "int64",
-						},
-					},
-					"protocol": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The protocol this port is configured to serve. If this is set to https you must include an ssl_cert and an ssl_key.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"proxyProtocol": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The version of ProxyProtocol to use for the underlying NodeBalancer. This requires protocol to be `tcp`. Valid values are `none`, `v1`, and `v2`.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"sslCommonname": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The read-only common name automatically derived from the SSL certificate assigned to this NodeBalancerConfig. Please refer to this field to verify that the appropriate certificate is assigned to your NodeBalancerConfig.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"sslFingerprint": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The read-only fingerprint automatically derived from the SSL certificate assigned to this NodeBalancerConfig. Please refer to this field to verify that the appropriate certificate is assigned to your NodeBalancerConfig.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"stickiness": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Controls how session stickiness is handled on this port: 'none', 'table', 'http_cookie'",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
 				},
-				Required: []string{"providerRef", "nodebalancerID"},
+				Required: []string{"resource", "providerRef"},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "kubeform.dev/provider-linode-api/apis/nodebalancer/v1alpha1.ConfigSpecNodeStatus"},
+			"k8s.io/api/core/v1.LocalObjectReference", "kubeform.dev/provider-linode-api/apis/nodebalancer/v1alpha1.ConfigSpecResource"},
 	}
 }
 
@@ -14688,6 +14394,152 @@ func schema_provider_linode_api_apis_nodebalancer_v1alpha1_ConfigSpecNodeStatus(
 				},
 			},
 		},
+	}
+}
+
+func schema_provider_linode_api_apis_nodebalancer_v1alpha1_ConfigSpecResource(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"id": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"algorithm": {
+						SchemaProps: spec.SchemaProps{
+							Description: "What algorithm this NodeBalancer should use for routing traffic to backends: roundrobin, leastconn, source",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"check": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The type of check to perform against backends to ensure they are serving requests. This is used to determine if backends are up or down. If none no check is performed. connection requires only a connection to the backend to succeed. http and http_body rely on the backend serving HTTP, and that the response returned matches what is expected.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"checkAttempts": {
+						SchemaProps: spec.SchemaProps{
+							Description: "How many times to attempt a check before considering a backend to be down. (1-30)",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"checkBody": {
+						SchemaProps: spec.SchemaProps{
+							Description: "This value must be present in the response body of the check in order for it to pass. If this value is not present in the response body of a check request, the backend is considered to be down",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"checkInterval": {
+						SchemaProps: spec.SchemaProps{
+							Description: "How often, in seconds, to check that backends are up and serving requests.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"checkPassive": {
+						SchemaProps: spec.SchemaProps{
+							Description: "If true, any response from this backend with a 5xx status code will be enough for it to be considered unhealthy and taken out of rotation.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"checkPath": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The URL path to check on each backend. If the backend does not respond to this request it is considered to be down.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"checkTimeout": {
+						SchemaProps: spec.SchemaProps{
+							Description: "How long, in seconds, to wait for a check attempt before considering it failed. (1-30)",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"cipherSuite": {
+						SchemaProps: spec.SchemaProps{
+							Description: "What ciphers to use for SSL connections served by this NodeBalancer. `legacy` is considered insecure and should only be used if necessary.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"nodeStatus": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubeform.dev/provider-linode-api/apis/nodebalancer/v1alpha1.ConfigSpecNodeStatus"),
+									},
+								},
+							},
+						},
+					},
+					"nodebalancerID": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The ID of the NodeBalancer to access.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"port": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The TCP port this Config is for. These values must be unique across configs on a single NodeBalancer (you can't have two configs for port 80, for example). While some ports imply some protocols, no enforcement is done and you may configure your NodeBalancer however is useful to you. For example, while port 443 is generally used for HTTPS, you do not need SSL configured to have a NodeBalancer listening on port 443.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"protocol": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The protocol this port is configured to serve. If this is set to https you must include an ssl_cert and an ssl_key.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"proxyProtocol": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The version of ProxyProtocol to use for the underlying NodeBalancer. This requires protocol to be `tcp`. Valid values are `none`, `v1`, and `v2`.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"sslCommonname": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The read-only common name automatically derived from the SSL certificate assigned to this NodeBalancerConfig. Please refer to this field to verify that the appropriate certificate is assigned to your NodeBalancerConfig.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"sslFingerprint": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The read-only fingerprint automatically derived from the SSL certificate assigned to this NodeBalancerConfig. Please refer to this field to verify that the appropriate certificate is assigned to your NodeBalancerConfig.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"stickiness": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Controls how session stickiness is handled on this port: 'none', 'table', 'http_cookie'",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"nodebalancerID"},
+			},
+		},
+		Dependencies: []string{
+			"kubeform.dev/provider-linode-api/apis/nodebalancer/v1alpha1.ConfigSpecNodeStatus"},
 	}
 }
 
@@ -14832,6 +14684,17 @@ func schema_provider_linode_api_apis_nodebalancer_v1alpha1_NodeSpec(ref common.R
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
+					"kubeformOutput": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubeform.dev/provider-linode-api/apis/nodebalancer/v1alpha1.NodeSpecResource"),
+						},
+					},
+					"resource": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubeform.dev/provider-linode-api/apis/nodebalancer/v1alpha1.NodeSpecResource"),
+						},
+					},
 					"updatePolicy": {
 						SchemaProps: spec.SchemaProps{
 							Type:   []string{"string"},
@@ -14850,99 +14713,21 @@ func schema_provider_linode_api_apis_nodebalancer_v1alpha1_NodeSpec(ref common.R
 							Ref:     ref("k8s.io/api/core/v1.LocalObjectReference"),
 						},
 					},
-					"id": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
-						},
-					},
-					"address": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The private IP Address and port (IP:PORT) where this backend can be reached. This must be a private IP address.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"configID": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The ID of the NodeBalancerConfig to access.",
-							Type:        []string{"integer"},
-							Format:      "int64",
-						},
-					},
-					"label": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The label for this node. This is for display purposes only.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"mode": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The mode this NodeBalancer should use when sending traffic to this backend. If set to `accept` this backend is accepting traffic. If set to `reject` this backend will not receive traffic. If set to `drain` this backend will not receive new traffic, but connections already pinned to it will continue to be routed to it. If set to `backup` this backend will only accept traffic if all other nodes are down.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"nodebalancerID": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The ID of the NodeBalancer to access.",
-							Type:        []string{"integer"},
-							Format:      "int64",
-						},
-					},
-					"status": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The current status of this node, based on the configured checks of its NodeBalancer Config. (unknown, UP, DOWN)",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"weight": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Used when picking a backend to serve a request and is not pinned to a single backend yet. Nodes with a higher weight will receive more traffic. (1-255)",
-							Type:        []string{"integer"},
-							Format:      "int64",
-						},
-					},
-					"kubeformOutput": {
-						SchemaProps: spec.SchemaProps{
-							Ref: ref("kubeform.dev/provider-linode-api/apis/nodebalancer/v1alpha1.NodeSpec2"),
-						},
-					},
 				},
-				Required: []string{"providerRef", "address", "configID", "label", "nodebalancerID"},
+				Required: []string{"resource", "providerRef"},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "kubeform.dev/provider-linode-api/apis/nodebalancer/v1alpha1.NodeSpec2"},
+			"k8s.io/api/core/v1.LocalObjectReference", "kubeform.dev/provider-linode-api/apis/nodebalancer/v1alpha1.NodeSpecResource"},
 	}
 }
 
-func schema_provider_linode_api_apis_nodebalancer_v1alpha1_NodeSpec2(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_provider_linode_api_apis_nodebalancer_v1alpha1_NodeSpecResource(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
-					"updatePolicy": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
-						},
-					},
-					"terminationPolicy": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
-						},
-					},
-					"providerRef": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("k8s.io/api/core/v1.LocalObjectReference"),
-						},
-					},
 					"id": {
 						SchemaProps: spec.SchemaProps{
 							Type:   []string{"string"},
@@ -14999,11 +14784,9 @@ func schema_provider_linode_api_apis_nodebalancer_v1alpha1_NodeSpec2(ref common.
 						},
 					},
 				},
-				Required: []string{"providerRef", "address", "configID", "label", "nodebalancerID"},
+				Required: []string{"address", "configID", "label", "nodebalancerID"},
 			},
 		},
-		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference"},
 	}
 }
 
@@ -15148,6 +14931,17 @@ func schema_provider_linode_api_apis_nodebalancer_v1alpha1_NodebalancerSpec(ref 
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
+					"kubeformOutput": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubeform.dev/provider-linode-api/apis/nodebalancer/v1alpha1.NodebalancerSpecResource"),
+						},
+					},
+					"resource": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubeform.dev/provider-linode-api/apis/nodebalancer/v1alpha1.NodebalancerSpecResource"),
+						},
+					},
 					"updatePolicy": {
 						SchemaProps: spec.SchemaProps{
 							Type:   []string{"string"},
@@ -15166,132 +14960,21 @@ func schema_provider_linode_api_apis_nodebalancer_v1alpha1_NodebalancerSpec(ref 
 							Ref:     ref("k8s.io/api/core/v1.LocalObjectReference"),
 						},
 					},
-					"id": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
-						},
-					},
-					"clientConnThrottle": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Throttle connections per second (0-20). Set to 0 (zero) to disable throttling.",
-							Type:        []string{"integer"},
-							Format:      "int64",
-						},
-					},
-					"created": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
-						},
-					},
-					"hostname": {
-						SchemaProps: spec.SchemaProps{
-							Description: "This NodeBalancer's hostname, ending with .nodebalancer.linode.com",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"ipv4": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The Public IPv4 Address of this NodeBalancer",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"ipv6": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The Public IPv6 Address of this NodeBalancer",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"label": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The label of the Linode NodeBalancer.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"region": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The region where this NodeBalancer will be deployed.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"tags": {
-						SchemaProps: spec.SchemaProps{
-							Description: "An array of tags applied to this object. Tags are for organizational purposes only.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: "",
-										Type:    []string{"string"},
-										Format:  "",
-									},
-								},
-							},
-						},
-					},
-					"transfer": {
-						SchemaProps: spec.SchemaProps{
-							Type: []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubeform.dev/provider-linode-api/apis/nodebalancer/v1alpha1.NodebalancerSpecTransfer"),
-									},
-								},
-							},
-						},
-					},
-					"updated": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
-						},
-					},
-					"kubeformOutput": {
-						SchemaProps: spec.SchemaProps{
-							Ref: ref("kubeform.dev/provider-linode-api/apis/nodebalancer/v1alpha1.NodebalancerSpec2"),
-						},
-					},
 				},
-				Required: []string{"providerRef", "region"},
+				Required: []string{"resource", "providerRef"},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "kubeform.dev/provider-linode-api/apis/nodebalancer/v1alpha1.NodebalancerSpec2", "kubeform.dev/provider-linode-api/apis/nodebalancer/v1alpha1.NodebalancerSpecTransfer"},
+			"k8s.io/api/core/v1.LocalObjectReference", "kubeform.dev/provider-linode-api/apis/nodebalancer/v1alpha1.NodebalancerSpecResource"},
 	}
 }
 
-func schema_provider_linode_api_apis_nodebalancer_v1alpha1_NodebalancerSpec2(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_provider_linode_api_apis_nodebalancer_v1alpha1_NodebalancerSpecResource(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
-					"updatePolicy": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
-						},
-					},
-					"terminationPolicy": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
-						},
-					},
-					"providerRef": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("k8s.io/api/core/v1.LocalObjectReference"),
-						},
-					},
 					"id": {
 						SchemaProps: spec.SchemaProps{
 							Type:   []string{"string"},
@@ -15381,11 +15064,11 @@ func schema_provider_linode_api_apis_nodebalancer_v1alpha1_NodebalancerSpec2(ref
 						},
 					},
 				},
-				Required: []string{"providerRef", "region"},
+				Required: []string{"region"},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "kubeform.dev/provider-linode-api/apis/nodebalancer/v1alpha1.NodebalancerSpecTransfer"},
+			"kubeform.dev/provider-linode-api/apis/nodebalancer/v1alpha1.NodebalancerSpecTransfer"},
 	}
 }
 

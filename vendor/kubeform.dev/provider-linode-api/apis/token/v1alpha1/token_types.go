@@ -42,21 +42,21 @@ type Token struct {
 }
 
 type TokenSpec struct {
-	TokenSpec2 `json:",inline"`
-	// +optional
-	KubeformOutput *TokenSpec2 `json:"kubeformOutput,omitempty" tf:"-"`
-}
+	KubeformOutput *TokenSpecResource `json:"kubeformOutput,omitempty" tf:"-"`
 
-type TokenSpec2 struct {
+	Resource TokenSpecResource `json:"resource" tf:"resource"`
+
 	UpdatePolicy base.UpdatePolicy `json:"updatePolicy,omitempty" tf:"-"`
 
 	TerminationPolicy base.TerminationPolicy `json:"terminationPolicy,omitempty" tf:"-"`
 
 	ProviderRef core.LocalObjectReference `json:"providerRef" tf:"-"`
 
-	ID string `json:"id,omitempty" tf:"id,omitempty"`
-
 	SecretRef *core.LocalObjectReference `json:"secretRef,omitempty" tf:"-"`
+}
+
+type TokenSpecResource struct {
+	ID string `json:"id,omitempty" tf:"id,omitempty"`
 
 	// The date and time this token was created.
 	// +optional

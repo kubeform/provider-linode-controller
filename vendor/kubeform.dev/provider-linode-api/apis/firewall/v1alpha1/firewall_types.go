@@ -41,12 +41,6 @@ type Firewall struct {
 	Status            FirewallStatus `json:"status,omitempty"`
 }
 
-type FirewallSpec struct {
-	FirewallSpec2 `json:",inline"`
-	// +optional
-	KubeformOutput *FirewallSpec2 `json:"kubeformOutput,omitempty" tf:"-"`
-}
-
 type FirewallSpecDevices struct {
 	// The ID of the underlying entity for the firewall device (e.g. the Linode's ID).
 	// +optional
@@ -103,13 +97,19 @@ type FirewallSpecOutbound struct {
 	Protocol *string `json:"protocol" tf:"protocol"`
 }
 
-type FirewallSpec2 struct {
+type FirewallSpec struct {
+	KubeformOutput *FirewallSpecResource `json:"kubeformOutput,omitempty" tf:"-"`
+
+	Resource FirewallSpecResource `json:"resource" tf:"resource"`
+
 	UpdatePolicy base.UpdatePolicy `json:"updatePolicy,omitempty" tf:"-"`
 
 	TerminationPolicy base.TerminationPolicy `json:"terminationPolicy,omitempty" tf:"-"`
 
 	ProviderRef core.LocalObjectReference `json:"providerRef" tf:"-"`
+}
 
+type FirewallSpecResource struct {
 	ID string `json:"id,omitempty" tf:"id,omitempty"`
 
 	// The devices associated with this firewall.

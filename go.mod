@@ -22,7 +22,7 @@ require (
 	k8s.io/klog/v2 v2.8.0
 	kmodules.xyz/client-go v0.0.0-20210514054158-27e164b43474
 	kmodules.xyz/constants v0.0.0-20210218100002-2c304bfda278
-	kubeform.dev/provider-linode-api v0.0.0-20210617050532-e448227cc491
+	kubeform.dev/provider-linode-api v0.0.0-20210623063831-eadad8d438dc
 	sigs.k8s.io/cli-utils v0.25.0
 	sigs.k8s.io/controller-runtime v0.9.0
 )

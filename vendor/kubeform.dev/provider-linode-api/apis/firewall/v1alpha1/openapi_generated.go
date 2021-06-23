@@ -297,10 +297,10 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubeform.dev/provider-linode-api/apis/firewall/v1alpha1.Firewall":             schema_provider_linode_api_apis_firewall_v1alpha1_Firewall(ref),
 		"kubeform.dev/provider-linode-api/apis/firewall/v1alpha1.FirewallList":         schema_provider_linode_api_apis_firewall_v1alpha1_FirewallList(ref),
 		"kubeform.dev/provider-linode-api/apis/firewall/v1alpha1.FirewallSpec":         schema_provider_linode_api_apis_firewall_v1alpha1_FirewallSpec(ref),
-		"kubeform.dev/provider-linode-api/apis/firewall/v1alpha1.FirewallSpec2":        schema_provider_linode_api_apis_firewall_v1alpha1_FirewallSpec2(ref),
 		"kubeform.dev/provider-linode-api/apis/firewall/v1alpha1.FirewallSpecDevices":  schema_provider_linode_api_apis_firewall_v1alpha1_FirewallSpecDevices(ref),
 		"kubeform.dev/provider-linode-api/apis/firewall/v1alpha1.FirewallSpecInbound":  schema_provider_linode_api_apis_firewall_v1alpha1_FirewallSpecInbound(ref),
 		"kubeform.dev/provider-linode-api/apis/firewall/v1alpha1.FirewallSpecOutbound": schema_provider_linode_api_apis_firewall_v1alpha1_FirewallSpecOutbound(ref),
+		"kubeform.dev/provider-linode-api/apis/firewall/v1alpha1.FirewallSpecResource": schema_provider_linode_api_apis_firewall_v1alpha1_FirewallSpecResource(ref),
 		"kubeform.dev/provider-linode-api/apis/firewall/v1alpha1.FirewallStatus":       schema_provider_linode_api_apis_firewall_v1alpha1_FirewallStatus(ref),
 	}
 }
@@ -14319,157 +14319,17 @@ func schema_provider_linode_api_apis_firewall_v1alpha1_FirewallSpec(ref common.R
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
-					"updatePolicy": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
-						},
-					},
-					"terminationPolicy": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
-						},
-					},
-					"providerRef": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("k8s.io/api/core/v1.LocalObjectReference"),
-						},
-					},
-					"id": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
-						},
-					},
-					"devices": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The devices associated with this firewall.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubeform.dev/provider-linode-api/apis/firewall/v1alpha1.FirewallSpecDevices"),
-									},
-								},
-							},
-						},
-					},
-					"disabled": {
-						SchemaProps: spec.SchemaProps{
-							Description: "If true, the Firewall is inactive.",
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
-					"inbound": {
-						SchemaProps: spec.SchemaProps{
-							Description: "A firewall rule that specifies what inbound network traffic is allowed.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubeform.dev/provider-linode-api/apis/firewall/v1alpha1.FirewallSpecInbound"),
-									},
-								},
-							},
-						},
-					},
-					"inboundPolicy": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The default behavior for inbound traffic. This setting can be overridden by updating the inbound.action property for an individual Firewall Rule.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"label": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The label for the Firewall. For display purposes only. If no label is provided, a default will be assigned.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"linodes": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The IDs of Linodes to apply this firewall to.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: 0,
-										Type:    []string{"integer"},
-										Format:  "int64",
-									},
-								},
-							},
-						},
-					},
-					"outbound": {
-						SchemaProps: spec.SchemaProps{
-							Description: "A firewall rule that specifies what outbound network traffic is allowed.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubeform.dev/provider-linode-api/apis/firewall/v1alpha1.FirewallSpecOutbound"),
-									},
-								},
-							},
-						},
-					},
-					"outboundPolicy": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The default behavior for outbound traffic. This setting can be overridden by updating the outbound.action property for an individual Firewall Rule.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"status": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The status of the firewall.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"tags": {
-						SchemaProps: spec.SchemaProps{
-							Description: "An array of tags applied to this object. Tags are for organizational purposes only.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: "",
-										Type:    []string{"string"},
-										Format:  "",
-									},
-								},
-							},
-						},
-					},
 					"kubeformOutput": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("kubeform.dev/provider-linode-api/apis/firewall/v1alpha1.FirewallSpec2"),
+							Ref: ref("kubeform.dev/provider-linode-api/apis/firewall/v1alpha1.FirewallSpecResource"),
 						},
 					},
-				},
-				Required: []string{"providerRef", "inboundPolicy", "label", "outboundPolicy"},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "kubeform.dev/provider-linode-api/apis/firewall/v1alpha1.FirewallSpec2", "kubeform.dev/provider-linode-api/apis/firewall/v1alpha1.FirewallSpecDevices", "kubeform.dev/provider-linode-api/apis/firewall/v1alpha1.FirewallSpecInbound", "kubeform.dev/provider-linode-api/apis/firewall/v1alpha1.FirewallSpecOutbound"},
-	}
-}
-
-func schema_provider_linode_api_apis_firewall_v1alpha1_FirewallSpec2(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
+					"resource": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubeform.dev/provider-linode-api/apis/firewall/v1alpha1.FirewallSpecResource"),
+						},
+					},
 					"updatePolicy": {
 						SchemaProps: spec.SchemaProps{
 							Type:   []string{"string"},
@@ -14488,125 +14348,12 @@ func schema_provider_linode_api_apis_firewall_v1alpha1_FirewallSpec2(ref common.
 							Ref:     ref("k8s.io/api/core/v1.LocalObjectReference"),
 						},
 					},
-					"id": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
-						},
-					},
-					"devices": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The devices associated with this firewall.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubeform.dev/provider-linode-api/apis/firewall/v1alpha1.FirewallSpecDevices"),
-									},
-								},
-							},
-						},
-					},
-					"disabled": {
-						SchemaProps: spec.SchemaProps{
-							Description: "If true, the Firewall is inactive.",
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
-					"inbound": {
-						SchemaProps: spec.SchemaProps{
-							Description: "A firewall rule that specifies what inbound network traffic is allowed.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubeform.dev/provider-linode-api/apis/firewall/v1alpha1.FirewallSpecInbound"),
-									},
-								},
-							},
-						},
-					},
-					"inboundPolicy": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The default behavior for inbound traffic. This setting can be overridden by updating the inbound.action property for an individual Firewall Rule.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"label": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The label for the Firewall. For display purposes only. If no label is provided, a default will be assigned.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"linodes": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The IDs of Linodes to apply this firewall to.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: 0,
-										Type:    []string{"integer"},
-										Format:  "int64",
-									},
-								},
-							},
-						},
-					},
-					"outbound": {
-						SchemaProps: spec.SchemaProps{
-							Description: "A firewall rule that specifies what outbound network traffic is allowed.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubeform.dev/provider-linode-api/apis/firewall/v1alpha1.FirewallSpecOutbound"),
-									},
-								},
-							},
-						},
-					},
-					"outboundPolicy": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The default behavior for outbound traffic. This setting can be overridden by updating the outbound.action property for an individual Firewall Rule.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"status": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The status of the firewall.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"tags": {
-						SchemaProps: spec.SchemaProps{
-							Description: "An array of tags applied to this object. Tags are for organizational purposes only.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: "",
-										Type:    []string{"string"},
-										Format:  "",
-									},
-								},
-							},
-						},
-					},
 				},
-				Required: []string{"providerRef", "inboundPolicy", "label", "outboundPolicy"},
+				Required: []string{"resource", "providerRef"},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "kubeform.dev/provider-linode-api/apis/firewall/v1alpha1.FirewallSpecDevices", "kubeform.dev/provider-linode-api/apis/firewall/v1alpha1.FirewallSpecInbound", "kubeform.dev/provider-linode-api/apis/firewall/v1alpha1.FirewallSpecOutbound"},
+			"k8s.io/api/core/v1.LocalObjectReference", "kubeform.dev/provider-linode-api/apis/firewall/v1alpha1.FirewallSpecResource"},
 	}
 }
 
@@ -14796,6 +14543,134 @@ func schema_provider_linode_api_apis_firewall_v1alpha1_FirewallSpecOutbound(ref 
 				Required: []string{"action", "label", "protocol"},
 			},
 		},
+	}
+}
+
+func schema_provider_linode_api_apis_firewall_v1alpha1_FirewallSpecResource(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"id": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"devices": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The devices associated with this firewall.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubeform.dev/provider-linode-api/apis/firewall/v1alpha1.FirewallSpecDevices"),
+									},
+								},
+							},
+						},
+					},
+					"disabled": {
+						SchemaProps: spec.SchemaProps{
+							Description: "If true, the Firewall is inactive.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"inbound": {
+						SchemaProps: spec.SchemaProps{
+							Description: "A firewall rule that specifies what inbound network traffic is allowed.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubeform.dev/provider-linode-api/apis/firewall/v1alpha1.FirewallSpecInbound"),
+									},
+								},
+							},
+						},
+					},
+					"inboundPolicy": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The default behavior for inbound traffic. This setting can be overridden by updating the inbound.action property for an individual Firewall Rule.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"label": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The label for the Firewall. For display purposes only. If no label is provided, a default will be assigned.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"linodes": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The IDs of Linodes to apply this firewall to.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: 0,
+										Type:    []string{"integer"},
+										Format:  "int64",
+									},
+								},
+							},
+						},
+					},
+					"outbound": {
+						SchemaProps: spec.SchemaProps{
+							Description: "A firewall rule that specifies what outbound network traffic is allowed.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubeform.dev/provider-linode-api/apis/firewall/v1alpha1.FirewallSpecOutbound"),
+									},
+								},
+							},
+						},
+					},
+					"outboundPolicy": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The default behavior for outbound traffic. This setting can be overridden by updating the outbound.action property for an individual Firewall Rule.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The status of the firewall.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"tags": {
+						SchemaProps: spec.SchemaProps{
+							Description: "An array of tags applied to this object. Tags are for organizational purposes only.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"inboundPolicy", "label", "outboundPolicy"},
+			},
+		},
+		Dependencies: []string{
+			"kubeform.dev/provider-linode-api/apis/firewall/v1alpha1.FirewallSpecDevices", "kubeform.dev/provider-linode-api/apis/firewall/v1alpha1.FirewallSpecInbound", "kubeform.dev/provider-linode-api/apis/firewall/v1alpha1.FirewallSpecOutbound"},
 	}
 }
 

@@ -231,8 +231,6 @@ github.com/onsi/ginkgo/types
 ## explicit
 github.com/onsi/gomega
 github.com/onsi/gomega/format
-github.com/onsi/gomega/gbytes
-github.com/onsi/gomega/gexec
 github.com/onsi/gomega/internal/assertion
 github.com/onsi/gomega/internal/asyncassertion
 github.com/onsi/gomega/internal/defaults
@@ -651,7 +649,7 @@ kmodules.xyz/client-go/meta
 kmodules.xyz/constants/linode
 # kubeform.dev/apimachinery v0.0.0-20210615065315-df2f79694cbe
 kubeform.dev/apimachinery/api/v1alpha1
-# kubeform.dev/provider-linode-api v0.0.0-20210617050532-e448227cc491
+# kubeform.dev/provider-linode-api v0.0.0-20210623063831-eadad8d438dc
 ## explicit
 kubeform.dev/provider-linode-api/apis/domain
 kubeform.dev/provider-linode-api/apis/domain/v1alpha1

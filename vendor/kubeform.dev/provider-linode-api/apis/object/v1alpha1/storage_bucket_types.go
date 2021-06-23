@@ -41,12 +41,6 @@ type StorageBucket struct {
 	Status            StorageBucketStatus `json:"status,omitempty"`
 }
 
-type StorageBucketSpec struct {
-	StorageBucketSpec2 `json:",inline"`
-	// +optional
-	KubeformOutput *StorageBucketSpec2 `json:"kubeformOutput,omitempty" tf:"-"`
-}
-
 type StorageBucketSpecCert struct {
 	// The Base64 encoded and PEM formatted SSL certificate.
 	Certificate *string `json:"-" sensitive:"true" tf:"certificate"`
@@ -91,16 +85,22 @@ type StorageBucketSpecLifecycleRule struct {
 	Prefix *string `json:"prefix,omitempty" tf:"prefix"`
 }
 
-type StorageBucketSpec2 struct {
+type StorageBucketSpec struct {
+	KubeformOutput *StorageBucketSpecResource `json:"kubeformOutput,omitempty" tf:"-"`
+
+	Resource StorageBucketSpecResource `json:"resource" tf:"resource"`
+
 	UpdatePolicy base.UpdatePolicy `json:"updatePolicy,omitempty" tf:"-"`
 
 	TerminationPolicy base.TerminationPolicy `json:"terminationPolicy,omitempty" tf:"-"`
 
 	ProviderRef core.LocalObjectReference `json:"providerRef" tf:"-"`
 
-	ID string `json:"id,omitempty" tf:"id,omitempty"`
-
 	SecretRef *core.LocalObjectReference `json:"secretRef,omitempty" tf:"-"`
+}
+
+type StorageBucketSpecResource struct {
+	ID string `json:"id,omitempty" tf:"id,omitempty"`
 
 	// +optional
 	AccessKey *string `json:"accessKey,omitempty" tf:"access_key"`

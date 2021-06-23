@@ -42,18 +42,18 @@ type Record struct {
 }
 
 type RecordSpec struct {
-	RecordSpec2 `json:",inline"`
-	// +optional
-	KubeformOutput *RecordSpec2 `json:"kubeformOutput,omitempty" tf:"-"`
-}
+	KubeformOutput *RecordSpecResource `json:"kubeformOutput,omitempty" tf:"-"`
 
-type RecordSpec2 struct {
+	Resource RecordSpecResource `json:"resource" tf:"resource"`
+
 	UpdatePolicy base.UpdatePolicy `json:"updatePolicy,omitempty" tf:"-"`
 
 	TerminationPolicy base.TerminationPolicy `json:"terminationPolicy,omitempty" tf:"-"`
 
 	ProviderRef core.LocalObjectReference `json:"providerRef" tf:"-"`
+}
 
+type RecordSpecResource struct {
 	ID string `json:"id,omitempty" tf:"id,omitempty"`
 
 	// The ID of the Domain to access.

@@ -41,12 +41,6 @@ type Cluster struct {
 	Status            ClusterStatus `json:"status,omitempty"`
 }
 
-type ClusterSpec struct {
-	ClusterSpec2 `json:",inline"`
-	// +optional
-	KubeformOutput *ClusterSpec2 `json:"kubeformOutput,omitempty" tf:"-"`
-}
-
 type ClusterSpecPoolNodes struct {
 	// The ID of the node.
 	// +optional
@@ -72,18 +66,24 @@ type ClusterSpecPool struct {
 	Type *string `json:"type" tf:"type"`
 }
 
-type ClusterSpec2 struct {
+type ClusterSpec struct {
+	KubeformOutput *ClusterSpecResource `json:"kubeformOutput,omitempty" tf:"-"`
+
+	Resource ClusterSpecResource `json:"resource" tf:"resource"`
+
 	UpdatePolicy base.UpdatePolicy `json:"updatePolicy,omitempty" tf:"-"`
 
 	TerminationPolicy base.TerminationPolicy `json:"terminationPolicy,omitempty" tf:"-"`
 
-	Timeouts *base.ResourceTimeout `json:"timeouts,omitempty" tf:"timeouts"`
-
 	ProviderRef core.LocalObjectReference `json:"providerRef" tf:"-"`
 
-	ID string `json:"id,omitempty" tf:"id,omitempty"`
-
 	SecretRef *core.LocalObjectReference `json:"secretRef,omitempty" tf:"-"`
+}
+
+type ClusterSpecResource struct {
+	Timeouts *base.ResourceTimeout `json:"timeouts,omitempty" tf:"timeouts"`
+
+	ID string `json:"id,omitempty" tf:"id,omitempty"`
 
 	// The API endpoints for the cluster.
 	// +optional

@@ -41,12 +41,6 @@ type StorageKey struct {
 	Status            StorageKeyStatus `json:"status,omitempty"`
 }
 
-type StorageKeySpec struct {
-	StorageKeySpec2 `json:",inline"`
-	// +optional
-	KubeformOutput *StorageKeySpec2 `json:"kubeformOutput,omitempty" tf:"-"`
-}
-
 type StorageKeySpecBucketAccess struct {
 	// The unique label of the bucket to which the key will grant limited access.
 	BucketName *string `json:"bucketName" tf:"bucket_name"`
@@ -56,16 +50,22 @@ type StorageKeySpecBucketAccess struct {
 	Permissions *string `json:"permissions" tf:"permissions"`
 }
 
-type StorageKeySpec2 struct {
+type StorageKeySpec struct {
+	KubeformOutput *StorageKeySpecResource `json:"kubeformOutput,omitempty" tf:"-"`
+
+	Resource StorageKeySpecResource `json:"resource" tf:"resource"`
+
 	UpdatePolicy base.UpdatePolicy `json:"updatePolicy,omitempty" tf:"-"`
 
 	TerminationPolicy base.TerminationPolicy `json:"terminationPolicy,omitempty" tf:"-"`
 
 	ProviderRef core.LocalObjectReference `json:"providerRef" tf:"-"`
 
-	ID string `json:"id,omitempty" tf:"id,omitempty"`
-
 	SecretRef *core.LocalObjectReference `json:"secretRef,omitempty" tf:"-"`
+}
+
+type StorageKeySpecResource struct {
+	ID string `json:"id,omitempty" tf:"id,omitempty"`
 
 	// This keypair's access key. This is not secret.
 	// +optional

@@ -42,18 +42,18 @@ type StorageObject struct {
 }
 
 type StorageObjectSpec struct {
-	StorageObjectSpec2 `json:",inline"`
-	// +optional
-	KubeformOutput *StorageObjectSpec2 `json:"kubeformOutput,omitempty" tf:"-"`
-}
+	KubeformOutput *StorageObjectSpecResource `json:"kubeformOutput,omitempty" tf:"-"`
 
-type StorageObjectSpec2 struct {
+	Resource StorageObjectSpecResource `json:"resource" tf:"resource"`
+
 	UpdatePolicy base.UpdatePolicy `json:"updatePolicy,omitempty" tf:"-"`
 
 	TerminationPolicy base.TerminationPolicy `json:"terminationPolicy,omitempty" tf:"-"`
 
 	ProviderRef core.LocalObjectReference `json:"providerRef" tf:"-"`
+}
 
+type StorageObjectSpecResource struct {
 	ID string `json:"id,omitempty" tf:"id,omitempty"`
 
 	AccessKey *string `json:"accessKey" tf:"access_key"`

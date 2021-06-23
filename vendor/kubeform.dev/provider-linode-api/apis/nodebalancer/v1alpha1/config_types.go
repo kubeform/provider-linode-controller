@@ -41,12 +41,6 @@ type Config struct {
 	Status            ConfigStatus `json:"status,omitempty"`
 }
 
-type ConfigSpec struct {
-	ConfigSpec2 `json:",inline"`
-	// +optional
-	KubeformOutput *ConfigSpec2 `json:"kubeformOutput,omitempty" tf:"-"`
-}
-
 type ConfigSpecNodeStatus struct {
 	// The number of backends considered to be 'DOWN' and unhealthy. These are not in rotation, and not serving requests.
 	// +optional
@@ -56,16 +50,22 @@ type ConfigSpecNodeStatus struct {
 	Up *int64 `json:"up,omitempty" tf:"up"`
 }
 
-type ConfigSpec2 struct {
+type ConfigSpec struct {
+	KubeformOutput *ConfigSpecResource `json:"kubeformOutput,omitempty" tf:"-"`
+
+	Resource ConfigSpecResource `json:"resource" tf:"resource"`
+
 	UpdatePolicy base.UpdatePolicy `json:"updatePolicy,omitempty" tf:"-"`
 
 	TerminationPolicy base.TerminationPolicy `json:"terminationPolicy,omitempty" tf:"-"`
 
 	ProviderRef core.LocalObjectReference `json:"providerRef" tf:"-"`
 
-	ID string `json:"id,omitempty" tf:"id,omitempty"`
-
 	SecretRef *core.LocalObjectReference `json:"secretRef,omitempty" tf:"-"`
+}
+
+type ConfigSpecResource struct {
+	ID string `json:"id,omitempty" tf:"id,omitempty"`
 
 	// What algorithm this NodeBalancer should use for routing traffic to backends: roundrobin, leastconn, source
 	// +optional

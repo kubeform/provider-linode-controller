@@ -42,18 +42,18 @@ type Sshkey struct {
 }
 
 type SshkeySpec struct {
-	SshkeySpec2 `json:",inline"`
-	// +optional
-	KubeformOutput *SshkeySpec2 `json:"kubeformOutput,omitempty" tf:"-"`
-}
+	KubeformOutput *SshkeySpecResource `json:"kubeformOutput,omitempty" tf:"-"`
 
-type SshkeySpec2 struct {
+	Resource SshkeySpecResource `json:"resource" tf:"resource"`
+
 	UpdatePolicy base.UpdatePolicy `json:"updatePolicy,omitempty" tf:"-"`
 
 	TerminationPolicy base.TerminationPolicy `json:"terminationPolicy,omitempty" tf:"-"`
 
 	ProviderRef core.LocalObjectReference `json:"providerRef" tf:"-"`
+}
 
+type SshkeySpecResource struct {
 	ID string `json:"id,omitempty" tf:"id,omitempty"`
 
 	// The date this key was added.

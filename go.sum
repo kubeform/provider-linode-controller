@@ -1201,8 +1201,8 @@ kmodules.xyz/constants v0.0.0-20210218100002-2c304bfda278 h1:sFmqh4EaiZ4K2FkkGvr
 kmodules.xyz/constants v0.0.0-20210218100002-2c304bfda278/go.mod h1:DbiFk1bJ1KEO94t1SlAn7tzc+Zz95rSXgyUKa2nzPmY=
 kubeform.dev/apimachinery v0.0.0-20210615065315-df2f79694cbe h1:MMgFu+iGoXVEqDOgRO9Sf/fCerEBFbPi71YsEgROjKg=
 kubeform.dev/apimachinery v0.0.0-20210615065315-df2f79694cbe/go.mod h1:LXe1/1+KyH3rE/xbO9eKf64xZyoPKumxXP6yvGMJjnY=
-kubeform.dev/provider-linode-api v0.0.0-20210617050532-e448227cc491 h1:K2fzdIZf1ZO8znr5s3/3hU42keU539TprQBzTaC4vco=
-kubeform.dev/provider-linode-api v0.0.0-20210617050532-e448227cc491/go.mod h1:jEZe3pDxv8/VGboxwUBSCwEgBj6KAKuCuKmDlSJ2iZE=
+kubeform.dev/provider-linode-api v0.0.0-20210623063831-eadad8d438dc h1:kUTK1xHkM9zzgGU4RESbrOvTygU7U0cn67v8dLlISKI=
+kubeform.dev/provider-linode-api v0.0.0-20210623063831-eadad8d438dc/go.mod h1:jEZe3pDxv8/VGboxwUBSCwEgBj6KAKuCuKmDlSJ2iZE=
 rsc.io/binaryregexp v0.2.0/go.mod h1:qTv7/COck+e2FymRvadv62gMdZztPaShugOCi3I+8D8=
 rsc.io/quote/v3 v3.1.0/go.mod h1:yEA65RcK8LyAZtP9Kv3t0HmxON59tX3rD+tICJqUlj0=
 rsc.io/sampler v1.3.0/go.mod h1:T1hPZKmBbMNahiBKFy5HrXp6adAjACjK9JXDnKaTXpA=

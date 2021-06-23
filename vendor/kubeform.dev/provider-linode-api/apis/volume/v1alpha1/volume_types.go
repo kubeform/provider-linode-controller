@@ -42,19 +42,19 @@ type Volume struct {
 }
 
 type VolumeSpec struct {
-	VolumeSpec2 `json:",inline"`
-	// +optional
-	KubeformOutput *VolumeSpec2 `json:"kubeformOutput,omitempty" tf:"-"`
-}
+	KubeformOutput *VolumeSpecResource `json:"kubeformOutput,omitempty" tf:"-"`
 
-type VolumeSpec2 struct {
+	Resource VolumeSpecResource `json:"resource" tf:"resource"`
+
 	UpdatePolicy base.UpdatePolicy `json:"updatePolicy,omitempty" tf:"-"`
 
 	TerminationPolicy base.TerminationPolicy `json:"terminationPolicy,omitempty" tf:"-"`
 
-	Timeouts *base.ResourceTimeout `json:"timeouts,omitempty" tf:"timeouts"`
-
 	ProviderRef core.LocalObjectReference `json:"providerRef" tf:"-"`
+}
+
+type VolumeSpecResource struct {
+	Timeouts *base.ResourceTimeout `json:"timeouts,omitempty" tf:"timeouts"`
 
 	ID string `json:"id,omitempty" tf:"id,omitempty"`
 

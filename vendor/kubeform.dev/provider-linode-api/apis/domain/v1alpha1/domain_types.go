@@ -42,18 +42,18 @@ type Domain struct {
 }
 
 type DomainSpec struct {
-	DomainSpec2 `json:",inline"`
-	// +optional
-	KubeformOutput *DomainSpec2 `json:"kubeformOutput,omitempty" tf:"-"`
-}
+	KubeformOutput *DomainSpecResource `json:"kubeformOutput,omitempty" tf:"-"`
 
-type DomainSpec2 struct {
+	Resource DomainSpecResource `json:"resource" tf:"resource"`
+
 	UpdatePolicy base.UpdatePolicy `json:"updatePolicy,omitempty" tf:"-"`
 
 	TerminationPolicy base.TerminationPolicy `json:"terminationPolicy,omitempty" tf:"-"`
 
 	ProviderRef core.LocalObjectReference `json:"providerRef" tf:"-"`
+}
 
+type DomainSpecResource struct {
 	ID string `json:"id,omitempty" tf:"id,omitempty"`
 
 	// The list of IPs that may perform a zone transfer for this Domain. This is potentially dangerous, and should be set to an empty list unless you intend to use it.

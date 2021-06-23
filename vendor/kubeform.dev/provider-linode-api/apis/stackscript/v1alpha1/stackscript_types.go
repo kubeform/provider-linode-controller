@@ -41,12 +41,6 @@ type Stackscript struct {
 	Status            StackscriptStatus `json:"status,omitempty"`
 }
 
-type StackscriptSpec struct {
-	StackscriptSpec2 `json:",inline"`
-	// +optional
-	KubeformOutput *StackscriptSpec2 `json:"kubeformOutput,omitempty" tf:"-"`
-}
-
 type StackscriptSpecUserDefinedFields struct {
 	// +optional
 	Default *string `json:"default,omitempty" tf:"default"`
@@ -62,13 +56,19 @@ type StackscriptSpecUserDefinedFields struct {
 	OneOf *string `json:"oneOf,omitempty" tf:"one_of"`
 }
 
-type StackscriptSpec2 struct {
+type StackscriptSpec struct {
+	KubeformOutput *StackscriptSpecResource `json:"kubeformOutput,omitempty" tf:"-"`
+
+	Resource StackscriptSpecResource `json:"resource" tf:"resource"`
+
 	UpdatePolicy base.UpdatePolicy `json:"updatePolicy,omitempty" tf:"-"`
 
 	TerminationPolicy base.TerminationPolicy `json:"terminationPolicy,omitempty" tf:"-"`
 
 	ProviderRef core.LocalObjectReference `json:"providerRef" tf:"-"`
+}
 
+type StackscriptSpecResource struct {
 	ID string `json:"id,omitempty" tf:"id,omitempty"`
 
 	// The date this StackScript was created.

@@ -72,7 +72,7 @@ func reconcile(rClient client.Client, provider *tfschema.Provider, ctx context.C
 	}
 
 	// Get object ID
-	_, found, err := unstructured.NestedString(unstructuredObj.Object, "spec", "id")
+	_, found, err := unstructured.NestedString(unstructuredObj.Object, "spec", "resource", "id")
 	if err != nil {
 		return err
 	}
@@ -148,7 +148,7 @@ func reconcile(rClient client.Client, provider *tfschema.Provider, ctx context.C
 		}
 
 		// set the id value in unstructuredObj object
-		err = unstructured.SetNestedField(unstructuredObj.Object, newStateVal.GetAttr("id").AsString(), "spec", "id")
+		err = unstructured.SetNestedField(unstructuredObj.Object, newStateVal.GetAttr("id").AsString(), "spec", "resource", "id")
 		if err != nil {
 			return err
 		}
@@ -198,7 +198,7 @@ func reconcile(rClient client.Client, provider *tfschema.Provider, ctx context.C
 		}
 
 		// set the id value in unstructuredObj object
-		err = unstructured.SetNestedField(unstructuredObj.Object, newStateVal.GetAttr("id").AsString(), "spec", "id")
+		err = unstructured.SetNestedField(unstructuredObj.Object, newStateVal.GetAttr("id").AsString(), "spec", "resource", "id")
 		if err != nil {
 			return err
 		}
@@ -217,7 +217,7 @@ func reconcile(rClient client.Client, provider *tfschema.Provider, ctx context.C
 
 	if updated {
 		//set the id value in unstructuredObj object
-		err = unstructured.SetNestedField(unstructuredObj.Object, newStateVal.GetAttr("id").AsString(), "spec", "id")
+		err = unstructured.SetNestedField(unstructuredObj.Object, newStateVal.GetAttr("id").AsString(), "spec", "resource", "id")
 		if err != nil {
 			return err
 		}
@@ -258,12 +258,7 @@ func initialUpdateStatus(rClient client.Client, ctx context.Context, gv schema.G
 		return err
 	}
 
-	err = updateStatus(rClient, ctx, obj, phase)
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return updateStatus(rClient, ctx, obj, phase)
 }
 
 func finalUpdateStatus(rClient client.Client, ctx context.Context, gv schema.GroupVersion, obj *unstructured.Unstructured) error {
@@ -643,8 +638,8 @@ func getSpecWithSensitiveData(gv schema.GroupVersion, rClient client.Client, ctx
 	}
 
 	typedStruct := structs.New(typedObj)
-	spec := reflect.ValueOf(typedStruct.Field("Spec").Value())
-	specType := reflect.TypeOf(typedStruct.Field("Spec").Value())
+	spec := reflect.ValueOf(typedStruct.Field("Spec").Field("Resource").Value())
+	specType := reflect.TypeOf(typedStruct.Field("Spec").Field("Resource").Value())
 	specValue := reflect.New(specType)
 	specValue.Elem().Set(spec)
 
@@ -773,9 +768,9 @@ func updateStateField(rClient client.Client, ctx context.Context, intrfc map[str
 		return err
 	}
 
-	raw = append(raw, []byte(`{"spec":`)...)
+	raw = append(raw, []byte(`{"spec":{ "resource":`)...)
 	raw = append(raw, jsonByte...)
-	raw = append(raw, []byte(`}`)...)
+	raw = append(raw, []byte(`}}`)...)
 
 	err = jsonit.Unmarshal(raw, &typedObj)
 	if err != nil {
@@ -784,7 +779,7 @@ func updateStateField(rClient client.Client, ctx context.Context, intrfc map[str
 
 	s := structs.New(typedObj)
 
-	secretData, err := processSensitiveFields(reflect.TypeOf(s.Field("Spec").Value()).Field(0).Type, reflect.ValueOf(s.Field("Spec").Value()).Field(0))
+	secretData, err := processSensitiveFields(reflect.TypeOf(s.Field("Spec").Field("Resource").Value()), reflect.ValueOf(s.Field("Spec").Field("Resource").Value()))
 	if err != nil {
 		return err
 	}
@@ -838,7 +833,7 @@ func updateStateField(rClient client.Client, ctx context.Context, intrfc map[str
 		}
 	}
 
-	output := s.Field("Spec").Value()
+	output := s.Field("Spec").Field("Resource").Value()
 	specByte, err := json.Marshal(output)
 	if err != nil {
 		return err

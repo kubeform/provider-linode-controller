@@ -297,9 +297,9 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubeform.dev/provider-linode-api/apis/lke/v1alpha1.Cluster":              schema_provider_linode_api_apis_lke_v1alpha1_Cluster(ref),
 		"kubeform.dev/provider-linode-api/apis/lke/v1alpha1.ClusterList":          schema_provider_linode_api_apis_lke_v1alpha1_ClusterList(ref),
 		"kubeform.dev/provider-linode-api/apis/lke/v1alpha1.ClusterSpec":          schema_provider_linode_api_apis_lke_v1alpha1_ClusterSpec(ref),
-		"kubeform.dev/provider-linode-api/apis/lke/v1alpha1.ClusterSpec2":         schema_provider_linode_api_apis_lke_v1alpha1_ClusterSpec2(ref),
 		"kubeform.dev/provider-linode-api/apis/lke/v1alpha1.ClusterSpecPool":      schema_provider_linode_api_apis_lke_v1alpha1_ClusterSpecPool(ref),
 		"kubeform.dev/provider-linode-api/apis/lke/v1alpha1.ClusterSpecPoolNodes": schema_provider_linode_api_apis_lke_v1alpha1_ClusterSpecPoolNodes(ref),
+		"kubeform.dev/provider-linode-api/apis/lke/v1alpha1.ClusterSpecResource":  schema_provider_linode_api_apis_lke_v1alpha1_ClusterSpecResource(ref),
 		"kubeform.dev/provider-linode-api/apis/lke/v1alpha1.ClusterStatus":        schema_provider_linode_api_apis_lke_v1alpha1_ClusterStatus(ref),
 	}
 }
@@ -14318,132 +14318,17 @@ func schema_provider_linode_api_apis_lke_v1alpha1_ClusterSpec(ref common.Referen
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
-					"updatePolicy": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
-						},
-					},
-					"terminationPolicy": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
-						},
-					},
-					"timeouts": {
-						SchemaProps: spec.SchemaProps{
-							Ref: ref("kubeform.dev/apimachinery/api/v1alpha1.ResourceTimeout"),
-						},
-					},
-					"providerRef": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("k8s.io/api/core/v1.LocalObjectReference"),
-						},
-					},
-					"id": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
-						},
-					},
-					"secretRef": {
-						SchemaProps: spec.SchemaProps{
-							Ref: ref("k8s.io/api/core/v1.LocalObjectReference"),
-						},
-					},
-					"apiEndpoints": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The API endpoints for the cluster.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: "",
-										Type:    []string{"string"},
-										Format:  "",
-									},
-								},
-							},
-						},
-					},
-					"k8sVersion": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The desired Kubernetes version for this Kubernetes cluster in the format of <major>.<minor>. The latest supported patch version will be deployed.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"label": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The unique label for the cluster.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"pool": {
-						SchemaProps: spec.SchemaProps{
-							Description: "A node pool in the cluster.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubeform.dev/provider-linode-api/apis/lke/v1alpha1.ClusterSpecPool"),
-									},
-								},
-							},
-						},
-					},
-					"region": {
-						SchemaProps: spec.SchemaProps{
-							Description: "This cluster's location.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"status": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The status of the cluster.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"tags": {
-						SchemaProps: spec.SchemaProps{
-							Description: "An array of tags applied to this object. Tags are for organizational purposes only.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: "",
-										Type:    []string{"string"},
-										Format:  "",
-									},
-								},
-							},
-						},
-					},
 					"kubeformOutput": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("kubeform.dev/provider-linode-api/apis/lke/v1alpha1.ClusterSpec2"),
+							Ref: ref("kubeform.dev/provider-linode-api/apis/lke/v1alpha1.ClusterSpecResource"),
 						},
 					},
-				},
-				Required: []string{"providerRef", "k8sVersion", "label", "pool", "region"},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "kubeform.dev/apimachinery/api/v1alpha1.ResourceTimeout", "kubeform.dev/provider-linode-api/apis/lke/v1alpha1.ClusterSpec2", "kubeform.dev/provider-linode-api/apis/lke/v1alpha1.ClusterSpecPool"},
-	}
-}
-
-func schema_provider_linode_api_apis_lke_v1alpha1_ClusterSpec2(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
+					"resource": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubeform.dev/provider-linode-api/apis/lke/v1alpha1.ClusterSpecResource"),
+						},
+					},
 					"updatePolicy": {
 						SchemaProps: spec.SchemaProps{
 							Type:   []string{"string"},
@@ -14456,21 +14341,10 @@ func schema_provider_linode_api_apis_lke_v1alpha1_ClusterSpec2(ref common.Refere
 							Format: "",
 						},
 					},
-					"timeouts": {
-						SchemaProps: spec.SchemaProps{
-							Ref: ref("kubeform.dev/apimachinery/api/v1alpha1.ResourceTimeout"),
-						},
-					},
 					"providerRef": {
 						SchemaProps: spec.SchemaProps{
 							Default: map[string]interface{}{},
 							Ref:     ref("k8s.io/api/core/v1.LocalObjectReference"),
-						},
-					},
-					"id": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
 						},
 					},
 					"secretRef": {
@@ -14478,84 +14352,12 @@ func schema_provider_linode_api_apis_lke_v1alpha1_ClusterSpec2(ref common.Refere
 							Ref: ref("k8s.io/api/core/v1.LocalObjectReference"),
 						},
 					},
-					"apiEndpoints": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The API endpoints for the cluster.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: "",
-										Type:    []string{"string"},
-										Format:  "",
-									},
-								},
-							},
-						},
-					},
-					"k8sVersion": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The desired Kubernetes version for this Kubernetes cluster in the format of <major>.<minor>. The latest supported patch version will be deployed.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"label": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The unique label for the cluster.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"pool": {
-						SchemaProps: spec.SchemaProps{
-							Description: "A node pool in the cluster.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubeform.dev/provider-linode-api/apis/lke/v1alpha1.ClusterSpecPool"),
-									},
-								},
-							},
-						},
-					},
-					"region": {
-						SchemaProps: spec.SchemaProps{
-							Description: "This cluster's location.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"status": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The status of the cluster.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"tags": {
-						SchemaProps: spec.SchemaProps{
-							Description: "An array of tags applied to this object. Tags are for organizational purposes only.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: "",
-										Type:    []string{"string"},
-										Format:  "",
-									},
-								},
-							},
-						},
-					},
 				},
-				Required: []string{"providerRef", "k8sVersion", "label", "pool", "region"},
+				Required: []string{"resource", "providerRef"},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "kubeform.dev/apimachinery/api/v1alpha1.ResourceTimeout", "kubeform.dev/provider-linode-api/apis/lke/v1alpha1.ClusterSpecPool"},
+			"k8s.io/api/core/v1.LocalObjectReference", "kubeform.dev/provider-linode-api/apis/lke/v1alpha1.ClusterSpecResource"},
 	}
 }
 
@@ -14639,6 +14441,104 @@ func schema_provider_linode_api_apis_lke_v1alpha1_ClusterSpecPoolNodes(ref commo
 				},
 			},
 		},
+	}
+}
+
+func schema_provider_linode_api_apis_lke_v1alpha1_ClusterSpecResource(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"timeouts": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubeform.dev/apimachinery/api/v1alpha1.ResourceTimeout"),
+						},
+					},
+					"id": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"apiEndpoints": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The API endpoints for the cluster.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"k8sVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The desired Kubernetes version for this Kubernetes cluster in the format of <major>.<minor>. The latest supported patch version will be deployed.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"label": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The unique label for the cluster.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"pool": {
+						SchemaProps: spec.SchemaProps{
+							Description: "A node pool in the cluster.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubeform.dev/provider-linode-api/apis/lke/v1alpha1.ClusterSpecPool"),
+									},
+								},
+							},
+						},
+					},
+					"region": {
+						SchemaProps: spec.SchemaProps{
+							Description: "This cluster's location.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The status of the cluster.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"tags": {
+						SchemaProps: spec.SchemaProps{
+							Description: "An array of tags applied to this object. Tags are for organizational purposes only.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"k8sVersion", "label", "pool", "region"},
+			},
+		},
+		Dependencies: []string{
+			"kubeform.dev/apimachinery/api/v1alpha1.ResourceTimeout", "kubeform.dev/provider-linode-api/apis/lke/v1alpha1.ClusterSpecPool"},
 	}
 }
 

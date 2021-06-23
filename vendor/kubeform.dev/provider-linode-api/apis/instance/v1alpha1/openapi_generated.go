@@ -297,7 +297,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubeform.dev/provider-linode-api/apis/instance/v1alpha1.Instance":                          schema_provider_linode_api_apis_instance_v1alpha1_Instance(ref),
 		"kubeform.dev/provider-linode-api/apis/instance/v1alpha1.InstanceList":                      schema_provider_linode_api_apis_instance_v1alpha1_InstanceList(ref),
 		"kubeform.dev/provider-linode-api/apis/instance/v1alpha1.InstanceSpec":                      schema_provider_linode_api_apis_instance_v1alpha1_InstanceSpec(ref),
-		"kubeform.dev/provider-linode-api/apis/instance/v1alpha1.InstanceSpec2":                     schema_provider_linode_api_apis_instance_v1alpha1_InstanceSpec2(ref),
 		"kubeform.dev/provider-linode-api/apis/instance/v1alpha1.InstanceSpecAlerts":                schema_provider_linode_api_apis_instance_v1alpha1_InstanceSpecAlerts(ref),
 		"kubeform.dev/provider-linode-api/apis/instance/v1alpha1.InstanceSpecAlertsCodec":           schema_provider_linode_api_apis_instance_v1alpha1_InstanceSpecAlertsCodec(ref),
 		"kubeform.dev/provider-linode-api/apis/instance/v1alpha1.InstanceSpecBackups":               schema_provider_linode_api_apis_instance_v1alpha1_InstanceSpecBackups(ref),
@@ -324,12 +323,13 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubeform.dev/provider-linode-api/apis/instance/v1alpha1.InstanceSpecConfigHelpers":         schema_provider_linode_api_apis_instance_v1alpha1_InstanceSpecConfigHelpers(ref),
 		"kubeform.dev/provider-linode-api/apis/instance/v1alpha1.InstanceSpecConfigHelpersCodec":    schema_provider_linode_api_apis_instance_v1alpha1_InstanceSpecConfigHelpersCodec(ref),
 		"kubeform.dev/provider-linode-api/apis/instance/v1alpha1.InstanceSpecDisk":                  schema_provider_linode_api_apis_instance_v1alpha1_InstanceSpecDisk(ref),
+		"kubeform.dev/provider-linode-api/apis/instance/v1alpha1.InstanceSpecResource":              schema_provider_linode_api_apis_instance_v1alpha1_InstanceSpecResource(ref),
 		"kubeform.dev/provider-linode-api/apis/instance/v1alpha1.InstanceSpecSpecs":                 schema_provider_linode_api_apis_instance_v1alpha1_InstanceSpecSpecs(ref),
 		"kubeform.dev/provider-linode-api/apis/instance/v1alpha1.InstanceStatus":                    schema_provider_linode_api_apis_instance_v1alpha1_InstanceStatus(ref),
 		"kubeform.dev/provider-linode-api/apis/instance/v1alpha1.Ip":                                schema_provider_linode_api_apis_instance_v1alpha1_Ip(ref),
 		"kubeform.dev/provider-linode-api/apis/instance/v1alpha1.IpList":                            schema_provider_linode_api_apis_instance_v1alpha1_IpList(ref),
 		"kubeform.dev/provider-linode-api/apis/instance/v1alpha1.IpSpec":                            schema_provider_linode_api_apis_instance_v1alpha1_IpSpec(ref),
-		"kubeform.dev/provider-linode-api/apis/instance/v1alpha1.IpSpec2":                           schema_provider_linode_api_apis_instance_v1alpha1_IpSpec2(ref),
+		"kubeform.dev/provider-linode-api/apis/instance/v1alpha1.IpSpecResource":                    schema_provider_linode_api_apis_instance_v1alpha1_IpSpecResource(ref),
 		"kubeform.dev/provider-linode-api/apis/instance/v1alpha1.IpStatus":                          schema_provider_linode_api_apis_instance_v1alpha1_IpStatus(ref),
 	}
 }
@@ -14348,291 +14348,17 @@ func schema_provider_linode_api_apis_instance_v1alpha1_InstanceSpec(ref common.R
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
-					"updatePolicy": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
-						},
-					},
-					"terminationPolicy": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
-						},
-					},
-					"timeouts": {
-						SchemaProps: spec.SchemaProps{
-							Ref: ref("kubeform.dev/apimachinery/api/v1alpha1.ResourceTimeout"),
-						},
-					},
-					"providerRef": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("k8s.io/api/core/v1.LocalObjectReference"),
-						},
-					},
-					"id": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
-						},
-					},
-					"secretRef": {
-						SchemaProps: spec.SchemaProps{
-							Ref: ref("k8s.io/api/core/v1.LocalObjectReference"),
-						},
-					},
-					"alerts": {
-						SchemaProps: spec.SchemaProps{
-							Ref: ref("kubeform.dev/provider-linode-api/apis/instance/v1alpha1.InstanceSpecAlerts"),
-						},
-					},
-					"authorizedKeys": {
-						SchemaProps: spec.SchemaProps{
-							Description: "A list of SSH public keys to deploy for the root user on the newly created Linode. Only accepted if 'image' is provided.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: "",
-										Type:    []string{"string"},
-										Format:  "",
-									},
-								},
-							},
-						},
-					},
-					"authorizedUsers": {
-						SchemaProps: spec.SchemaProps{
-							Description: "A list of Linode usernames. If the usernames have associated SSH keys, the keys will be appended to the `root` user's `~/.ssh/authorized_keys` file automatically. Only accepted if 'image' is provided.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: "",
-										Type:    []string{"string"},
-										Format:  "",
-									},
-								},
-							},
-						},
-					},
-					"backupID": {
-						SchemaProps: spec.SchemaProps{
-							Description: "A Backup ID from another Linode's available backups. Your User must have read_write access to that Linode, the Backup must have a status of successful, and the Linode must be deployed to the same region as the Backup. See /linode/instances/{linodeId}/backups for a Linode's available backups. This field and the image field are mutually exclusive.",
-							Type:        []string{"integer"},
-							Format:      "int64",
-						},
-					},
-					"backups": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Information about this Linode's backups status.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubeform.dev/provider-linode-api/apis/instance/v1alpha1.InstanceSpecBackups"),
-									},
-								},
-							},
-						},
-					},
-					"backupsEnabled": {
-						SchemaProps: spec.SchemaProps{
-							Description: "If this field is set to true, the created Linode will automatically be enrolled in the Linode Backup service. This will incur an additional charge. The cost for the Backup service is dependent on the Type of Linode deployed.",
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
-					"bootConfigLabel": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The Label of the Instance Config that should be used to boot the Linode instance.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"config": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Configuration profiles define the VM settings and boot behavior of the Linode Instance.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubeform.dev/provider-linode-api/apis/instance/v1alpha1.InstanceSpecConfig"),
-									},
-								},
-							},
-						},
-					},
-					"disk": {
-						SchemaProps: spec.SchemaProps{
-							Type: []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubeform.dev/provider-linode-api/apis/instance/v1alpha1.InstanceSpecDisk"),
-									},
-								},
-							},
-						},
-					},
-					"group": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The display group of the Linode instance.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"image": {
-						SchemaProps: spec.SchemaProps{
-							Description: "An Image ID to deploy the Disk from. Official Linode Images start with linode/, while your Images start with private/. See /images for more information on the Images available for you to use.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"ipAddress": {
-						SchemaProps: spec.SchemaProps{
-							Description: "This Linode's Public IPv4 Address. If there are multiple public IPv4 addresses on this Instance, an arbitrary address will be used for this field.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"ipv4": {
-						SchemaProps: spec.SchemaProps{
-							Description: "This Linode's IPv4 Addresses. Each Linode is assigned a single public IPv4 address upon creation, and may get a single private IPv4 address if needed. You may need to open a support ticket to get additional IPv4 addresses.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: "",
-										Type:    []string{"string"},
-										Format:  "",
-									},
-								},
-							},
-						},
-					},
-					"ipv6": {
-						SchemaProps: spec.SchemaProps{
-							Description: "This Linode's IPv6 SLAAC addresses. This address is specific to a Linode, and may not be shared.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"label": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The Linode's label is for display purposes only. If no label is provided for a Linode, a default will be assigned",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"privateIP": {
-						SchemaProps: spec.SchemaProps{
-							Description: "If true, the created Linode will have private networking enabled, allowing use of the 192.168.128.0/17 network within the Linode's region.",
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
-					"privateIPAddress": {
-						SchemaProps: spec.SchemaProps{
-							Description: "This Linode's Private IPv4 Address.  The regional private IP address range is 192.168.128/17 address shared by all Linode Instances in a region.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"region": {
-						SchemaProps: spec.SchemaProps{
-							Description: "This is the location where the Linode was deployed. This cannot be changed without opening a support ticket.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"specs": {
-						SchemaProps: spec.SchemaProps{
-							Type: []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubeform.dev/provider-linode-api/apis/instance/v1alpha1.InstanceSpecSpecs"),
-									},
-								},
-							},
-						},
-					},
-					"stackscriptID": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The StackScript to deploy to the newly created Linode. If provided, 'image' must also be provided, and must be an Image that is compatible with this StackScript.",
-							Type:        []string{"integer"},
-							Format:      "int64",
-						},
-					},
-					"status": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The status of the instance, indicating the current readiness state.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"swapSize": {
-						SchemaProps: spec.SchemaProps{
-							Description: "When deploying from an Image, this field is optional with a Linode API default of 512mb, otherwise it is ignored. This is used to set the swap disk size for the newly-created Linode.",
-							Type:        []string{"integer"},
-							Format:      "int64",
-						},
-					},
-					"tags": {
-						SchemaProps: spec.SchemaProps{
-							Description: "An array of tags applied to this object. Tags are for organizational purposes only.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: "",
-										Type:    []string{"string"},
-										Format:  "",
-									},
-								},
-							},
-						},
-					},
-					"type": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The type of instance to be deployed, determining the price and size.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"watchdogEnabled": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The watchdog, named Lassie, is a Shutdown Watchdog that monitors your Linode and will reboot it if it powers off unexpectedly. It works by issuing a boot job when your Linode powers off without a shutdown job being responsible. To prevent a loop, Lassie will give up if there have been more than 5 boot jobs issued within 15 minutes.",
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
 					"kubeformOutput": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("kubeform.dev/provider-linode-api/apis/instance/v1alpha1.InstanceSpec2"),
+							Ref: ref("kubeform.dev/provider-linode-api/apis/instance/v1alpha1.InstanceSpecResource"),
 						},
 					},
-				},
-				Required: []string{"providerRef", "region"},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "kubeform.dev/apimachinery/api/v1alpha1.ResourceTimeout", "kubeform.dev/provider-linode-api/apis/instance/v1alpha1.InstanceSpec2", "kubeform.dev/provider-linode-api/apis/instance/v1alpha1.InstanceSpecAlerts", "kubeform.dev/provider-linode-api/apis/instance/v1alpha1.InstanceSpecBackups", "kubeform.dev/provider-linode-api/apis/instance/v1alpha1.InstanceSpecConfig", "kubeform.dev/provider-linode-api/apis/instance/v1alpha1.InstanceSpecDisk", "kubeform.dev/provider-linode-api/apis/instance/v1alpha1.InstanceSpecSpecs"},
-	}
-}
-
-func schema_provider_linode_api_apis_instance_v1alpha1_InstanceSpec2(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
+					"resource": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubeform.dev/provider-linode-api/apis/instance/v1alpha1.InstanceSpecResource"),
+						},
+					},
 					"updatePolicy": {
 						SchemaProps: spec.SchemaProps{
 							Type:   []string{"string"},
@@ -14645,21 +14371,10 @@ func schema_provider_linode_api_apis_instance_v1alpha1_InstanceSpec2(ref common.
 							Format: "",
 						},
 					},
-					"timeouts": {
-						SchemaProps: spec.SchemaProps{
-							Ref: ref("kubeform.dev/apimachinery/api/v1alpha1.ResourceTimeout"),
-						},
-					},
 					"providerRef": {
 						SchemaProps: spec.SchemaProps{
 							Default: map[string]interface{}{},
 							Ref:     ref("k8s.io/api/core/v1.LocalObjectReference"),
-						},
-					},
-					"id": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
 						},
 					},
 					"secretRef": {
@@ -14667,243 +14382,12 @@ func schema_provider_linode_api_apis_instance_v1alpha1_InstanceSpec2(ref common.
 							Ref: ref("k8s.io/api/core/v1.LocalObjectReference"),
 						},
 					},
-					"alerts": {
-						SchemaProps: spec.SchemaProps{
-							Ref: ref("kubeform.dev/provider-linode-api/apis/instance/v1alpha1.InstanceSpecAlerts"),
-						},
-					},
-					"authorizedKeys": {
-						SchemaProps: spec.SchemaProps{
-							Description: "A list of SSH public keys to deploy for the root user on the newly created Linode. Only accepted if 'image' is provided.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: "",
-										Type:    []string{"string"},
-										Format:  "",
-									},
-								},
-							},
-						},
-					},
-					"authorizedUsers": {
-						SchemaProps: spec.SchemaProps{
-							Description: "A list of Linode usernames. If the usernames have associated SSH keys, the keys will be appended to the `root` user's `~/.ssh/authorized_keys` file automatically. Only accepted if 'image' is provided.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: "",
-										Type:    []string{"string"},
-										Format:  "",
-									},
-								},
-							},
-						},
-					},
-					"backupID": {
-						SchemaProps: spec.SchemaProps{
-							Description: "A Backup ID from another Linode's available backups. Your User must have read_write access to that Linode, the Backup must have a status of successful, and the Linode must be deployed to the same region as the Backup. See /linode/instances/{linodeId}/backups for a Linode's available backups. This field and the image field are mutually exclusive.",
-							Type:        []string{"integer"},
-							Format:      "int64",
-						},
-					},
-					"backups": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Information about this Linode's backups status.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubeform.dev/provider-linode-api/apis/instance/v1alpha1.InstanceSpecBackups"),
-									},
-								},
-							},
-						},
-					},
-					"backupsEnabled": {
-						SchemaProps: spec.SchemaProps{
-							Description: "If this field is set to true, the created Linode will automatically be enrolled in the Linode Backup service. This will incur an additional charge. The cost for the Backup service is dependent on the Type of Linode deployed.",
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
-					"bootConfigLabel": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The Label of the Instance Config that should be used to boot the Linode instance.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"config": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Configuration profiles define the VM settings and boot behavior of the Linode Instance.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubeform.dev/provider-linode-api/apis/instance/v1alpha1.InstanceSpecConfig"),
-									},
-								},
-							},
-						},
-					},
-					"disk": {
-						SchemaProps: spec.SchemaProps{
-							Type: []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubeform.dev/provider-linode-api/apis/instance/v1alpha1.InstanceSpecDisk"),
-									},
-								},
-							},
-						},
-					},
-					"group": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The display group of the Linode instance.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"image": {
-						SchemaProps: spec.SchemaProps{
-							Description: "An Image ID to deploy the Disk from. Official Linode Images start with linode/, while your Images start with private/. See /images for more information on the Images available for you to use.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"ipAddress": {
-						SchemaProps: spec.SchemaProps{
-							Description: "This Linode's Public IPv4 Address. If there are multiple public IPv4 addresses on this Instance, an arbitrary address will be used for this field.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"ipv4": {
-						SchemaProps: spec.SchemaProps{
-							Description: "This Linode's IPv4 Addresses. Each Linode is assigned a single public IPv4 address upon creation, and may get a single private IPv4 address if needed. You may need to open a support ticket to get additional IPv4 addresses.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: "",
-										Type:    []string{"string"},
-										Format:  "",
-									},
-								},
-							},
-						},
-					},
-					"ipv6": {
-						SchemaProps: spec.SchemaProps{
-							Description: "This Linode's IPv6 SLAAC addresses. This address is specific to a Linode, and may not be shared.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"label": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The Linode's label is for display purposes only. If no label is provided for a Linode, a default will be assigned",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"privateIP": {
-						SchemaProps: spec.SchemaProps{
-							Description: "If true, the created Linode will have private networking enabled, allowing use of the 192.168.128.0/17 network within the Linode's region.",
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
-					"privateIPAddress": {
-						SchemaProps: spec.SchemaProps{
-							Description: "This Linode's Private IPv4 Address.  The regional private IP address range is 192.168.128/17 address shared by all Linode Instances in a region.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"region": {
-						SchemaProps: spec.SchemaProps{
-							Description: "This is the location where the Linode was deployed. This cannot be changed without opening a support ticket.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"specs": {
-						SchemaProps: spec.SchemaProps{
-							Type: []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubeform.dev/provider-linode-api/apis/instance/v1alpha1.InstanceSpecSpecs"),
-									},
-								},
-							},
-						},
-					},
-					"stackscriptID": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The StackScript to deploy to the newly created Linode. If provided, 'image' must also be provided, and must be an Image that is compatible with this StackScript.",
-							Type:        []string{"integer"},
-							Format:      "int64",
-						},
-					},
-					"status": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The status of the instance, indicating the current readiness state.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"swapSize": {
-						SchemaProps: spec.SchemaProps{
-							Description: "When deploying from an Image, this field is optional with a Linode API default of 512mb, otherwise it is ignored. This is used to set the swap disk size for the newly-created Linode.",
-							Type:        []string{"integer"},
-							Format:      "int64",
-						},
-					},
-					"tags": {
-						SchemaProps: spec.SchemaProps{
-							Description: "An array of tags applied to this object. Tags are for organizational purposes only.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: "",
-										Type:    []string{"string"},
-										Format:  "",
-									},
-								},
-							},
-						},
-					},
-					"type": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The type of instance to be deployed, determining the price and size.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"watchdogEnabled": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The watchdog, named Lassie, is a Shutdown Watchdog that monitors your Linode and will reboot it if it powers off unexpectedly. It works by issuing a boot job when your Linode powers off without a shutdown job being responsible. To prevent a loop, Lassie will give up if there have been more than 5 boot jobs issued within 15 minutes.",
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
 				},
-				Required: []string{"providerRef", "region"},
+				Required: []string{"resource", "providerRef"},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "kubeform.dev/apimachinery/api/v1alpha1.ResourceTimeout", "kubeform.dev/provider-linode-api/apis/instance/v1alpha1.InstanceSpecAlerts", "kubeform.dev/provider-linode-api/apis/instance/v1alpha1.InstanceSpecBackups", "kubeform.dev/provider-linode-api/apis/instance/v1alpha1.InstanceSpecConfig", "kubeform.dev/provider-linode-api/apis/instance/v1alpha1.InstanceSpecDisk", "kubeform.dev/provider-linode-api/apis/instance/v1alpha1.InstanceSpecSpecs"},
+			"k8s.io/api/core/v1.LocalObjectReference", "kubeform.dev/provider-linode-api/apis/instance/v1alpha1.InstanceSpecResource"},
 	}
 }
 
@@ -15657,6 +15141,263 @@ func schema_provider_linode_api_apis_instance_v1alpha1_InstanceSpecDisk(ref comm
 	}
 }
 
+func schema_provider_linode_api_apis_instance_v1alpha1_InstanceSpecResource(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"timeouts": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubeform.dev/apimachinery/api/v1alpha1.ResourceTimeout"),
+						},
+					},
+					"id": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"alerts": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubeform.dev/provider-linode-api/apis/instance/v1alpha1.InstanceSpecAlerts"),
+						},
+					},
+					"authorizedKeys": {
+						SchemaProps: spec.SchemaProps{
+							Description: "A list of SSH public keys to deploy for the root user on the newly created Linode. Only accepted if 'image' is provided.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"authorizedUsers": {
+						SchemaProps: spec.SchemaProps{
+							Description: "A list of Linode usernames. If the usernames have associated SSH keys, the keys will be appended to the `root` user's `~/.ssh/authorized_keys` file automatically. Only accepted if 'image' is provided.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"backupID": {
+						SchemaProps: spec.SchemaProps{
+							Description: "A Backup ID from another Linode's available backups. Your User must have read_write access to that Linode, the Backup must have a status of successful, and the Linode must be deployed to the same region as the Backup. See /linode/instances/{linodeId}/backups for a Linode's available backups. This field and the image field are mutually exclusive.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"backups": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Information about this Linode's backups status.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubeform.dev/provider-linode-api/apis/instance/v1alpha1.InstanceSpecBackups"),
+									},
+								},
+							},
+						},
+					},
+					"backupsEnabled": {
+						SchemaProps: spec.SchemaProps{
+							Description: "If this field is set to true, the created Linode will automatically be enrolled in the Linode Backup service. This will incur an additional charge. The cost for the Backup service is dependent on the Type of Linode deployed.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"bootConfigLabel": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The Label of the Instance Config that should be used to boot the Linode instance.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"config": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Configuration profiles define the VM settings and boot behavior of the Linode Instance.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubeform.dev/provider-linode-api/apis/instance/v1alpha1.InstanceSpecConfig"),
+									},
+								},
+							},
+						},
+					},
+					"disk": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubeform.dev/provider-linode-api/apis/instance/v1alpha1.InstanceSpecDisk"),
+									},
+								},
+							},
+						},
+					},
+					"group": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The display group of the Linode instance.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"image": {
+						SchemaProps: spec.SchemaProps{
+							Description: "An Image ID to deploy the Disk from. Official Linode Images start with linode/, while your Images start with private/. See /images for more information on the Images available for you to use.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"ipAddress": {
+						SchemaProps: spec.SchemaProps{
+							Description: "This Linode's Public IPv4 Address. If there are multiple public IPv4 addresses on this Instance, an arbitrary address will be used for this field.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"ipv4": {
+						SchemaProps: spec.SchemaProps{
+							Description: "This Linode's IPv4 Addresses. Each Linode is assigned a single public IPv4 address upon creation, and may get a single private IPv4 address if needed. You may need to open a support ticket to get additional IPv4 addresses.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"ipv6": {
+						SchemaProps: spec.SchemaProps{
+							Description: "This Linode's IPv6 SLAAC addresses. This address is specific to a Linode, and may not be shared.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"label": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The Linode's label is for display purposes only. If no label is provided for a Linode, a default will be assigned",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"privateIP": {
+						SchemaProps: spec.SchemaProps{
+							Description: "If true, the created Linode will have private networking enabled, allowing use of the 192.168.128.0/17 network within the Linode's region.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"privateIPAddress": {
+						SchemaProps: spec.SchemaProps{
+							Description: "This Linode's Private IPv4 Address.  The regional private IP address range is 192.168.128/17 address shared by all Linode Instances in a region.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"region": {
+						SchemaProps: spec.SchemaProps{
+							Description: "This is the location where the Linode was deployed. This cannot be changed without opening a support ticket.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"specs": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubeform.dev/provider-linode-api/apis/instance/v1alpha1.InstanceSpecSpecs"),
+									},
+								},
+							},
+						},
+					},
+					"stackscriptID": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The StackScript to deploy to the newly created Linode. If provided, 'image' must also be provided, and must be an Image that is compatible with this StackScript.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The status of the instance, indicating the current readiness state.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"swapSize": {
+						SchemaProps: spec.SchemaProps{
+							Description: "When deploying from an Image, this field is optional with a Linode API default of 512mb, otherwise it is ignored. This is used to set the swap disk size for the newly-created Linode.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"tags": {
+						SchemaProps: spec.SchemaProps{
+							Description: "An array of tags applied to this object. Tags are for organizational purposes only.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"type": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The type of instance to be deployed, determining the price and size.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"watchdogEnabled": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The watchdog, named Lassie, is a Shutdown Watchdog that monitors your Linode and will reboot it if it powers off unexpectedly. It works by issuing a boot job when your Linode powers off without a shutdown job being responsible. To prevent a loop, Lassie will give up if there have been more than 5 boot jobs issued within 15 minutes.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"region"},
+			},
+		},
+		Dependencies: []string{
+			"kubeform.dev/apimachinery/api/v1alpha1.ResourceTimeout", "kubeform.dev/provider-linode-api/apis/instance/v1alpha1.InstanceSpecAlerts", "kubeform.dev/provider-linode-api/apis/instance/v1alpha1.InstanceSpecBackups", "kubeform.dev/provider-linode-api/apis/instance/v1alpha1.InstanceSpecConfig", "kubeform.dev/provider-linode-api/apis/instance/v1alpha1.InstanceSpecDisk", "kubeform.dev/provider-linode-api/apis/instance/v1alpha1.InstanceSpecSpecs"},
+	}
+}
+
 func schema_provider_linode_api_apis_instance_v1alpha1_InstanceSpecSpecs(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -15838,6 +15579,17 @@ func schema_provider_linode_api_apis_instance_v1alpha1_IpSpec(ref common.Referen
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
+					"kubeformOutput": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubeform.dev/provider-linode-api/apis/instance/v1alpha1.IpSpecResource"),
+						},
+					},
+					"resource": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubeform.dev/provider-linode-api/apis/instance/v1alpha1.IpSpecResource"),
+						},
+					},
 					"updatePolicy": {
 						SchemaProps: spec.SchemaProps{
 							Type:   []string{"string"},
@@ -15856,113 +15608,21 @@ func schema_provider_linode_api_apis_instance_v1alpha1_IpSpec(ref common.Referen
 							Ref:     ref("k8s.io/api/core/v1.LocalObjectReference"),
 						},
 					},
-					"id": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
-						},
-					},
-					"address": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The resulting IPv4 address.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"gateway": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The default gateway for this address",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"linodeID": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The ID of the Linode to allocate an IPv4 address for.",
-							Type:        []string{"integer"},
-							Format:      "int64",
-						},
-					},
-					"prefix": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The number of bits set in the subnet mask.",
-							Type:        []string{"integer"},
-							Format:      "int64",
-						},
-					},
-					"public": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Whether the IPv4 address is public or private.",
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
-					"rdns": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The reverse DNS assigned to this address.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"region": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The region this IP resides in.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"subnetMask": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The mask that separates host bits from network bits for this address.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"type": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The type of IP address.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"kubeformOutput": {
-						SchemaProps: spec.SchemaProps{
-							Ref: ref("kubeform.dev/provider-linode-api/apis/instance/v1alpha1.IpSpec2"),
-						},
-					},
 				},
-				Required: []string{"providerRef", "linodeID"},
+				Required: []string{"resource", "providerRef"},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "kubeform.dev/provider-linode-api/apis/instance/v1alpha1.IpSpec2"},
+			"k8s.io/api/core/v1.LocalObjectReference", "kubeform.dev/provider-linode-api/apis/instance/v1alpha1.IpSpecResource"},
 	}
 }
 
-func schema_provider_linode_api_apis_instance_v1alpha1_IpSpec2(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_provider_linode_api_apis_instance_v1alpha1_IpSpecResource(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
-					"updatePolicy": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
-						},
-					},
-					"terminationPolicy": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
-						},
-					},
-					"providerRef": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("k8s.io/api/core/v1.LocalObjectReference"),
-						},
-					},
 					"id": {
 						SchemaProps: spec.SchemaProps{
 							Type:   []string{"string"},
@@ -16033,11 +15693,9 @@ func schema_provider_linode_api_apis_instance_v1alpha1_IpSpec2(ref common.Refere
 						},
 					},
 				},
-				Required: []string{"providerRef", "linodeID"},
+				Required: []string{"linodeID"},
 			},
 		},
-		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference"},
 	}
 }
 

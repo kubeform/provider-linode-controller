@@ -42,19 +42,19 @@ type Image struct {
 }
 
 type ImageSpec struct {
-	ImageSpec2 `json:",inline"`
-	// +optional
-	KubeformOutput *ImageSpec2 `json:"kubeformOutput,omitempty" tf:"-"`
-}
+	KubeformOutput *ImageSpecResource `json:"kubeformOutput,omitempty" tf:"-"`
 
-type ImageSpec2 struct {
+	Resource ImageSpecResource `json:"resource" tf:"resource"`
+
 	UpdatePolicy base.UpdatePolicy `json:"updatePolicy,omitempty" tf:"-"`
 
 	TerminationPolicy base.TerminationPolicy `json:"terminationPolicy,omitempty" tf:"-"`
 
-	Timeouts *base.ResourceTimeout `json:"timeouts,omitempty" tf:"timeouts"`
-
 	ProviderRef core.LocalObjectReference `json:"providerRef" tf:"-"`
+}
+
+type ImageSpecResource struct {
+	Timeouts *base.ResourceTimeout `json:"timeouts,omitempty" tf:"timeouts"`
 
 	ID string `json:"id,omitempty" tf:"id,omitempty"`
 

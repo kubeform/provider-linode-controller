@@ -297,7 +297,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubeform.dev/provider-linode-api/apis/user/v1alpha1.User":                      schema_provider_linode_api_apis_user_v1alpha1_User(ref),
 		"kubeform.dev/provider-linode-api/apis/user/v1alpha1.UserList":                  schema_provider_linode_api_apis_user_v1alpha1_UserList(ref),
 		"kubeform.dev/provider-linode-api/apis/user/v1alpha1.UserSpec":                  schema_provider_linode_api_apis_user_v1alpha1_UserSpec(ref),
-		"kubeform.dev/provider-linode-api/apis/user/v1alpha1.UserSpec2":                 schema_provider_linode_api_apis_user_v1alpha1_UserSpec2(ref),
 		"kubeform.dev/provider-linode-api/apis/user/v1alpha1.UserSpecDomainGrant":       schema_provider_linode_api_apis_user_v1alpha1_UserSpecDomainGrant(ref),
 		"kubeform.dev/provider-linode-api/apis/user/v1alpha1.UserSpecGlobalGrants":      schema_provider_linode_api_apis_user_v1alpha1_UserSpecGlobalGrants(ref),
 		"kubeform.dev/provider-linode-api/apis/user/v1alpha1.UserSpecGlobalGrantsCodec": schema_provider_linode_api_apis_user_v1alpha1_UserSpecGlobalGrantsCodec(ref),
@@ -305,6 +304,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubeform.dev/provider-linode-api/apis/user/v1alpha1.UserSpecLinodeGrant":       schema_provider_linode_api_apis_user_v1alpha1_UserSpecLinodeGrant(ref),
 		"kubeform.dev/provider-linode-api/apis/user/v1alpha1.UserSpecLongviewGrant":     schema_provider_linode_api_apis_user_v1alpha1_UserSpecLongviewGrant(ref),
 		"kubeform.dev/provider-linode-api/apis/user/v1alpha1.UserSpecNodebalancerGrant": schema_provider_linode_api_apis_user_v1alpha1_UserSpecNodebalancerGrant(ref),
+		"kubeform.dev/provider-linode-api/apis/user/v1alpha1.UserSpecResource":          schema_provider_linode_api_apis_user_v1alpha1_UserSpecResource(ref),
 		"kubeform.dev/provider-linode-api/apis/user/v1alpha1.UserSpecStackscriptGrant":  schema_provider_linode_api_apis_user_v1alpha1_UserSpecStackscriptGrant(ref),
 		"kubeform.dev/provider-linode-api/apis/user/v1alpha1.UserSpecVolumeGrant":       schema_provider_linode_api_apis_user_v1alpha1_UserSpecVolumeGrant(ref),
 		"kubeform.dev/provider-linode-api/apis/user/v1alpha1.UserStatus":                schema_provider_linode_api_apis_user_v1alpha1_UserStatus(ref),
@@ -14325,190 +14325,17 @@ func schema_provider_linode_api_apis_user_v1alpha1_UserSpec(ref common.Reference
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
-					"updatePolicy": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
-						},
-					},
-					"terminationPolicy": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
-						},
-					},
-					"providerRef": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("k8s.io/api/core/v1.LocalObjectReference"),
-						},
-					},
-					"id": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
-						},
-					},
-					"domainGrant": {
-						SchemaProps: spec.SchemaProps{
-							Type: []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubeform.dev/provider-linode-api/apis/user/v1alpha1.UserSpecDomainGrant"),
-									},
-								},
-							},
-						},
-					},
-					"email": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The email of the user.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"globalGrants": {
-						SchemaProps: spec.SchemaProps{
-							Description: "A structure containing the Account-level grants a User has.",
-							Ref:         ref("kubeform.dev/provider-linode-api/apis/user/v1alpha1.UserSpecGlobalGrants"),
-						},
-					},
-					"imageGrant": {
-						SchemaProps: spec.SchemaProps{
-							Type: []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubeform.dev/provider-linode-api/apis/user/v1alpha1.UserSpecImageGrant"),
-									},
-								},
-							},
-						},
-					},
-					"linodeGrant": {
-						SchemaProps: spec.SchemaProps{
-							Type: []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubeform.dev/provider-linode-api/apis/user/v1alpha1.UserSpecLinodeGrant"),
-									},
-								},
-							},
-						},
-					},
-					"longviewGrant": {
-						SchemaProps: spec.SchemaProps{
-							Type: []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubeform.dev/provider-linode-api/apis/user/v1alpha1.UserSpecLongviewGrant"),
-									},
-								},
-							},
-						},
-					},
-					"nodebalancerGrant": {
-						SchemaProps: spec.SchemaProps{
-							Type: []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubeform.dev/provider-linode-api/apis/user/v1alpha1.UserSpecNodebalancerGrant"),
-									},
-								},
-							},
-						},
-					},
-					"restricted": {
-						SchemaProps: spec.SchemaProps{
-							Description: "If true, the user must be explicitly granted access to platform actions and entities.",
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
-					"sshKeys": {
-						SchemaProps: spec.SchemaProps{
-							Description: "SSH keys to add to the user profile.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: "",
-										Type:    []string{"string"},
-										Format:  "",
-									},
-								},
-							},
-						},
-					},
-					"stackscriptGrant": {
-						SchemaProps: spec.SchemaProps{
-							Type: []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubeform.dev/provider-linode-api/apis/user/v1alpha1.UserSpecStackscriptGrant"),
-									},
-								},
-							},
-						},
-					},
-					"tfaEnabled": {
-						SchemaProps: spec.SchemaProps{
-							Description: "If the User has Two Factor Authentication (TFA) enabled.",
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
-					"username": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The username of the user.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"volumeGrant": {
-						SchemaProps: spec.SchemaProps{
-							Type: []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubeform.dev/provider-linode-api/apis/user/v1alpha1.UserSpecVolumeGrant"),
-									},
-								},
-							},
-						},
-					},
 					"kubeformOutput": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("kubeform.dev/provider-linode-api/apis/user/v1alpha1.UserSpec2"),
+							Ref: ref("kubeform.dev/provider-linode-api/apis/user/v1alpha1.UserSpecResource"),
 						},
 					},
-				},
-				Required: []string{"providerRef", "email", "username"},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "kubeform.dev/provider-linode-api/apis/user/v1alpha1.UserSpec2", "kubeform.dev/provider-linode-api/apis/user/v1alpha1.UserSpecDomainGrant", "kubeform.dev/provider-linode-api/apis/user/v1alpha1.UserSpecGlobalGrants", "kubeform.dev/provider-linode-api/apis/user/v1alpha1.UserSpecImageGrant", "kubeform.dev/provider-linode-api/apis/user/v1alpha1.UserSpecLinodeGrant", "kubeform.dev/provider-linode-api/apis/user/v1alpha1.UserSpecLongviewGrant", "kubeform.dev/provider-linode-api/apis/user/v1alpha1.UserSpecNodebalancerGrant", "kubeform.dev/provider-linode-api/apis/user/v1alpha1.UserSpecStackscriptGrant", "kubeform.dev/provider-linode-api/apis/user/v1alpha1.UserSpecVolumeGrant"},
-	}
-}
-
-func schema_provider_linode_api_apis_user_v1alpha1_UserSpec2(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
+					"resource": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubeform.dev/provider-linode-api/apis/user/v1alpha1.UserSpecResource"),
+						},
+					},
 					"updatePolicy": {
 						SchemaProps: spec.SchemaProps{
 							Type:   []string{"string"},
@@ -14527,158 +14354,12 @@ func schema_provider_linode_api_apis_user_v1alpha1_UserSpec2(ref common.Referenc
 							Ref:     ref("k8s.io/api/core/v1.LocalObjectReference"),
 						},
 					},
-					"id": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
-						},
-					},
-					"domainGrant": {
-						SchemaProps: spec.SchemaProps{
-							Type: []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubeform.dev/provider-linode-api/apis/user/v1alpha1.UserSpecDomainGrant"),
-									},
-								},
-							},
-						},
-					},
-					"email": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The email of the user.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"globalGrants": {
-						SchemaProps: spec.SchemaProps{
-							Description: "A structure containing the Account-level grants a User has.",
-							Ref:         ref("kubeform.dev/provider-linode-api/apis/user/v1alpha1.UserSpecGlobalGrants"),
-						},
-					},
-					"imageGrant": {
-						SchemaProps: spec.SchemaProps{
-							Type: []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubeform.dev/provider-linode-api/apis/user/v1alpha1.UserSpecImageGrant"),
-									},
-								},
-							},
-						},
-					},
-					"linodeGrant": {
-						SchemaProps: spec.SchemaProps{
-							Type: []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubeform.dev/provider-linode-api/apis/user/v1alpha1.UserSpecLinodeGrant"),
-									},
-								},
-							},
-						},
-					},
-					"longviewGrant": {
-						SchemaProps: spec.SchemaProps{
-							Type: []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubeform.dev/provider-linode-api/apis/user/v1alpha1.UserSpecLongviewGrant"),
-									},
-								},
-							},
-						},
-					},
-					"nodebalancerGrant": {
-						SchemaProps: spec.SchemaProps{
-							Type: []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubeform.dev/provider-linode-api/apis/user/v1alpha1.UserSpecNodebalancerGrant"),
-									},
-								},
-							},
-						},
-					},
-					"restricted": {
-						SchemaProps: spec.SchemaProps{
-							Description: "If true, the user must be explicitly granted access to platform actions and entities.",
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
-					"sshKeys": {
-						SchemaProps: spec.SchemaProps{
-							Description: "SSH keys to add to the user profile.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: "",
-										Type:    []string{"string"},
-										Format:  "",
-									},
-								},
-							},
-						},
-					},
-					"stackscriptGrant": {
-						SchemaProps: spec.SchemaProps{
-							Type: []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubeform.dev/provider-linode-api/apis/user/v1alpha1.UserSpecStackscriptGrant"),
-									},
-								},
-							},
-						},
-					},
-					"tfaEnabled": {
-						SchemaProps: spec.SchemaProps{
-							Description: "If the User has Two Factor Authentication (TFA) enabled.",
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
-					"username": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The username of the user.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"volumeGrant": {
-						SchemaProps: spec.SchemaProps{
-							Type: []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubeform.dev/provider-linode-api/apis/user/v1alpha1.UserSpecVolumeGrant"),
-									},
-								},
-							},
-						},
-					},
 				},
-				Required: []string{"providerRef", "email", "username"},
+				Required: []string{"resource", "providerRef"},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "kubeform.dev/provider-linode-api/apis/user/v1alpha1.UserSpecDomainGrant", "kubeform.dev/provider-linode-api/apis/user/v1alpha1.UserSpecGlobalGrants", "kubeform.dev/provider-linode-api/apis/user/v1alpha1.UserSpecImageGrant", "kubeform.dev/provider-linode-api/apis/user/v1alpha1.UserSpecLinodeGrant", "kubeform.dev/provider-linode-api/apis/user/v1alpha1.UserSpecLongviewGrant", "kubeform.dev/provider-linode-api/apis/user/v1alpha1.UserSpecNodebalancerGrant", "kubeform.dev/provider-linode-api/apis/user/v1alpha1.UserSpecStackscriptGrant", "kubeform.dev/provider-linode-api/apis/user/v1alpha1.UserSpecVolumeGrant"},
+			"k8s.io/api/core/v1.LocalObjectReference", "kubeform.dev/provider-linode-api/apis/user/v1alpha1.UserSpecResource"},
 	}
 }
 
@@ -14906,6 +14587,167 @@ func schema_provider_linode_api_apis_user_v1alpha1_UserSpecNodebalancerGrant(ref
 				Required: []string{"ID", "permissions"},
 			},
 		},
+	}
+}
+
+func schema_provider_linode_api_apis_user_v1alpha1_UserSpecResource(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"id": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"domainGrant": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubeform.dev/provider-linode-api/apis/user/v1alpha1.UserSpecDomainGrant"),
+									},
+								},
+							},
+						},
+					},
+					"email": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The email of the user.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"globalGrants": {
+						SchemaProps: spec.SchemaProps{
+							Description: "A structure containing the Account-level grants a User has.",
+							Ref:         ref("kubeform.dev/provider-linode-api/apis/user/v1alpha1.UserSpecGlobalGrants"),
+						},
+					},
+					"imageGrant": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubeform.dev/provider-linode-api/apis/user/v1alpha1.UserSpecImageGrant"),
+									},
+								},
+							},
+						},
+					},
+					"linodeGrant": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubeform.dev/provider-linode-api/apis/user/v1alpha1.UserSpecLinodeGrant"),
+									},
+								},
+							},
+						},
+					},
+					"longviewGrant": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubeform.dev/provider-linode-api/apis/user/v1alpha1.UserSpecLongviewGrant"),
+									},
+								},
+							},
+						},
+					},
+					"nodebalancerGrant": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubeform.dev/provider-linode-api/apis/user/v1alpha1.UserSpecNodebalancerGrant"),
+									},
+								},
+							},
+						},
+					},
+					"restricted": {
+						SchemaProps: spec.SchemaProps{
+							Description: "If true, the user must be explicitly granted access to platform actions and entities.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"sshKeys": {
+						SchemaProps: spec.SchemaProps{
+							Description: "SSH keys to add to the user profile.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"stackscriptGrant": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubeform.dev/provider-linode-api/apis/user/v1alpha1.UserSpecStackscriptGrant"),
+									},
+								},
+							},
+						},
+					},
+					"tfaEnabled": {
+						SchemaProps: spec.SchemaProps{
+							Description: "If the User has Two Factor Authentication (TFA) enabled.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"username": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The username of the user.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"volumeGrant": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubeform.dev/provider-linode-api/apis/user/v1alpha1.UserSpecVolumeGrant"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"email", "username"},
+			},
+		},
+		Dependencies: []string{
+			"kubeform.dev/provider-linode-api/apis/user/v1alpha1.UserSpecDomainGrant", "kubeform.dev/provider-linode-api/apis/user/v1alpha1.UserSpecGlobalGrants", "kubeform.dev/provider-linode-api/apis/user/v1alpha1.UserSpecImageGrant", "kubeform.dev/provider-linode-api/apis/user/v1alpha1.UserSpecLinodeGrant", "kubeform.dev/provider-linode-api/apis/user/v1alpha1.UserSpecLongviewGrant", "kubeform.dev/provider-linode-api/apis/user/v1alpha1.UserSpecNodebalancerGrant", "kubeform.dev/provider-linode-api/apis/user/v1alpha1.UserSpecStackscriptGrant", "kubeform.dev/provider-linode-api/apis/user/v1alpha1.UserSpecVolumeGrant"},
 	}
 }
 

@@ -41,12 +41,6 @@ type Instance struct {
 	Status            InstanceStatus `json:"status,omitempty"`
 }
 
-type InstanceSpec struct {
-	InstanceSpec2 `json:",inline"`
-	// +optional
-	KubeformOutput *InstanceSpec2 `json:"kubeformOutput,omitempty" tf:"-"`
-}
-
 type InstanceSpecAlerts struct {
 	// The percentage of CPU usage required to trigger an alert. If the average CPU usage over two hours exceeds this value, we'll send you an alert. If this is set to 0, the alert is disabled.
 	// +optional
@@ -293,18 +287,24 @@ type InstanceSpecSpecs struct {
 	Vcpus *int64 `json:"vcpus,omitempty" tf:"vcpus"`
 }
 
-type InstanceSpec2 struct {
+type InstanceSpec struct {
+	KubeformOutput *InstanceSpecResource `json:"kubeformOutput,omitempty" tf:"-"`
+
+	Resource InstanceSpecResource `json:"resource" tf:"resource"`
+
 	UpdatePolicy base.UpdatePolicy `json:"updatePolicy,omitempty" tf:"-"`
 
 	TerminationPolicy base.TerminationPolicy `json:"terminationPolicy,omitempty" tf:"-"`
 
-	Timeouts *base.ResourceTimeout `json:"timeouts,omitempty" tf:"timeouts"`
-
 	ProviderRef core.LocalObjectReference `json:"providerRef" tf:"-"`
 
-	ID string `json:"id,omitempty" tf:"id,omitempty"`
-
 	SecretRef *core.LocalObjectReference `json:"secretRef,omitempty" tf:"-"`
+}
+
+type InstanceSpecResource struct {
+	Timeouts *base.ResourceTimeout `json:"timeouts,omitempty" tf:"timeouts"`
+
+	ID string `json:"id,omitempty" tf:"id,omitempty"`
 
 	// +optional
 	Alerts *InstanceSpecAlerts `json:"alerts,omitempty" tf:"alerts"`

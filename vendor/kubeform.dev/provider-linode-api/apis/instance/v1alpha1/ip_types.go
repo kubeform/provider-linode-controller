@@ -42,18 +42,18 @@ type Ip struct {
 }
 
 type IpSpec struct {
-	IpSpec2 `json:",inline"`
-	// +optional
-	KubeformOutput *IpSpec2 `json:"kubeformOutput,omitempty" tf:"-"`
-}
+	KubeformOutput *IpSpecResource `json:"kubeformOutput,omitempty" tf:"-"`
 
-type IpSpec2 struct {
+	Resource IpSpecResource `json:"resource" tf:"resource"`
+
 	UpdatePolicy base.UpdatePolicy `json:"updatePolicy,omitempty" tf:"-"`
 
 	TerminationPolicy base.TerminationPolicy `json:"terminationPolicy,omitempty" tf:"-"`
 
 	ProviderRef core.LocalObjectReference `json:"providerRef" tf:"-"`
+}
 
+type IpSpecResource struct {
 	ID string `json:"id,omitempty" tf:"id,omitempty"`
 
 	// The resulting IPv4 address.
