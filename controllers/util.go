@@ -809,11 +809,36 @@ func updateStateField(rClient client.Client, ctx context.Context, intrfc map[str
 					ObjectMeta: metav1.ObjectMeta{
 						Name:      secretName,
 						Namespace: obj.GetNamespace(),
+						OwnerReferences: []metav1.OwnerReference{
+							{
+								APIVersion: obj.GetAPIVersion(),
+								Kind:       obj.GetKind(),
+								Name:       obj.GetName(),
+								UID:        obj.GetUID(),
+							},
+						},
 					},
 				})
 				if err != nil {
 					return err
 				}
+			}
+			output := s.Field("Spec").Field("Resource").Value()
+			specByte, err := json.Marshal(output)
+			if err != nil {
+				return err
+			}
+			var specMap map[string]interface{}
+			err = json.Unmarshal(specByte, &specMap)
+			if err != nil {
+				return err
+			}
+			err = unstructured.SetNestedField(obj.Object, specMap, "spec", "kubeformOutput")
+			if err != nil {
+				return err
+			}
+			if err = rClient.Update(ctx, obj); err != nil {
+				return err
 			}
 			return err
 		}
