@@ -24,6 +24,7 @@ import (
 	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	kmapi "kmodules.xyz/client-go/api/v1"
+	"sigs.k8s.io/cli-utils/pkg/kstatus/status"
 )
 
 // +genclient
@@ -38,12 +39,6 @@ type User struct {
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 	Spec              UserSpec   `json:"spec,omitempty"`
 	Status            UserStatus `json:"status,omitempty"`
-}
-
-type UserSpec struct {
-	UserSpec2 `json:",inline"`
-	// +optional
-	KubeformOutput UserSpec2 `json:"kubeformOutput,omitempty" tf:"-"`
 }
 
 type UserSpecDomainGrant struct {
@@ -128,11 +123,19 @@ type UserSpecVolumeGrant struct {
 	Permissions *string `json:"permissions" tf:"permissions"`
 }
 
-type UserSpec2 struct {
+type UserSpec struct {
+	KubeformOutput *UserSpecResource `json:"kubeformOutput,omitempty" tf:"-"`
+
+	Resource UserSpecResource `json:"resource" tf:"resource"`
+
+	UpdatePolicy base.UpdatePolicy `json:"updatePolicy,omitempty" tf:"-"`
+
 	TerminationPolicy base.TerminationPolicy `json:"terminationPolicy,omitempty" tf:"-"`
 
 	ProviderRef core.LocalObjectReference `json:"providerRef" tf:"-"`
+}
 
+type UserSpecResource struct {
 	ID string `json:"id,omitempty" tf:"id,omitempty"`
 
 	// +optional
@@ -172,7 +175,7 @@ type UserStatus struct {
 	// +optional
 	ObservedGeneration int64 `json:"observedGeneration,omitempty"`
 	// +optional
-	Phase base.Phase `json:"phase,omitempty"`
+	Phase status.Status `json:"phase,omitempty"`
 	// +optional
 	Conditions []kmapi.Condition `json:"conditions,omitempty"`
 }

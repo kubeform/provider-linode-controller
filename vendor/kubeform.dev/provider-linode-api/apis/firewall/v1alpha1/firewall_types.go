@@ -24,6 +24,7 @@ import (
 	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	kmapi "kmodules.xyz/client-go/api/v1"
+	"sigs.k8s.io/cli-utils/pkg/kstatus/status"
 )
 
 // +genclient
@@ -38,12 +39,6 @@ type Firewall struct {
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 	Spec              FirewallSpec   `json:"spec,omitempty"`
 	Status            FirewallStatus `json:"status,omitempty"`
-}
-
-type FirewallSpec struct {
-	FirewallSpec2 `json:",inline"`
-	// +optional
-	KubeformOutput FirewallSpec2 `json:"kubeformOutput,omitempty" tf:"-"`
 }
 
 type FirewallSpecDevices struct {
@@ -102,11 +97,19 @@ type FirewallSpecOutbound struct {
 	Protocol *string `json:"protocol" tf:"protocol"`
 }
 
-type FirewallSpec2 struct {
+type FirewallSpec struct {
+	KubeformOutput *FirewallSpecResource `json:"kubeformOutput,omitempty" tf:"-"`
+
+	Resource FirewallSpecResource `json:"resource" tf:"resource"`
+
+	UpdatePolicy base.UpdatePolicy `json:"updatePolicy,omitempty" tf:"-"`
+
 	TerminationPolicy base.TerminationPolicy `json:"terminationPolicy,omitempty" tf:"-"`
 
 	ProviderRef core.LocalObjectReference `json:"providerRef" tf:"-"`
+}
 
+type FirewallSpecResource struct {
 	ID string `json:"id,omitempty" tf:"id,omitempty"`
 
 	// The devices associated with this firewall.
@@ -143,7 +146,7 @@ type FirewallStatus struct {
 	// +optional
 	ObservedGeneration int64 `json:"observedGeneration,omitempty"`
 	// +optional
-	Phase base.Phase `json:"phase,omitempty"`
+	Phase status.Status `json:"phase,omitempty"`
 	// +optional
 	Conditions []kmapi.Condition `json:"conditions,omitempty"`
 }

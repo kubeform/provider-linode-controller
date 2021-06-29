@@ -24,6 +24,7 @@ import (
 	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	kmapi "kmodules.xyz/client-go/api/v1"
+	"sigs.k8s.io/cli-utils/pkg/kstatus/status"
 )
 
 // +genclient
@@ -41,19 +42,21 @@ type Token struct {
 }
 
 type TokenSpec struct {
-	TokenSpec2 `json:",inline"`
-	// +optional
-	KubeformOutput TokenSpec2 `json:"kubeformOutput,omitempty" tf:"-"`
-}
+	KubeformOutput *TokenSpecResource `json:"kubeformOutput,omitempty" tf:"-"`
 
-type TokenSpec2 struct {
+	Resource TokenSpecResource `json:"resource" tf:"resource"`
+
+	UpdatePolicy base.UpdatePolicy `json:"updatePolicy,omitempty" tf:"-"`
+
 	TerminationPolicy base.TerminationPolicy `json:"terminationPolicy,omitempty" tf:"-"`
 
 	ProviderRef core.LocalObjectReference `json:"providerRef" tf:"-"`
 
-	ID string `json:"id,omitempty" tf:"id,omitempty"`
-
 	SecretRef *core.LocalObjectReference `json:"secretRef,omitempty" tf:"-"`
+}
+
+type TokenSpecResource struct {
+	ID string `json:"id,omitempty" tf:"id,omitempty"`
 
 	// The date and time this token was created.
 	// +optional
@@ -76,7 +79,7 @@ type TokenStatus struct {
 	// +optional
 	ObservedGeneration int64 `json:"observedGeneration,omitempty"`
 	// +optional
-	Phase base.Phase `json:"phase,omitempty"`
+	Phase status.Status `json:"phase,omitempty"`
 	// +optional
 	Conditions []kmapi.Condition `json:"conditions,omitempty"`
 }

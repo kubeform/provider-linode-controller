@@ -24,6 +24,7 @@ import (
 	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	kmapi "kmodules.xyz/client-go/api/v1"
+	"sigs.k8s.io/cli-utils/pkg/kstatus/status"
 )
 
 // +genclient
@@ -38,12 +39,6 @@ type Stackscript struct {
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 	Spec              StackscriptSpec   `json:"spec,omitempty"`
 	Status            StackscriptStatus `json:"status,omitempty"`
-}
-
-type StackscriptSpec struct {
-	StackscriptSpec2 `json:",inline"`
-	// +optional
-	KubeformOutput StackscriptSpec2 `json:"kubeformOutput,omitempty" tf:"-"`
 }
 
 type StackscriptSpecUserDefinedFields struct {
@@ -61,11 +56,19 @@ type StackscriptSpecUserDefinedFields struct {
 	OneOf *string `json:"oneOf,omitempty" tf:"one_of"`
 }
 
-type StackscriptSpec2 struct {
+type StackscriptSpec struct {
+	KubeformOutput *StackscriptSpecResource `json:"kubeformOutput,omitempty" tf:"-"`
+
+	Resource StackscriptSpecResource `json:"resource" tf:"resource"`
+
+	UpdatePolicy base.UpdatePolicy `json:"updatePolicy,omitempty" tf:"-"`
+
 	TerminationPolicy base.TerminationPolicy `json:"terminationPolicy,omitempty" tf:"-"`
 
 	ProviderRef core.LocalObjectReference `json:"providerRef" tf:"-"`
+}
 
+type StackscriptSpecResource struct {
 	ID string `json:"id,omitempty" tf:"id,omitempty"`
 
 	// The date this StackScript was created.
@@ -110,7 +113,7 @@ type StackscriptStatus struct {
 	// +optional
 	ObservedGeneration int64 `json:"observedGeneration,omitempty"`
 	// +optional
-	Phase base.Phase `json:"phase,omitempty"`
+	Phase status.Status `json:"phase,omitempty"`
 	// +optional
 	Conditions []kmapi.Condition `json:"conditions,omitempty"`
 }

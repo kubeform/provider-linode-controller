@@ -24,6 +24,7 @@ import (
 	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	kmapi "kmodules.xyz/client-go/api/v1"
+	"sigs.k8s.io/cli-utils/pkg/kstatus/status"
 )
 
 // +genclient
@@ -41,16 +42,18 @@ type Domain struct {
 }
 
 type DomainSpec struct {
-	DomainSpec2 `json:",inline"`
-	// +optional
-	KubeformOutput DomainSpec2 `json:"kubeformOutput,omitempty" tf:"-"`
-}
+	KubeformOutput *DomainSpecResource `json:"kubeformOutput,omitempty" tf:"-"`
 
-type DomainSpec2 struct {
+	Resource DomainSpecResource `json:"resource" tf:"resource"`
+
+	UpdatePolicy base.UpdatePolicy `json:"updatePolicy,omitempty" tf:"-"`
+
 	TerminationPolicy base.TerminationPolicy `json:"terminationPolicy,omitempty" tf:"-"`
 
 	ProviderRef core.LocalObjectReference `json:"providerRef" tf:"-"`
+}
 
+type DomainSpecResource struct {
 	ID string `json:"id,omitempty" tf:"id,omitempty"`
 
 	// The list of IPs that may perform a zone transfer for this Domain. This is potentially dangerous, and should be set to an empty list unless you intend to use it.
@@ -97,7 +100,7 @@ type DomainStatus struct {
 	// +optional
 	ObservedGeneration int64 `json:"observedGeneration,omitempty"`
 	// +optional
-	Phase base.Phase `json:"phase,omitempty"`
+	Phase status.Status `json:"phase,omitempty"`
 	// +optional
 	Conditions []kmapi.Condition `json:"conditions,omitempty"`
 }

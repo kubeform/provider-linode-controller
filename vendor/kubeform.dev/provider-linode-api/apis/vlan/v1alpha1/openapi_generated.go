@@ -297,8 +297,8 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubeform.dev/provider-linode-api/apis/vlan/v1alpha1.Vlan":                    schema_provider_linode_api_apis_vlan_v1alpha1_Vlan(ref),
 		"kubeform.dev/provider-linode-api/apis/vlan/v1alpha1.VlanList":                schema_provider_linode_api_apis_vlan_v1alpha1_VlanList(ref),
 		"kubeform.dev/provider-linode-api/apis/vlan/v1alpha1.VlanSpec":                schema_provider_linode_api_apis_vlan_v1alpha1_VlanSpec(ref),
-		"kubeform.dev/provider-linode-api/apis/vlan/v1alpha1.VlanSpec2":               schema_provider_linode_api_apis_vlan_v1alpha1_VlanSpec2(ref),
 		"kubeform.dev/provider-linode-api/apis/vlan/v1alpha1.VlanSpecAttachedLinodes": schema_provider_linode_api_apis_vlan_v1alpha1_VlanSpecAttachedLinodes(ref),
+		"kubeform.dev/provider-linode-api/apis/vlan/v1alpha1.VlanSpecResource":        schema_provider_linode_api_apis_vlan_v1alpha1_VlanSpecResource(ref),
 		"kubeform.dev/provider-linode-api/apis/vlan/v1alpha1.VlanStatus":              schema_provider_linode_api_apis_vlan_v1alpha1_VlanStatus(ref),
 	}
 }
@@ -14317,94 +14317,23 @@ func schema_provider_linode_api_apis_vlan_v1alpha1_VlanSpec(ref common.Reference
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
-					"terminationPolicy": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
-						},
-					},
-					"providerRef": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("k8s.io/api/core/v1.LocalObjectReference"),
-						},
-					},
-					"id": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
-						},
-					},
-					"attachedLinodes": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The Linodes attached to this vlan.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubeform.dev/provider-linode-api/apis/vlan/v1alpha1.VlanSpecAttachedLinodes"),
-									},
-								},
-							},
-						},
-					},
-					"cidrBlock": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
-						},
-					},
-					"description": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Description of the vlan for display purposes only.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"linodes": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The IDs of the Linodes to attach to this vlan.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: 0,
-										Type:    []string{"integer"},
-										Format:  "int64",
-									},
-								},
-							},
-						},
-					},
-					"region": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The region where the vlan is deployed.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
 					"kubeformOutput": {
 						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("kubeform.dev/provider-linode-api/apis/vlan/v1alpha1.VlanSpec2"),
+							Ref: ref("kubeform.dev/provider-linode-api/apis/vlan/v1alpha1.VlanSpecResource"),
 						},
 					},
-				},
-				Required: []string{"providerRef", "region"},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "kubeform.dev/provider-linode-api/apis/vlan/v1alpha1.VlanSpec2", "kubeform.dev/provider-linode-api/apis/vlan/v1alpha1.VlanSpecAttachedLinodes"},
-	}
-}
-
-func schema_provider_linode_api_apis_vlan_v1alpha1_VlanSpec2(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
+					"resource": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubeform.dev/provider-linode-api/apis/vlan/v1alpha1.VlanSpecResource"),
+						},
+					},
+					"updatePolicy": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
 					"terminationPolicy": {
 						SchemaProps: spec.SchemaProps{
 							Type:   []string{"string"},
@@ -14417,67 +14346,12 @@ func schema_provider_linode_api_apis_vlan_v1alpha1_VlanSpec2(ref common.Referenc
 							Ref:     ref("k8s.io/api/core/v1.LocalObjectReference"),
 						},
 					},
-					"id": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
-						},
-					},
-					"attachedLinodes": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The Linodes attached to this vlan.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubeform.dev/provider-linode-api/apis/vlan/v1alpha1.VlanSpecAttachedLinodes"),
-									},
-								},
-							},
-						},
-					},
-					"cidrBlock": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
-						},
-					},
-					"description": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Description of the vlan for display purposes only.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"linodes": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The IDs of the Linodes to attach to this vlan.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: 0,
-										Type:    []string{"integer"},
-										Format:  "int64",
-									},
-								},
-							},
-						},
-					},
-					"region": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The region where the vlan is deployed.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
 				},
-				Required: []string{"providerRef", "region"},
+				Required: []string{"resource", "providerRef"},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "kubeform.dev/provider-linode-api/apis/vlan/v1alpha1.VlanSpecAttachedLinodes"},
+			"k8s.io/api/core/v1.LocalObjectReference", "kubeform.dev/provider-linode-api/apis/vlan/v1alpha1.VlanSpecResource"},
 	}
 }
 
@@ -14508,6 +14382,76 @@ func schema_provider_linode_api_apis_vlan_v1alpha1_VlanSpecAttachedLinodes(ref c
 				},
 			},
 		},
+	}
+}
+
+func schema_provider_linode_api_apis_vlan_v1alpha1_VlanSpecResource(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"id": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"attachedLinodes": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The Linodes attached to this vlan.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubeform.dev/provider-linode-api/apis/vlan/v1alpha1.VlanSpecAttachedLinodes"),
+									},
+								},
+							},
+						},
+					},
+					"cidrBlock": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"description": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Description of the vlan for display purposes only.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"linodes": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The IDs of the Linodes to attach to this vlan.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: 0,
+										Type:    []string{"integer"},
+										Format:  "int64",
+									},
+								},
+							},
+						},
+					},
+					"region": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The region where the vlan is deployed.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"region"},
+			},
+		},
+		Dependencies: []string{
+			"kubeform.dev/provider-linode-api/apis/vlan/v1alpha1.VlanSpecAttachedLinodes"},
 	}
 }
 

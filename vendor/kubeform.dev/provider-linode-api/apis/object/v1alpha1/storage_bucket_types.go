@@ -24,6 +24,7 @@ import (
 	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	kmapi "kmodules.xyz/client-go/api/v1"
+	"sigs.k8s.io/cli-utils/pkg/kstatus/status"
 )
 
 // +genclient
@@ -38,12 +39,6 @@ type StorageBucket struct {
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 	Spec              StorageBucketSpec   `json:"spec,omitempty"`
 	Status            StorageBucketStatus `json:"status,omitempty"`
-}
-
-type StorageBucketSpec struct {
-	StorageBucketSpec2 `json:",inline"`
-	// +optional
-	KubeformOutput StorageBucketSpec2 `json:"kubeformOutput,omitempty" tf:"-"`
 }
 
 type StorageBucketSpecCert struct {
@@ -90,14 +85,22 @@ type StorageBucketSpecLifecycleRule struct {
 	Prefix *string `json:"prefix,omitempty" tf:"prefix"`
 }
 
-type StorageBucketSpec2 struct {
+type StorageBucketSpec struct {
+	KubeformOutput *StorageBucketSpecResource `json:"kubeformOutput,omitempty" tf:"-"`
+
+	Resource StorageBucketSpecResource `json:"resource" tf:"resource"`
+
+	UpdatePolicy base.UpdatePolicy `json:"updatePolicy,omitempty" tf:"-"`
+
 	TerminationPolicy base.TerminationPolicy `json:"terminationPolicy,omitempty" tf:"-"`
 
 	ProviderRef core.LocalObjectReference `json:"providerRef" tf:"-"`
 
-	ID string `json:"id,omitempty" tf:"id,omitempty"`
-
 	SecretRef *core.LocalObjectReference `json:"secretRef,omitempty" tf:"-"`
+}
+
+type StorageBucketSpecResource struct {
+	ID string `json:"id,omitempty" tf:"id,omitempty"`
 
 	// +optional
 	AccessKey *string `json:"accessKey,omitempty" tf:"access_key"`
@@ -128,7 +131,7 @@ type StorageBucketStatus struct {
 	// +optional
 	ObservedGeneration int64 `json:"observedGeneration,omitempty"`
 	// +optional
-	Phase base.Phase `json:"phase,omitempty"`
+	Phase status.Status `json:"phase,omitempty"`
 	// +optional
 	Conditions []kmapi.Condition `json:"conditions,omitempty"`
 }

@@ -24,6 +24,7 @@ import (
 	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	kmapi "kmodules.xyz/client-go/api/v1"
+	"sigs.k8s.io/cli-utils/pkg/kstatus/status"
 )
 
 // +genclient
@@ -40,12 +41,6 @@ type Config struct {
 	Status            ConfigStatus `json:"status,omitempty"`
 }
 
-type ConfigSpec struct {
-	ConfigSpec2 `json:",inline"`
-	// +optional
-	KubeformOutput ConfigSpec2 `json:"kubeformOutput,omitempty" tf:"-"`
-}
-
 type ConfigSpecNodeStatus struct {
 	// The number of backends considered to be 'DOWN' and unhealthy. These are not in rotation, and not serving requests.
 	// +optional
@@ -55,14 +50,22 @@ type ConfigSpecNodeStatus struct {
 	Up *int64 `json:"up,omitempty" tf:"up"`
 }
 
-type ConfigSpec2 struct {
+type ConfigSpec struct {
+	KubeformOutput *ConfigSpecResource `json:"kubeformOutput,omitempty" tf:"-"`
+
+	Resource ConfigSpecResource `json:"resource" tf:"resource"`
+
+	UpdatePolicy base.UpdatePolicy `json:"updatePolicy,omitempty" tf:"-"`
+
 	TerminationPolicy base.TerminationPolicy `json:"terminationPolicy,omitempty" tf:"-"`
 
 	ProviderRef core.LocalObjectReference `json:"providerRef" tf:"-"`
 
-	ID string `json:"id,omitempty" tf:"id,omitempty"`
-
 	SecretRef *core.LocalObjectReference `json:"secretRef,omitempty" tf:"-"`
+}
+
+type ConfigSpecResource struct {
+	ID string `json:"id,omitempty" tf:"id,omitempty"`
 
 	// What algorithm this NodeBalancer should use for routing traffic to backends: roundrobin, leastconn, source
 	// +optional
@@ -126,7 +129,7 @@ type ConfigStatus struct {
 	// +optional
 	ObservedGeneration int64 `json:"observedGeneration,omitempty"`
 	// +optional
-	Phase base.Phase `json:"phase,omitempty"`
+	Phase status.Status `json:"phase,omitempty"`
 	// +optional
 	Conditions []kmapi.Condition `json:"conditions,omitempty"`
 }

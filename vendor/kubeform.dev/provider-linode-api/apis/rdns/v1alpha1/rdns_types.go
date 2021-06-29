@@ -24,6 +24,7 @@ import (
 	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	kmapi "kmodules.xyz/client-go/api/v1"
+	"sigs.k8s.io/cli-utils/pkg/kstatus/status"
 )
 
 // +genclient
@@ -41,16 +42,18 @@ type Rdns struct {
 }
 
 type RdnsSpec struct {
-	RdnsSpec2 `json:",inline"`
-	// +optional
-	KubeformOutput RdnsSpec2 `json:"kubeformOutput,omitempty" tf:"-"`
-}
+	KubeformOutput *RdnsSpecResource `json:"kubeformOutput,omitempty" tf:"-"`
 
-type RdnsSpec2 struct {
+	Resource RdnsSpecResource `json:"resource" tf:"resource"`
+
+	UpdatePolicy base.UpdatePolicy `json:"updatePolicy,omitempty" tf:"-"`
+
 	TerminationPolicy base.TerminationPolicy `json:"terminationPolicy,omitempty" tf:"-"`
 
 	ProviderRef core.LocalObjectReference `json:"providerRef" tf:"-"`
+}
 
+type RdnsSpecResource struct {
 	ID string `json:"id,omitempty" tf:"id,omitempty"`
 
 	// The public Linode IPv4 or IPv6 address to operate on.
@@ -64,7 +67,7 @@ type RdnsStatus struct {
 	// +optional
 	ObservedGeneration int64 `json:"observedGeneration,omitempty"`
 	// +optional
-	Phase base.Phase `json:"phase,omitempty"`
+	Phase status.Status `json:"phase,omitempty"`
 	// +optional
 	Conditions []kmapi.Condition `json:"conditions,omitempty"`
 }

@@ -297,7 +297,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubeform.dev/provider-linode-api/apis/stackscript/v1alpha1.Stackscript":                      schema_provider_linode_api_apis_stackscript_v1alpha1_Stackscript(ref),
 		"kubeform.dev/provider-linode-api/apis/stackscript/v1alpha1.StackscriptList":                  schema_provider_linode_api_apis_stackscript_v1alpha1_StackscriptList(ref),
 		"kubeform.dev/provider-linode-api/apis/stackscript/v1alpha1.StackscriptSpec":                  schema_provider_linode_api_apis_stackscript_v1alpha1_StackscriptSpec(ref),
-		"kubeform.dev/provider-linode-api/apis/stackscript/v1alpha1.StackscriptSpec2":                 schema_provider_linode_api_apis_stackscript_v1alpha1_StackscriptSpec2(ref),
+		"kubeform.dev/provider-linode-api/apis/stackscript/v1alpha1.StackscriptSpecResource":          schema_provider_linode_api_apis_stackscript_v1alpha1_StackscriptSpecResource(ref),
 		"kubeform.dev/provider-linode-api/apis/stackscript/v1alpha1.StackscriptSpecUserDefinedFields": schema_provider_linode_api_apis_stackscript_v1alpha1_StackscriptSpecUserDefinedFields(ref),
 		"kubeform.dev/provider-linode-api/apis/stackscript/v1alpha1.StackscriptStatus":                schema_provider_linode_api_apis_stackscript_v1alpha1_StackscriptStatus(ref),
 	}
@@ -14317,6 +14317,23 @@ func schema_provider_linode_api_apis_stackscript_v1alpha1_StackscriptSpec(ref co
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
+					"kubeformOutput": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubeform.dev/provider-linode-api/apis/stackscript/v1alpha1.StackscriptSpecResource"),
+						},
+					},
+					"resource": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubeform.dev/provider-linode-api/apis/stackscript/v1alpha1.StackscriptSpecResource"),
+						},
+					},
+					"updatePolicy": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
 					"terminationPolicy": {
 						SchemaProps: spec.SchemaProps{
 							Type:   []string{"string"},
@@ -14329,151 +14346,21 @@ func schema_provider_linode_api_apis_stackscript_v1alpha1_StackscriptSpec(ref co
 							Ref:     ref("k8s.io/api/core/v1.LocalObjectReference"),
 						},
 					},
-					"id": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
-						},
-					},
-					"created": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The date this StackScript was created.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"deploymentsActive": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Count of currently active, deployed Linodes created from this StackScript.",
-							Type:        []string{"integer"},
-							Format:      "int64",
-						},
-					},
-					"deploymentsTotal": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The total number of times this StackScript has been deployed.",
-							Type:        []string{"integer"},
-							Format:      "int64",
-						},
-					},
-					"description": {
-						SchemaProps: spec.SchemaProps{
-							Description: "A description for the StackScript.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"images": {
-						SchemaProps: spec.SchemaProps{
-							Description: "An array of Image IDs representing the Images that this StackScript is compatible for deploying with.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: "",
-										Type:    []string{"string"},
-										Format:  "",
-									},
-								},
-							},
-						},
-					},
-					"isPublic": {
-						SchemaProps: spec.SchemaProps{
-							Description: "This determines whether other users can use your StackScript. Once a StackScript is made public, it cannot be made private.",
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
-					"label": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The StackScript's label is for display purposes only.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"revNote": {
-						SchemaProps: spec.SchemaProps{
-							Description: "This field allows you to add notes for the set of revisions made to this StackScript.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"script": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The script to execute when provisioning a new Linode with this StackScript.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"updated": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The date this StackScript was updated.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"userDefinedFields": {
-						SchemaProps: spec.SchemaProps{
-							Description: "This is a list of fields defined with a special syntax inside this StackScript that allow for supplying customized parameters during deployment.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubeform.dev/provider-linode-api/apis/stackscript/v1alpha1.StackscriptSpecUserDefinedFields"),
-									},
-								},
-							},
-						},
-					},
-					"userGravatarID": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The Gravatar ID for the User who created the StackScript.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"username": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The User who created the StackScript.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"kubeformOutput": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("kubeform.dev/provider-linode-api/apis/stackscript/v1alpha1.StackscriptSpec2"),
-						},
-					},
 				},
-				Required: []string{"providerRef", "description", "images", "label", "script"},
+				Required: []string{"resource", "providerRef"},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "kubeform.dev/provider-linode-api/apis/stackscript/v1alpha1.StackscriptSpec2", "kubeform.dev/provider-linode-api/apis/stackscript/v1alpha1.StackscriptSpecUserDefinedFields"},
+			"k8s.io/api/core/v1.LocalObjectReference", "kubeform.dev/provider-linode-api/apis/stackscript/v1alpha1.StackscriptSpecResource"},
 	}
 }
 
-func schema_provider_linode_api_apis_stackscript_v1alpha1_StackscriptSpec2(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_provider_linode_api_apis_stackscript_v1alpha1_StackscriptSpecResource(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
-					"terminationPolicy": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
-						},
-					},
-					"providerRef": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("k8s.io/api/core/v1.LocalObjectReference"),
-						},
-					},
 					"id": {
 						SchemaProps: spec.SchemaProps{
 							Type:   []string{"string"},
@@ -14587,11 +14474,11 @@ func schema_provider_linode_api_apis_stackscript_v1alpha1_StackscriptSpec2(ref c
 						},
 					},
 				},
-				Required: []string{"providerRef", "description", "images", "label", "script"},
+				Required: []string{"description", "images", "label", "script"},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "kubeform.dev/provider-linode-api/apis/stackscript/v1alpha1.StackscriptSpecUserDefinedFields"},
+			"kubeform.dev/provider-linode-api/apis/stackscript/v1alpha1.StackscriptSpecUserDefinedFields"},
 	}
 }
 

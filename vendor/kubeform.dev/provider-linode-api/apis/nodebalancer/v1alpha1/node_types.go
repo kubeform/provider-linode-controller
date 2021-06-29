@@ -24,6 +24,7 @@ import (
 	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	kmapi "kmodules.xyz/client-go/api/v1"
+	"sigs.k8s.io/cli-utils/pkg/kstatus/status"
 )
 
 // +genclient
@@ -41,16 +42,18 @@ type Node struct {
 }
 
 type NodeSpec struct {
-	NodeSpec2 `json:",inline"`
-	// +optional
-	KubeformOutput NodeSpec2 `json:"kubeformOutput,omitempty" tf:"-"`
-}
+	KubeformOutput *NodeSpecResource `json:"kubeformOutput,omitempty" tf:"-"`
 
-type NodeSpec2 struct {
+	Resource NodeSpecResource `json:"resource" tf:"resource"`
+
+	UpdatePolicy base.UpdatePolicy `json:"updatePolicy,omitempty" tf:"-"`
+
 	TerminationPolicy base.TerminationPolicy `json:"terminationPolicy,omitempty" tf:"-"`
 
 	ProviderRef core.LocalObjectReference `json:"providerRef" tf:"-"`
+}
 
+type NodeSpecResource struct {
 	ID string `json:"id,omitempty" tf:"id,omitempty"`
 
 	// The private IP Address and port (IP:PORT) where this backend can be reached. This must be a private IP address.
@@ -77,7 +80,7 @@ type NodeStatus struct {
 	// +optional
 	ObservedGeneration int64 `json:"observedGeneration,omitempty"`
 	// +optional
-	Phase base.Phase `json:"phase,omitempty"`
+	Phase status.Status `json:"phase,omitempty"`
 	// +optional
 	Conditions []kmapi.Condition `json:"conditions,omitempty"`
 }

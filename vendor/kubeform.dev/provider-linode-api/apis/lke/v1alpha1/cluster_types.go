@@ -24,6 +24,7 @@ import (
 	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	kmapi "kmodules.xyz/client-go/api/v1"
+	"sigs.k8s.io/cli-utils/pkg/kstatus/status"
 )
 
 // +genclient
@@ -38,12 +39,6 @@ type Cluster struct {
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 	Spec              ClusterSpec   `json:"spec,omitempty"`
 	Status            ClusterStatus `json:"status,omitempty"`
-}
-
-type ClusterSpec struct {
-	ClusterSpec2 `json:",inline"`
-	// +optional
-	KubeformOutput ClusterSpec2 `json:"kubeformOutput,omitempty" tf:"-"`
 }
 
 type ClusterSpecPoolNodes struct {
@@ -71,16 +66,24 @@ type ClusterSpecPool struct {
 	Type *string `json:"type" tf:"type"`
 }
 
-type ClusterSpec2 struct {
-	TerminationPolicy base.TerminationPolicy `json:"terminationPolicy,omitempty" tf:"-"`
+type ClusterSpec struct {
+	KubeformOutput *ClusterSpecResource `json:"kubeformOutput,omitempty" tf:"-"`
 
-	Timeouts *base.ResourceTimeout `json:"timeouts,omitempty" tf:"timeouts"`
+	Resource ClusterSpecResource `json:"resource" tf:"resource"`
+
+	UpdatePolicy base.UpdatePolicy `json:"updatePolicy,omitempty" tf:"-"`
+
+	TerminationPolicy base.TerminationPolicy `json:"terminationPolicy,omitempty" tf:"-"`
 
 	ProviderRef core.LocalObjectReference `json:"providerRef" tf:"-"`
 
-	ID string `json:"id,omitempty" tf:"id,omitempty"`
-
 	SecretRef *core.LocalObjectReference `json:"secretRef,omitempty" tf:"-"`
+}
+
+type ClusterSpecResource struct {
+	Timeouts *base.ResourceTimeout `json:"timeouts,omitempty" tf:"timeouts"`
+
+	ID string `json:"id,omitempty" tf:"id,omitempty"`
 
 	// The API endpoints for the cluster.
 	// +optional
@@ -110,7 +113,7 @@ type ClusterStatus struct {
 	// +optional
 	ObservedGeneration int64 `json:"observedGeneration,omitempty"`
 	// +optional
-	Phase base.Phase `json:"phase,omitempty"`
+	Phase status.Status `json:"phase,omitempty"`
 	// +optional
 	Conditions []kmapi.Condition `json:"conditions,omitempty"`
 }
