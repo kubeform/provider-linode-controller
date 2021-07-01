@@ -3,6 +3,7 @@ package linode
 import (
 	"context"
 	"fmt"
+	"log"
 	"strings"
 	"time"
 
@@ -100,12 +101,14 @@ func resourceLinodeObjectStorageBucket() *schema.Resource {
 		},
 		Schema: map[string]*schema.Schema{
 			"secret_key": {
-				Type:     schema.TypeString,
-				Optional: true,
+				Type:        schema.TypeString,
+				Description: "The S3 secret key to use for this resource. (Required for lifecycle_rule and versioning)",
+				Optional:    true,
 			},
 			"access_key": {
-				Type:     schema.TypeString,
-				Optional: true,
+				Type:        schema.TypeString,
+				Description: "The S3 access key to use for this resource. (Required for lifecycle_rule and versioning)",
+				Optional:    true,
 			},
 			"cluster": {
 				Type:        schema.TypeString,
@@ -144,9 +147,10 @@ func resourceLinodeObjectStorageBucket() *schema.Resource {
 				Computed:    true,
 			},
 			"cert": {
-				Type:     schema.TypeList,
-				MaxItems: 1,
-				Optional: true,
+				Type:        schema.TypeList,
+				Description: "The cert used by this Object Storage Bucket.",
+				MaxItems:    1,
+				Optional:    true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"certificate": {
@@ -178,6 +182,11 @@ func resourceLinodeObjectStorageBucketRead(d *schema.ResourceData, meta interfac
 
 	bucket, err := client.GetObjectStorageBucket(context.Background(), cluster, label)
 	if err != nil {
+		if lerr, ok := err.(*linodego.Error); ok && lerr.Code == 404 {
+			log.Printf("[WARN] removing Object Storage Bucket %q from state because it no longer exists", d.Id())
+			d.SetId("")
+			return nil
+		}
 		return fmt.Errorf("failed to find the specified Linode ObjectStorageBucket: %s", err)
 	}
 

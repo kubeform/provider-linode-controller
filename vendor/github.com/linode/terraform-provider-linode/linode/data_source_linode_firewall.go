@@ -58,8 +58,9 @@ func dataSourceLinodeFirewall() *schema.Resource {
 		ReadContext: datasourceLinodeFirewallRead,
 		Schema: map[string]*schema.Schema{
 			"id": {
-				Type:     schema.TypeInt,
-				Required: true,
+				Type:        schema.TypeInt,
+				Description: "The unique ID assigned to this Firewall.",
+				Required:    true,
 			},
 			"label": {
 				Type: schema.TypeString,
@@ -131,17 +132,17 @@ func datasourceLinodeFirewallRead(ctx context.Context, d *schema.ResourceData, m
 
 	firewall, err := client.GetFirewall(context.Background(), id)
 	if err != nil {
-		diag.Errorf("failed to get firewall %d: %s", id, err)
+		return diag.Errorf("failed to get firewall %d: %s", id, err)
 	}
 
 	rules, err := client.GetFirewallRules(context.Background(), id)
 	if err != nil {
-		diag.Errorf("failed to get firewall rules %d: %s", id, err)
+		return diag.Errorf("failed to get firewall rules %d: %s", id, err)
 	}
 
 	devices, err := client.ListFirewallDevices(context.Background(), id, nil)
 	if err != nil {
-		diag.Errorf("failed to get firewall devices %d: %s", id, err)
+		return diag.Errorf("failed to get firewall devices %d: %s", id, err)
 	}
 
 	d.SetId(strconv.Itoa(id))

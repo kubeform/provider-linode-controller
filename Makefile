@@ -15,7 +15,7 @@
 SHELL=/bin/bash -o pipefail
 
 PRODUCT_OWNER_NAME := appscode
-PRODUCT_NAME       := kubeform
+PRODUCT_NAME       := kubeform-community
 ENFORCE_LICENSE    ?=
 
 GO_PKG   := kubefrom.dev
