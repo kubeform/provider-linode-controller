@@ -19,6 +19,9 @@ const (
 	LinodeInstanceDeleteTimeout = 10 * time.Minute
 )
 
+const linodeInstanceDeviceDescription = "Device can be either a Disk or Volume identified by disk_id or " +
+	"volume_id. Only one type per slot allowed."
+
 var linodeInstanceDownsizeFailedMessage = `
 Did you try to resize a linode with implicit, default disks to a smaller type? The provider does
 not automatically scale the boot disk to fit an updated instance type. You may need to switch to
@@ -45,6 +48,28 @@ func resourceLinodeInstanceDeviceDisk() *schema.Resource {
 				Type:        schema.TypeInt,
 				Optional:    true,
 				Description: "The Block Storage volume ID to map to this disk slot",
+			},
+		},
+	}
+}
+
+func resourceLinodeInstanceConfigInterface() *schema.Resource {
+	return &schema.Resource{
+		Schema: map[string]*schema.Schema{
+			"label": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "The unique label of this interface.",
+			},
+			"purpose": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "The purpose of this interface.",
+			},
+			"ipam_address": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "The IPAM Address of this interface.",
 			},
 		},
 	}
@@ -238,8 +263,9 @@ func resourceLinodeInstance() *schema.Resource {
 				Default:  true,
 			},
 			"specs": {
-				Computed: true,
-				Type:     schema.TypeList,
+				Computed:    true,
+				Description: "Information about the resources available to this Linode.",
+				Type:        schema.TypeList,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"disk": {
@@ -272,10 +298,11 @@ func resourceLinodeInstance() *schema.Resource {
 			},
 
 			"alerts": {
-				Computed: true,
-				Type:     schema.TypeList,
-				Optional: true,
-				MaxItems: 1,
+				Computed:    true,
+				Description: "Configuration options for alert triggers on this Linode.",
+				Type:        schema.TypeList,
+				Optional:    true,
+				MaxItems:    1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"cpu": {
@@ -362,12 +389,21 @@ func resourceLinodeInstance() *schema.Resource {
 					},
 				},
 			},
+			"interface": {
+				Type: schema.TypeList,
+				Description: "An array of Network Interfaces for this Linode to be created with. " +
+					"If an explicit config or disk is defined, interfaces must be declared in the config block.",
+				Optional:      true,
+				ConflictsWith: []string{"disk", "config"},
+				Elem:          resourceLinodeInstanceConfigInterface(),
+			},
 			"config": {
 				Optional:    true,
 				Description: "Configuration profiles define the VM settings and boot behavior of the Linode Instance.",
 				Type:        schema.TypeList,
 				ConflictsWith: []string{
-					"image", "root_pass", "authorized_keys", "authorized_users", "swap_size", "backup_id", "stackscript_id"},
+					"image", "root_pass", "authorized_keys", "authorized_users", "swap_size",
+					"backup_id", "stackscript_id", "interface"},
 				DiffSuppressFunc: func(k, old, new string, d *schema.ResourceData) bool {
 					_, hasImage := d.GetOk("image")
 					return hasImage
@@ -432,63 +468,77 @@ func resourceLinodeInstance() *schema.Resource {
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"sda": {
-										Type:     schema.TypeList,
-										MaxItems: 1,
-										Computed: true,
-										Optional: true,
-										Elem:     resourceLinodeInstanceDeviceDisk(),
+										Type:        schema.TypeList,
+										Description: linodeInstanceDeviceDescription,
+										MaxItems:    1,
+										Computed:    true,
+										Optional:    true,
+										Elem:        resourceLinodeInstanceDeviceDisk(),
 									},
 									"sdb": {
-										Type:     schema.TypeList,
-										MaxItems: 1,
-										Optional: true,
-										Computed: true,
-										Elem:     resourceLinodeInstanceDeviceDisk(),
+										Type:        schema.TypeList,
+										Description: linodeInstanceDeviceDescription,
+										MaxItems:    1,
+										Optional:    true,
+										Computed:    true,
+										Elem:        resourceLinodeInstanceDeviceDisk(),
 									},
 									"sdc": {
-										Type:     schema.TypeList,
-										MaxItems: 1,
-										Optional: true,
-										Computed: true,
-										Elem:     resourceLinodeInstanceDeviceDisk(),
+										Type:        schema.TypeList,
+										Description: linodeInstanceDeviceDescription,
+										MaxItems:    1,
+										Optional:    true,
+										Computed:    true,
+										Elem:        resourceLinodeInstanceDeviceDisk(),
 									},
 									"sdd": {
-										Type:     schema.TypeList,
-										MaxItems: 1,
-										Optional: true,
-										Computed: true,
-										Elem:     resourceLinodeInstanceDeviceDisk(),
+										Type:        schema.TypeList,
+										Description: linodeInstanceDeviceDescription,
+										MaxItems:    1,
+										Optional:    true,
+										Computed:    true,
+										Elem:        resourceLinodeInstanceDeviceDisk(),
 									},
 									"sde": {
-										Type:     schema.TypeList,
-										MaxItems: 1,
-										Optional: true,
-										Computed: true,
-										Elem:     resourceLinodeInstanceDeviceDisk(),
+										Type:        schema.TypeList,
+										Description: linodeInstanceDeviceDescription,
+										MaxItems:    1,
+										Optional:    true,
+										Computed:    true,
+										Elem:        resourceLinodeInstanceDeviceDisk(),
 									},
 									"sdf": {
-										Type:     schema.TypeList,
-										MaxItems: 1,
-										Optional: true,
-										Computed: true,
-										Elem:     resourceLinodeInstanceDeviceDisk(),
+										Type:        schema.TypeList,
+										Description: linodeInstanceDeviceDescription,
+										MaxItems:    1,
+										Optional:    true,
+										Computed:    true,
+										Elem:        resourceLinodeInstanceDeviceDisk(),
 									},
 									"sdg": {
-										Type:     schema.TypeList,
-										MaxItems: 1,
-										Optional: true,
-										Computed: true,
-										Elem:     resourceLinodeInstanceDeviceDisk(),
+										Type:        schema.TypeList,
+										Description: linodeInstanceDeviceDescription,
+										MaxItems:    1,
+										Optional:    true,
+										Computed:    true,
+										Elem:        resourceLinodeInstanceDeviceDisk(),
 									},
 									"sdh": {
-										Type:     schema.TypeList,
-										MaxItems: 1,
-										Optional: true,
-										Computed: true,
-										Elem:     resourceLinodeInstanceDeviceDisk(),
+										Type:        schema.TypeList,
+										Description: linodeInstanceDeviceDescription,
+										MaxItems:    1,
+										Optional:    true,
+										Computed:    true,
+										Elem:        resourceLinodeInstanceDeviceDisk(),
 									},
 								},
 							},
+						},
+						"interface": {
+							Type:        schema.TypeList,
+							Description: "An array of Network Interfaces for this Linode’s Configuration Profile.",
+							Optional:    true,
+							Elem:        resourceLinodeInstanceConfigInterface(),
 						},
 						"kernel": {
 							Type:     schema.TypeString,
@@ -533,7 +583,8 @@ func resourceLinodeInstance() *schema.Resource {
 			"disk": {
 				Optional: true,
 				ConflictsWith: []string{
-					"image", "root_pass", "authorized_keys", "authorized_users", "swap_size", "backup_id", "stackscript_id"},
+					"image", "root_pass", "authorized_keys", "authorized_users", "swap_size",
+					"backup_id", "stackscript_id", "interface"},
 				Type: schema.TypeList,
 				DiffSuppressFunc: func(k, old, new string, d *schema.ResourceData) bool {
 					_, hasImage := d.GetOk("image")
@@ -744,7 +795,19 @@ func resourceLinodeInstanceRead(ctx context.Context, d *schema.ResourceData, met
 
 	d.Set("config", configs)
 	if len(instanceConfigs) == 1 {
-		d.Set("boot_config_label", instanceConfigs[0].Label)
+		defaultConfig := instanceConfigs[0]
+
+		if _, ok := d.GetOk("interface"); ok {
+			flattenedInterfaces := make([]map[string]interface{}, len(defaultConfig.Interfaces))
+
+			for i, configInterface := range defaultConfig.Interfaces {
+				flattenedInterfaces[i] = flattenLinodeConfigInterface(configInterface)
+			}
+
+			d.Set("interface", flattenedInterfaces)
+		}
+
+		d.Set("boot_config_label", defaultConfig.Label)
 	}
 
 	return nil
@@ -766,6 +829,16 @@ func resourceLinodeInstanceCreate(ctx context.Context, d *schema.ResourceData, m
 	if tagsRaw, tagsOk := d.GetOk("tags"); tagsOk {
 		for _, tag := range tagsRaw.(*schema.Set).List() {
 			createOpts.Tags = append(createOpts.Tags, tag.(string))
+		}
+	}
+
+	if interfaces, interfacesOk := d.GetOk("interface"); interfacesOk {
+		interfaces := interfaces.([]interface{})
+
+		createOpts.Interfaces = make([]linodego.InstanceConfigInterface, len(interfaces))
+
+		for i, ni := range interfaces {
+			createOpts.Interfaces[i] = expandLinodeConfigInterface(ni.(map[string]interface{}))
 		}
 	}
 
@@ -928,7 +1001,7 @@ func resourceLinodeInstanceCreate(ctx context.Context, d *schema.ResourceData, m
 	}
 
 	// If the instance has implicit disks and config with no specified image it will not boot.
-	if !(disksOk && configsOk) && len(instance.Image) < 1 {
+	if !(disksOk && configsOk) && len(createOpts.Image) < 1 {
 		targetStatus = linodego.InstanceOffline
 	}
 
@@ -1047,8 +1120,10 @@ func resourceLinodeInstanceUpdate(ctx context.Context, d *schema.ResourceData, m
 
 	// apply staged simple updates early
 	if simpleUpdate {
+		instanceID := instance.ID
+
 		if instance, err = client.UpdateInstance(ctx, instance.ID, updateOpts); err != nil {
-			return diag.Errorf("Error updating Instance %d: %s", instance.ID, err)
+			return diag.Errorf("Error updating Instance %d: %s", instanceID, err)
 		}
 	}
 
@@ -1142,6 +1217,22 @@ func resourceLinodeInstanceUpdate(ctx context.Context, d *schema.ResourceData, m
 		bootConfig = updatedConfigs[0].ID
 	}
 
+	if d.HasChange("interface") {
+		interfaces := d.Get("interface").([]interface{})
+
+		expandedInterfaces := make([]linodego.InstanceConfigInterface, len(interfaces))
+
+		for i, ni := range interfaces {
+			expandedInterfaces[i] = expandLinodeConfigInterface(ni.(map[string]interface{}))
+		}
+
+		if _, err := client.UpdateInstanceConfig(ctx, instance.ID, bootConfig, linodego.InstanceConfigUpdateOptions{
+			Interfaces: expandedInterfaces,
+		}); err != nil {
+			return diag.Errorf("failed to set boot config interfaces: %s", err)
+		}
+	}
+
 	if rebootInstance && len(diskIDLabelMap) > 0 && len(updatedConfigMap) > 0 && bootConfig > 0 {
 		err = client.RebootInstance(ctx, instance.ID, bootConfig)
 
@@ -1174,9 +1265,14 @@ func resourceLinodeInstanceDelete(ctx context.Context, d *schema.ResourceData, m
 	if err != nil {
 		return diag.Errorf("Error deleting Linode instance %d: %s", id, err)
 	}
-	// Wait for full deletion to assure volumes are detached
-	client.WaitForEventFinished(ctx, int(id), linodego.EntityLinode, linodego.ActionLinodeDelete,
-		minDelete, getDeadlineSeconds(ctx, d))
+
+	if !meta.(*ProviderMeta).Config.SkipInstanceDeletePoll {
+		// Wait for full deletion to assure volumes are detached
+		if _, err = client.WaitForEventFinished(ctx, int(id), linodego.EntityLinode, linodego.ActionLinodeDelete,
+			minDelete, getDeadlineSeconds(ctx, d)); err != nil {
+			return diag.Errorf("failed to wait for instance %d to be deleted: %s", id, err)
+		}
+	}
 
 	d.SetId("")
 	return nil

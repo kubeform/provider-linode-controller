@@ -8,6 +8,9 @@ import (
 	"encoding/gob"
 	"encoding/json"
 	"fmt"
+	"reflect"
+	"strings"
+
 	"github.com/fatih/structs"
 	"github.com/hashicorp/go-cty/cty"
 	"github.com/hashicorp/go-cty/cty/msgpack"
@@ -25,11 +28,9 @@ import (
 	"k8s.io/apimachinery/pkg/types"
 	kmapi "kmodules.xyz/client-go/api/v1"
 	"kmodules.xyz/client-go/meta"
-	"kubeform.dev/provider-linode-api/apis/linode"
-	"reflect"
+	linode "kubeform.dev/provider-linode-api/api/provider"
 	"sigs.k8s.io/cli-utils/pkg/kstatus/status"
 	"sigs.k8s.io/controller-runtime/pkg/client"
-	"strings"
 )
 
 const (
@@ -803,6 +804,7 @@ func updateStateField(rClient client.Client, ctx context.Context, intrfc map[str
 			Namespace: obj.GetNamespace(),
 			Name:      secretName,
 		}
+		tr := true
 		if err := rClient.Get(ctx, req, &secret); err != nil {
 			if errors.ReasonForError(err) == metav1.StatusReasonNotFound {
 				err = rClient.Create(ctx, &corev1.Secret{
@@ -814,6 +816,7 @@ func updateStateField(rClient client.Client, ctx context.Context, intrfc map[str
 								APIVersion: obj.GetAPIVersion(),
 								Kind:       obj.GetKind(),
 								Name:       obj.GetName(),
+								Controller: &tr,
 								UID:        obj.GetUID(),
 							},
 						},
@@ -841,6 +844,15 @@ func updateStateField(rClient client.Client, ctx context.Context, intrfc map[str
 				return err
 			}
 			return err
+		}
+		secret.OwnerReferences = []metav1.OwnerReference{
+			{
+				APIVersion: obj.GetAPIVersion(),
+				Kind:       obj.GetKind(),
+				Name:       obj.GetName(),
+				Controller: &tr,
+				UID:        obj.GetUID(),
+			},
 		}
 		if secret.Data == nil {
 			secret.Data = make(map[string][]byte)

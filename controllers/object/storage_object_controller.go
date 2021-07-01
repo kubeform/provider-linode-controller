@@ -4,8 +4,10 @@ package object
 
 import (
 	"context"
+
 	"github.com/go-logr/logr"
 	tfschema "github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -67,5 +69,6 @@ func (r *StorageObjectReconciler) SetupWithManager(mgr ctrl.Manager) error {
 				return (e.ObjectNew.(metav1.Object)).GetDeletionTimestamp() != nil || !meta_util.MustAlreadyReconciled(e.ObjectNew)
 			},
 		}).
+		Owns(&v1.Secret{}).
 		Complete(r)
 }

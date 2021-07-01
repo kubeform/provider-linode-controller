@@ -1,11 +1,24 @@
+/*
+Copyright AppsCode Inc. and Contributors
+
+Licensed under the AppsCode Free Trial License 1.0.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    https://github.com/appscode/licenses/raw/1.0.0/AppsCode-Free-Trial-1.0.0.md
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
 package framework
 
 import (
 	"context"
 	"time"
-
-	"kubeform.dev/provider-linode-api/apis/instance/v1alpha1"
-	"sigs.k8s.io/cli-utils/pkg/kstatus/status"
 
 	. "github.com/onsi/gomega"
 	corev1 "k8s.io/api/core/v1"
@@ -13,6 +26,8 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	meta_util "kmodules.xyz/client-go/meta"
+	"kubeform.dev/provider-linode-api/apis/instance/v1alpha1"
+	"sigs.k8s.io/cli-utils/pkg/kstatus/status"
 )
 
 func (i *Invocation) Instance(name string, secretName string) *v1alpha1.Instance {
@@ -28,13 +43,13 @@ func (i *Invocation) Instance(name string, secretName string) *v1alpha1.Instance
 			},
 		},
 		Spec: v1alpha1.InstanceSpec{
-			InstanceSpec2: v1alpha1.InstanceSpec2{
-				ProviderRef: corev1.LocalObjectReference{
-					Name: secretName,
-				},
-				SecretRef: &corev1.LocalObjectReference{
-					Name: InstanceSecretName,
-				},
+			ProviderRef: corev1.LocalObjectReference{
+				Name: secretName,
+			},
+			SecretRef: &corev1.LocalObjectReference{
+				Name: InstanceSecretName,
+			},
+			Resource: v1alpha1.InstanceSpecResource{
 				Image:  &image,
 				Label:  &name,
 				Region: &region,
