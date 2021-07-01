@@ -1,11 +1,10 @@
 package framework
 
 import (
-	linodeclient "kubeform.dev/provider-linode-api/client/clientset/versioned"
-
 	"gomodules.xyz/x/crypto/rand"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
+	linodeclient "kubeform.dev/provider-linode-api/client/clientset/versioned"
 )
 
 type Framework struct {

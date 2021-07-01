@@ -4,16 +4,14 @@ import (
 	"context"
 	"time"
 
-	corev1 "k8s.io/api/core/v1"
-
-	"kubeform.dev/provider-linode-api/apis/instance/v1alpha1"
-	"sigs.k8s.io/cli-utils/pkg/kstatus/status"
-
 	. "github.com/onsi/gomega"
+	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	meta_util "kmodules.xyz/client-go/meta"
+	"kubeform.dev/provider-linode-api/apis/instance/v1alpha1"
+	"sigs.k8s.io/cli-utils/pkg/kstatus/status"
 )
 
 func (i *Invocation) Instance(name string, secretName string) *v1alpha1.Instance {

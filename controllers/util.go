@@ -8,6 +8,9 @@ import (
 	"encoding/gob"
 	"encoding/json"
 	"fmt"
+	"reflect"
+	"strings"
+
 	"github.com/fatih/structs"
 	"github.com/hashicorp/go-cty/cty"
 	"github.com/hashicorp/go-cty/cty/msgpack"
@@ -26,10 +29,8 @@ import (
 	kmapi "kmodules.xyz/client-go/api/v1"
 	"kmodules.xyz/client-go/meta"
 	linode "kubeform.dev/provider-linode-api/api/provider"
-	"reflect"
 	"sigs.k8s.io/cli-utils/pkg/kstatus/status"
 	"sigs.k8s.io/controller-runtime/pkg/client"
-	"strings"
 )
 
 const (

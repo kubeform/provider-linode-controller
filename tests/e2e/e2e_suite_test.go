@@ -1,6 +1,10 @@
 package e2e_test
 
 import (
+	"path/filepath"
+	"testing"
+	"time"
+
 	"github.com/linode/terraform-provider-linode/linode"
 	. "github.com/onsi/ginkgo"
 	"github.com/onsi/ginkgo/reporters"
@@ -14,12 +18,9 @@ import (
 	linodeclient "kubeform.dev/provider-linode-api/client/clientset/versioned"
 	controllersinstance "kubeform.dev/provider-linode-controller/controllers/instance"
 	"kubeform.dev/provider-linode-controller/tests/e2e/framework"
-	"path/filepath"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/envtest"
-	"testing"
-	"time"
 )
 
 var (

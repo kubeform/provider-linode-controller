@@ -6,16 +6,16 @@ import (
 	"flag"
 	"os"
 
+	// +kubebuilder:scaffold:imports
+
 	"k8s.io/apiextensions-apiserver/pkg/client/clientset/clientset"
 	clientgoscheme "k8s.io/client-go/kubernetes/scheme"
 	kscheme "k8s.io/client-go/kubernetes/scheme"
+	admissionregistrationv1 "k8s.io/client-go/kubernetes/typed/admissionregistration/v1"
 	_ "k8s.io/client-go/plugin/pkg/client/auth/gcp"
 	"k8s.io/klog/v2/klogr"
-	ctrl "sigs.k8s.io/controller-runtime"
-
-	admissionregistrationv1 "k8s.io/client-go/kubernetes/typed/admissionregistration/v1"
 	linodescheme "kubeform.dev/provider-linode-api/client/clientset/versioned/scheme"
-	// +kubebuilder:scaffold:imports
+	ctrl "sigs.k8s.io/controller-runtime"
 )
 
 var (
