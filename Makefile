@@ -136,9 +136,9 @@ version:
 	@echo ::set-output name=commit_hash::$(commit_hash)
 	@echo ::set-output name=commit_timestamp::$(commit_timestamp)
 
-# Generate gen-controller
-.PHONY: gen-controller
-gen-controller:
+# Generate gen-controllers
+.PHONY: gen-controllers
+gen-controllers:
 	@echo "Generating controller"
 	@provider-$(PROVIDER)-gen --controller-path=$$(pwd)
 	@$(MAKE) add-license fmt --no-print-directory

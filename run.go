@@ -8,9 +8,11 @@ import (
 
 	"github.com/spf13/cobra"
 	auditlib "go.bytebuilders.dev/audit/lib"
+	licenseapi "go.bytebuilders.dev/license-verifier/apis/licenses/v1alpha1"
 	license "go.bytebuilders.dev/license-verifier/kubernetes"
 	"k8s.io/apiextensions-apiserver/pkg/client/clientset/clientset"
 	"k8s.io/apimachinery/pkg/runtime"
+	"k8s.io/apimachinery/pkg/util/sets"
 	"k8s.io/client-go/kubernetes"
 	clientgoscheme "k8s.io/client-go/kubernetes/scheme"
 	admissionregistrationv1 "k8s.io/client-go/kubernetes/typed/admissionregistration/v1"
@@ -73,6 +75,18 @@ func NewCmdRun(version string) *cobra.Command {
 
 			info := license.NewLicenseEnforcer(cfg, licenseFile).LoadLicense()
 			fmt.Printf("%+v\n", info)
+			if info.Status != licenseapi.LicenseActive {
+				fmt.Printf("License status %s", info.Status)
+				os.Exit(1)
+			}
+			if sets.NewString(info.Features...).Has("kubeform-enterprise") {
+				fmt.Println("watch all namespaces")
+			} else if sets.NewString(info.Features...).Has("kubeform-community") {
+				fmt.Println("watch default namespace")
+			} else {
+				fmt.Println("not a valid license for this product")
+				os.Exit(1)
+			}
 
 			// audit event publisher
 			var auditor *auditlib.EventPublisher
