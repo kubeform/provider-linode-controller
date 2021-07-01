@@ -6,6 +6,8 @@ require (
 	github.com/appscode/go v0.0.0-20201105063637-5613f3b8169f
 	github.com/fatih/structs v1.1.0
 	github.com/go-logr/logr v0.4.0
+	github.com/gobuffalo/flect v0.2.2
+	github.com/golang/glog v0.0.0-20210429001901-424d2337a529 // indirect
 	github.com/hashicorp/go-cty v1.4.1-0.20200414143053-d3edf31b6320
 	github.com/hashicorp/terraform-plugin-go v0.2.1
 	github.com/hashicorp/terraform-plugin-sdk/v2 v2.5.0
@@ -20,9 +22,9 @@ require (
 	k8s.io/apimachinery v0.21.1
 	k8s.io/client-go v0.21.1
 	k8s.io/klog/v2 v2.8.0
-	kmodules.xyz/client-go v0.0.0-20210514054158-27e164b43474
+	kmodules.xyz/client-go v0.0.0-20210617233340-13d22e91512b
 	kmodules.xyz/constants v0.0.0-20210218100002-2c304bfda278
-	kubeform.dev/provider-linode-api v0.0.0-20210623063831-eadad8d438dc
+	kubeform.dev/provider-linode-api v0.0.0-20210701103354-dd321c8316d0
 	sigs.k8s.io/cli-utils v0.25.0
 	sigs.k8s.io/controller-runtime v0.9.0
 )

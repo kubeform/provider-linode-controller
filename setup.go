@@ -6,7 +6,10 @@ import (
 	"context"
 	"fmt"
 	"github.com/appscode/go/log"
+	"github.com/gobuffalo/flect"
 	"github.com/linode/terraform-provider-linode/linode"
+	"io/ioutil"
+	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/client-go/tools/cache"
@@ -22,7 +25,6 @@ import (
 	controllersstackscript "kubeform.dev/provider-linode-controller/controllers/stackscript"
 	controllerstoken "kubeform.dev/provider-linode-controller/controllers/token"
 	controllersuser "kubeform.dev/provider-linode-controller/controllers/user"
-	controllersvlan "kubeform.dev/provider-linode-controller/controllers/vlan"
 	controllersvolume "kubeform.dev/provider-linode-controller/controllers/volume"
 	"os"
 	"strings"
@@ -41,7 +43,6 @@ import (
 	stackscriptv1alpha1 "kubeform.dev/provider-linode-api/apis/stackscript/v1alpha1"
 	tokenv1alpha1 "kubeform.dev/provider-linode-api/apis/token/v1alpha1"
 	userv1alpha1 "kubeform.dev/provider-linode-api/apis/user/v1alpha1"
-	vlanv1alpha1 "kubeform.dev/provider-linode-api/apis/vlan/v1alpha1"
 	volumev1alpha1 "kubeform.dev/provider-linode-api/apis/volume/v1alpha1"
 
 	arv1 "k8s.io/api/admissionregistration/v1"
@@ -99,11 +100,11 @@ func watchCRD(crdClient *clientset.Clientset, vwcClient *admissionregistrationv1
 					runningControllers.mp[gvk] = true
 					runningControllers.Unlock()
 
-					if enableValidatingWebhook == true {
+					if enableValidatingWebhook {
 						// add dynamic ValidatingWebhookConfiguration
 
 						// create empty VWC if the group has come for the first time
-						err := createEmptyVWC(vwcClient, gvk)
+						err := createFirstVWC(vwcClient, gvk)
 						if err != nil {
 							log.Error(err)
 							return
@@ -138,23 +139,59 @@ func watchCRD(crdClient *clientset.Clientset, vwcClient *admissionregistrationv1
 	return nil
 }
 
-func createEmptyVWC(vwcClient *admissionregistrationv1.AdmissionregistrationV1Client, gvk schema.GroupVersionKind) error {
+func createFirstVWC(vwcClient *admissionregistrationv1.AdmissionregistrationV1Client, gvk schema.GroupVersionKind) error {
 	vwcName := strings.ReplaceAll(strings.ToLower(gvk.Group), ".", "-") + "-vwc"
-	_, err := vwcClient.ValidatingWebhookConfigurations().Get(context.TODO(), vwcName, metav1.GetOptions{})
-	if err == nil {
+	vwc, err := vwcClient.ValidatingWebhookConfigurations().Get(context.TODO(), vwcName, metav1.GetOptions{})
+	if err == nil || !(errors.IsNotFound(err)) {
 		return err
 	}
 
-	emptyVWC := &arv1.ValidatingWebhookConfiguration{
+	path := "/validate-" + strings.ReplaceAll(strings.ToLower(gvk.Group), ".", "-") + "-v1alpha1-" + strings.ToLower(gvk.Kind)
+	fail := arv1.Fail
+	sideEffects := arv1.SideEffectClassNone
+	admissionReviewVersions := []string{"v1"}
+
+	data, err := ioutil.ReadFile("/tmp/k8s-webhook-server/serving-certs/ca.crt")
+	if err != nil {
+		return err
+	}
+
+	name := strings.ToLower(gvk.Kind) + "." + gvk.Group
+	for _, webhook := range vwc.Webhooks {
+		if webhook.Name == name {
+			return nil
+		}
+	}
+
+	firstVWC := &arv1.ValidatingWebhookConfiguration{
 		TypeMeta: metav1.TypeMeta{
 			Kind:       "ValidatingWebhookConfiguration",
 			APIVersion: "admissionregistration.k8s.io/v1",
 		},
 		ObjectMeta: metav1.ObjectMeta{
 			Name: strings.ReplaceAll(strings.ToLower(gvk.Group), ".", "-") + "-vwc",
+			Labels: map[string]string{
+				"app.kubernetes.io/instance": "linode.kubeform.com",
+			},
+		},
+		Webhooks: []arv1.ValidatingWebhook{
+			{
+				Name: name,
+				ClientConfig: arv1.WebhookClientConfig{
+					Service: &arv1.ServiceReference{
+						Namespace: webhookNamespace,
+						Name:      webhookName,
+						Path:      &path,
+					},
+					CABundle: data,
+				},
+				FailurePolicy:           &fail,
+				SideEffects:             &sideEffects,
+				AdmissionReviewVersions: admissionReviewVersions,
+			},
 		},
 	}
-	_, err = vwcClient.ValidatingWebhookConfigurations().Create(context.TODO(), emptyVWC, metav1.CreateOptions{})
+	_, err = vwcClient.ValidatingWebhookConfigurations().Create(context.TODO(), firstVWC, metav1.CreateOptions{})
 	if err != nil {
 		return err
 	}
@@ -169,41 +206,20 @@ func updateVWC(vwcClient *admissionregistrationv1.AdmissionregistrationV1Client,
 		return err
 	}
 
-	path := "/validate-" + strings.ReplaceAll(strings.ToLower(gvk.Group), ".", "-") + "-v1alpha1-" + strings.ToLower(gvk.Kind)
-	fail := arv1.Fail
-	sideEffects := arv1.SideEffectClassNone
-	admissionReviewVersions := []string{"v1"}
-	rules := []arv1.RuleWithOperations{
-		{
-			Operations: []arv1.OperationType{
-				arv1.Create,
-				arv1.Update,
-				arv1.Delete,
-			},
-			Rule: arv1.Rule{
-				APIGroups:   []string{strings.ToLower(gvk.Group)},
-				APIVersions: []string{gvk.Version},
-				Resources:   []string{strings.ToLower(gvk.Kind)},
-			},
+	rules := arv1.RuleWithOperations{
+		Operations: []arv1.OperationType{
+			arv1.Create,
+			arv1.Update,
+			arv1.Delete,
+		},
+		Rule: arv1.Rule{
+			APIGroups:   []string{strings.ToLower(gvk.Group)},
+			APIVersions: []string{gvk.Version},
+			Resources:   []string{strings.ToLower(flect.Pluralize(gvk.Kind))},
 		},
 	}
 
-	newWebhook := arv1.ValidatingWebhook{
-		Name: strings.ToLower(gvk.Kind) + "." + gvk.Group,
-		ClientConfig: arv1.WebhookClientConfig{
-			Service: &arv1.ServiceReference{
-				Namespace: webhookName,
-				Name:      webhookNamespace,
-				Path:      &path,
-			},
-		},
-		Rules:                   rules,
-		FailurePolicy:           &fail,
-		SideEffects:             &sideEffects,
-		AdmissionReviewVersions: admissionReviewVersions,
-	}
-
-	vwc.Webhooks = append(vwc.Webhooks, newWebhook)
+	vwc.Webhooks[0].Rules = append(vwc.Webhooks[0].Rules, rules)
 
 	_, err = vwcClient.ValidatingWebhookConfigurations().Update(context.TODO(), vwc, metav1.UpdateOptions{})
 	if err != nil {
@@ -522,23 +538,6 @@ func SetupManager(mgr manager.Manager, gvk schema.GroupVersionKind) error {
 			return err
 		}
 	case schema.GroupVersionKind{
-		Group:   "vlan.linode.kubeform.com",
-		Version: "v1alpha1",
-		Kind:    "Vlan",
-	}:
-		if err := (&controllersvlan.VlanReconciler{
-			Client:   mgr.GetClient(),
-			Log:      ctrl.Log.WithName("controllers").WithName("Vlan"),
-			Scheme:   mgr.GetScheme(),
-			Gvk:      gvk,
-			Provider: linode.Provider(),
-			Resource: linode.Provider().ResourcesMap["linode_vlan"],
-			TypeName: "linode_vlan",
-		}).SetupWithManager(mgr); err != nil {
-			setupLog.Error(err, "unable to create controller", "controller", "Vlan")
-			return err
-		}
-	case schema.GroupVersionKind{
 		Group:   "volume.linode.kubeform.com",
 		Version: "v1alpha1",
 		Kind:    "Volume",
@@ -725,15 +724,6 @@ func SetupWebhook(mgr manager.Manager, gvk schema.GroupVersionKind) error {
 	}:
 		if err := (&userv1alpha1.User{}).SetupWebhookWithManager(mgr); err != nil {
 			setupLog.Error(err, "unable to create webhook", "webhook", "User")
-			return err
-		}
-	case schema.GroupVersionKind{
-		Group:   "vlan.linode.kubeform.com",
-		Version: "v1alpha1",
-		Kind:    "Vlan",
-	}:
-		if err := (&vlanv1alpha1.Vlan{}).SetupWebhookWithManager(mgr); err != nil {
-			setupLog.Error(err, "unable to create webhook", "webhook", "Vlan")
 			return err
 		}
 	case schema.GroupVersionKind{

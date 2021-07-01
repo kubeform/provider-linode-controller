@@ -4,11 +4,12 @@ import (
 	"context"
 	"time"
 
+	corev1 "k8s.io/api/core/v1"
+
 	"kubeform.dev/provider-linode-api/apis/instance/v1alpha1"
 	"sigs.k8s.io/cli-utils/pkg/kstatus/status"
 
 	. "github.com/onsi/gomega"
-	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -28,13 +29,13 @@ func (i *Invocation) Instance(name string, secretName string) *v1alpha1.Instance
 			},
 		},
 		Spec: v1alpha1.InstanceSpec{
-			InstanceSpec2: v1alpha1.InstanceSpec2{
-				ProviderRef: corev1.LocalObjectReference{
-					Name: secretName,
-				},
-				SecretRef: &corev1.LocalObjectReference{
-					Name: InstanceSecretName,
-				},
+			ProviderRef: corev1.LocalObjectReference{
+				Name: secretName,
+			},
+			SecretRef: &corev1.LocalObjectReference{
+				Name: InstanceSecretName,
+			},
+			Resource: v1alpha1.InstanceSpecResource{
 				Image:  &image,
 				Label:  &name,
 				Region: &region,

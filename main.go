@@ -26,6 +26,7 @@ var (
 var enableValidatingWebhook bool
 var webhookName string
 var webhookNamespace string
+var enableAnalytics bool
 
 func init() {
 	_ = clientgoscheme.AddToScheme(scheme)
@@ -41,9 +42,10 @@ func main() {
 	flag.BoolVar(&enableLeaderElection, "enable-leader-election", false,
 		"Enable leader election for controller manager. "+
 			"Enabling this will ensure there is only one active controller manager.")
-	flag.BoolVar(&enableValidatingWebhook, "enable-validating-webhook", true, "Enable validating webhook")
-	flag.StringVar(&webhookName, "webhook-name", "Nameless", "Webhook name")
-	flag.StringVar(&webhookNamespace, "webhook-namespace", "default", "Webhook namespace")
+	flag.BoolVar(&enableValidatingWebhook, "enable-validating-webhook", false, "Enable validating webhook")
+	flag.StringVar(&webhookName, "webhook-name", "webhook-service", "Webhook name")
+	flag.StringVar(&webhookNamespace, "webhook-namespace", "kube-system", "Webhook namespace")
+	flag.BoolVar(&enableAnalytics, "enable-analytics", false, "Send analytical events to Google Analytics")
 	flag.Parse()
 
 	ctrl.SetLogger(klogr.New())
