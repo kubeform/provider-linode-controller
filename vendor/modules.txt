@@ -8,11 +8,6 @@ github.com/PuerkitoBio/urlesc
 github.com/agext/levenshtein
 # github.com/apparentlymart/go-textseg v1.0.0
 github.com/apparentlymart/go-textseg/textseg
-# github.com/appscode/go v0.0.0-20201105063637-5613f3b8169f
-## explicit
-github.com/appscode/go/context
-github.com/appscode/go/crypto/rand
-github.com/appscode/go/log
 # github.com/aws/aws-sdk-go v1.34.2
 github.com/aws/aws-sdk-go/aws
 github.com/aws/aws-sdk-go/aws/arn
@@ -92,9 +87,6 @@ github.com/gobuffalo/flect
 # github.com/gogo/protobuf v1.3.2
 github.com/gogo/protobuf/proto
 github.com/gogo/protobuf/sortkeys
-# github.com/golang/glog v0.0.0-20210429001901-424d2337a529
-## explicit
-github.com/golang/glog
 # github.com/golang/groupcache v0.0.0-20200121045136-8c9f03a8e57e
 github.com/golang/groupcache/lru
 # github.com/golang/protobuf v1.5.2
@@ -338,6 +330,9 @@ golang.org/x/time/rate
 gomodules.xyz/jsonpatch/v2
 # gomodules.xyz/password-generator v0.2.6
 gomodules.xyz/password-generator
+# gomodules.xyz/x v0.0.5
+## explicit
+gomodules.xyz/x/crypto/rand
 # google.golang.org/appengine v1.6.7
 google.golang.org/appengine
 google.golang.org/appengine/datastore
@@ -653,7 +648,7 @@ kmodules.xyz/client-go/meta
 kmodules.xyz/constants/linode
 # kubeform.dev/apimachinery v0.0.0-20210629153539-7bcd34a30eb5
 kubeform.dev/apimachinery/api/v1alpha1
-# kubeform.dev/provider-linode-api v0.0.0-20210701103354-dd321c8316d0
+# kubeform.dev/provider-linode-api v0.0.0-20210701115520-c9127b976217
 ## explicit
 kubeform.dev/provider-linode-api/api/provider
 kubeform.dev/provider-linode-api/apis/domain
@@ -680,6 +675,8 @@ kubeform.dev/provider-linode-api/apis/token
 kubeform.dev/provider-linode-api/apis/token/v1alpha1
 kubeform.dev/provider-linode-api/apis/user
 kubeform.dev/provider-linode-api/apis/user/v1alpha1
+kubeform.dev/provider-linode-api/apis/vlan
+kubeform.dev/provider-linode-api/apis/vlan/v1alpha1
 kubeform.dev/provider-linode-api/apis/volume
 kubeform.dev/provider-linode-api/apis/volume/v1alpha1
 kubeform.dev/provider-linode-api/client/clientset/versioned
@@ -696,6 +693,7 @@ kubeform.dev/provider-linode-api/client/clientset/versioned/typed/sshkey/v1alpha
 kubeform.dev/provider-linode-api/client/clientset/versioned/typed/stackscript/v1alpha1
 kubeform.dev/provider-linode-api/client/clientset/versioned/typed/token/v1alpha1
 kubeform.dev/provider-linode-api/client/clientset/versioned/typed/user/v1alpha1
+kubeform.dev/provider-linode-api/client/clientset/versioned/typed/vlan/v1alpha1
 kubeform.dev/provider-linode-api/client/clientset/versioned/typed/volume/v1alpha1
 # sigs.k8s.io/cli-utils v0.25.0
 ## explicit

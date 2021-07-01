@@ -31,6 +31,7 @@ import (
 	stackscriptv1alpha1 "kubeform.dev/provider-linode-api/apis/stackscript/v1alpha1"
 	tokenv1alpha1 "kubeform.dev/provider-linode-api/apis/token/v1alpha1"
 	userv1alpha1 "kubeform.dev/provider-linode-api/apis/user/v1alpha1"
+	vlanv1alpha1 "kubeform.dev/provider-linode-api/apis/vlan/v1alpha1"
 	volumev1alpha1 "kubeform.dev/provider-linode-api/apis/volume/v1alpha1"
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -56,6 +57,7 @@ var localSchemeBuilder = runtime.SchemeBuilder{
 	stackscriptv1alpha1.AddToScheme,
 	tokenv1alpha1.AddToScheme,
 	userv1alpha1.AddToScheme,
+	vlanv1alpha1.AddToScheme,
 	volumev1alpha1.AddToScheme,
 }
 

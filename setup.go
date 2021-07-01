@@ -5,7 +5,7 @@ package main
 import (
 	"context"
 	"fmt"
-	"github.com/appscode/go/log"
+	"k8s.io/klog/v2"
 	"github.com/gobuffalo/flect"
 	"github.com/linode/terraform-provider-linode/linode"
 	"io/ioutil"
@@ -68,19 +68,19 @@ func watchCRD(crdClient *clientset.Clientset, vwcClient *admissionregistrationv1
 			var key string
 			key, err := cache.MetaNamespaceKeyFunc(obj)
 			if err != nil {
-				log.Error(err)
+				klog.Error(err)
 				return
 			}
 
 			_, name, err := cache.SplitMetaNamespaceKey(key)
 			if err != nil {
-				log.Error(err)
+				klog.Error(err)
 				return
 			}
 
 			crd, err := l.Get(name)
 			if err != nil {
-				log.Error(err)
+				klog.Error(err)
 				return
 			}
 			if strings.Contains(crd.Spec.Group, "linode.kubeform.com") {
@@ -106,14 +106,14 @@ func watchCRD(crdClient *clientset.Clientset, vwcClient *admissionregistrationv1
 						// create empty VWC if the group has come for the first time
 						err := createFirstVWC(vwcClient, gvk)
 						if err != nil {
-							log.Error(err)
+							klog.Error(err)
 							return
 						}
 
 						// update
 						err = updateVWC(vwcClient, gvk)
 						if err != nil {
-							log.Error(err)
+							klog.Error(err)
 							return
 						}
 

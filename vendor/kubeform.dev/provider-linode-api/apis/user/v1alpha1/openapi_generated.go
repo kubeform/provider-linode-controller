@@ -14604,8 +14604,7 @@ func schema_provider_linode_api_apis_user_v1alpha1_UserSpecResource(ref common.R
 					},
 					"domainGrant": {
 						SchemaProps: spec.SchemaProps{
-							Description: "A set containing all of the user's active grants.",
-							Type:        []string{"array"},
+							Type: []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
@@ -14631,8 +14630,7 @@ func schema_provider_linode_api_apis_user_v1alpha1_UserSpecResource(ref common.R
 					},
 					"imageGrant": {
 						SchemaProps: spec.SchemaProps{
-							Description: "A set containing all of the user's active grants.",
-							Type:        []string{"array"},
+							Type: []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
@@ -14645,8 +14643,7 @@ func schema_provider_linode_api_apis_user_v1alpha1_UserSpecResource(ref common.R
 					},
 					"linodeGrant": {
 						SchemaProps: spec.SchemaProps{
-							Description: "A set containing all of the user's active grants.",
-							Type:        []string{"array"},
+							Type: []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
@@ -14659,8 +14656,7 @@ func schema_provider_linode_api_apis_user_v1alpha1_UserSpecResource(ref common.R
 					},
 					"longviewGrant": {
 						SchemaProps: spec.SchemaProps{
-							Description: "A set containing all of the user's active grants.",
-							Type:        []string{"array"},
+							Type: []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
@@ -14673,8 +14669,7 @@ func schema_provider_linode_api_apis_user_v1alpha1_UserSpecResource(ref common.R
 					},
 					"nodebalancerGrant": {
 						SchemaProps: spec.SchemaProps{
-							Description: "A set containing all of the user's active grants.",
-							Type:        []string{"array"},
+							Type: []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
@@ -14709,8 +14704,7 @@ func schema_provider_linode_api_apis_user_v1alpha1_UserSpecResource(ref common.R
 					},
 					"stackscriptGrant": {
 						SchemaProps: spec.SchemaProps{
-							Description: "A set containing all of the user's active grants.",
-							Type:        []string{"array"},
+							Type: []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
@@ -14737,8 +14731,7 @@ func schema_provider_linode_api_apis_user_v1alpha1_UserSpecResource(ref common.R
 					},
 					"volumeGrant": {
 						SchemaProps: spec.SchemaProps{
-							Description: "A set containing all of the user's active grants.",
-							Type:        []string{"array"},
+							Type: []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{

@@ -14413,20 +14413,6 @@ func schema_provider_linode_api_apis_image_v1alpha1_ImageSpecResource(ref common
 							Format:      "",
 						},
 					},
-					"fileHash": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The MD5 hash of the image file.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"filePath": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The name of the file to upload to this image.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
 					"isPublic": {
 						SchemaProps: spec.SchemaProps{
 							Description: "True if the Image is public.",
@@ -14448,25 +14434,11 @@ func schema_provider_linode_api_apis_image_v1alpha1_ImageSpecResource(ref common
 							Format:      "int64",
 						},
 					},
-					"region": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The region to upload to.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
 					"size": {
 						SchemaProps: spec.SchemaProps{
 							Description: "The minimum size this Image needs to deploy. Size is in MB.",
 							Type:        []string{"integer"},
 							Format:      "int64",
-						},
-					},
-					"status": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The current status of this Image.",
-							Type:        []string{"string"},
-							Format:      "",
 						},
 					},
 					"type": {
@@ -14484,7 +14456,7 @@ func schema_provider_linode_api_apis_image_v1alpha1_ImageSpecResource(ref common
 						},
 					},
 				},
-				Required: []string{"label"},
+				Required: []string{"diskID", "label", "linodeID"},
 			},
 		},
 		Dependencies: []string{
