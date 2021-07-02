@@ -928,8 +928,9 @@ kmodules.xyz/resource-metadata/hub/resourceclasses
 kmodules.xyz/resource-metadata/hub/resourcedescriptors
 kmodules.xyz/resource-metadata/pkg/graph
 # kubeform.dev/apimachinery v0.0.0-20210629153539-7bcd34a30eb5
+## explicit
 kubeform.dev/apimachinery/api/v1alpha1
-# kubeform.dev/provider-linode-api v0.0.0-20210701115520-c9127b976217
+# kubeform.dev/provider-linode-api v0.0.0-20210702161152-6d2280d237b2
 ## explicit
 kubeform.dev/provider-linode-api/api/provider
 kubeform.dev/provider-linode-api/apis/domain
@@ -956,8 +957,6 @@ kubeform.dev/provider-linode-api/apis/token
 kubeform.dev/provider-linode-api/apis/token/v1alpha1
 kubeform.dev/provider-linode-api/apis/user
 kubeform.dev/provider-linode-api/apis/user/v1alpha1
-kubeform.dev/provider-linode-api/apis/vlan
-kubeform.dev/provider-linode-api/apis/vlan/v1alpha1
 kubeform.dev/provider-linode-api/apis/volume
 kubeform.dev/provider-linode-api/apis/volume/v1alpha1
 kubeform.dev/provider-linode-api/client/clientset/versioned
@@ -974,7 +973,6 @@ kubeform.dev/provider-linode-api/client/clientset/versioned/typed/sshkey/v1alpha
 kubeform.dev/provider-linode-api/client/clientset/versioned/typed/stackscript/v1alpha1
 kubeform.dev/provider-linode-api/client/clientset/versioned/typed/token/v1alpha1
 kubeform.dev/provider-linode-api/client/clientset/versioned/typed/user/v1alpha1
-kubeform.dev/provider-linode-api/client/clientset/versioned/typed/vlan/v1alpha1
 kubeform.dev/provider-linode-api/client/clientset/versioned/typed/volume/v1alpha1
 # sigs.k8s.io/cli-utils v0.25.0
 ## explicit
