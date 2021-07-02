@@ -83,8 +83,8 @@ func (r *FirewallReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 
 func (r *FirewallReconciler) SetupWithManager(ctx context.Context, mgr ctrl.Manager, auditor *auditlib.EventPublisher) error {
 	if auditor != nil {
-		if err := auditor.SetupWithManager(ctx, mgr, &objectv1alpha1.StorageBucket{}); err != nil {
-			klog.Error(err, "unable to set up auditor", objectv1alpha1.StorageBucket{}.APIVersion, objectv1alpha1.StorageBucket{}.Kind)
+		if err := auditor.SetupWithManager(ctx, mgr, &firewallv1alpha1.Firewall{}); err != nil {
+			klog.Error(err, "unable to set up auditor", firewallv1alpha1.Firewall{}.APIVersion, firewallv1alpha1.Firewall{}.Kind)
 			return err
 		}
 	}

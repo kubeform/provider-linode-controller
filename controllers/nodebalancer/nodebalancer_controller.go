@@ -83,8 +83,8 @@ func (r *NodebalancerReconciler) Reconcile(ctx context.Context, req ctrl.Request
 
 func (r *NodebalancerReconciler) SetupWithManager(ctx context.Context, mgr ctrl.Manager, auditor *auditlib.EventPublisher) error {
 	if auditor != nil {
-		if err := auditor.SetupWithManager(ctx, mgr, &objectv1alpha1.StorageBucket{}); err != nil {
-			klog.Error(err, "unable to set up auditor", objectv1alpha1.StorageBucket{}.APIVersion, objectv1alpha1.StorageBucket{}.Kind)
+		if err := auditor.SetupWithManager(ctx, mgr, &nodebalancerv1alpha1.Nodebalancer{}); err != nil {
+			klog.Error(err, "unable to set up auditor", nodebalancerv1alpha1.Nodebalancer{}.APIVersion, nodebalancerv1alpha1.Nodebalancer{}.Kind)
 			return err
 		}
 	}

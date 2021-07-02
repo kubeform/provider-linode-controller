@@ -81,6 +81,8 @@ var _ = BeforeSuite(func() {
 	})
 	Expect(err).ToNot(HaveOccurred())
 
+	ctx := ctrl.SetupSignalHandler()
+
 	gvk := schema.GroupVersionKind{
 		Group:   "instance.linode.kubeform.com",
 		Version: "v1alpha1",
@@ -95,7 +97,7 @@ var _ = BeforeSuite(func() {
 		Provider: linode.Provider(),
 		Resource: linode.Provider().ResourcesMap["linode_instance"],
 		TypeName: "linode_instance",
-	}).SetupWithManager(k8sManager)
+	}).SetupWithManager(ctx, k8sManager, nil)
 	Expect(err).ToNot(HaveOccurred())
 
 	// Clients
