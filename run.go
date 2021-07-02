@@ -66,10 +66,10 @@ func init() {
 func NewCmdRun(version string) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:               "run",
-		Short:             "Launch Linode controller",
+		Short:             "Launch Kubeform Linode Provider Controller",
 		DisableAutoGenTag: true,
 		Run: func(cmd *cobra.Command, args []string) {
-			klog.Infoln("Starting Linode controller...")
+			klog.Infoln("Starting provider-linode-controller...")
 
 			ctrl.SetLogger(klogr.New())
 
@@ -81,7 +81,7 @@ func NewCmdRun(version string) *cobra.Command {
 				Port:                   9443,
 				HealthProbeBindAddress: probeAddr,
 				LeaderElection:         enableLeaderElection,
-				LeaderElectionID:       "5b87adeb.linode.kubeform.com", // 5b87adeb needs to be dynamically generated for each controller
+				LeaderElectionID:       "linode.kubeform.com",
 			})
 			if err != nil {
 				setupLog.Error(err, "unable to start manager")
