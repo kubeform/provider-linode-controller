@@ -83,8 +83,8 @@ func (r *StackscriptReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 
 func (r *StackscriptReconciler) SetupWithManager(ctx context.Context, mgr ctrl.Manager, auditor *auditlib.EventPublisher) error {
 	if auditor != nil {
-		if err := auditor.SetupWithManager(ctx, mgr, &objectv1alpha1.StorageBucket{}); err != nil {
-			klog.Error(err, "unable to set up auditor", objectv1alpha1.StorageBucket{}.APIVersion, objectv1alpha1.StorageBucket{}.Kind)
+		if err := auditor.SetupWithManager(ctx, mgr, &stackscriptv1alpha1.Stackscript{}); err != nil {
+			klog.Error(err, "unable to set up auditor", stackscriptv1alpha1.Stackscript{}.APIVersion, stackscriptv1alpha1.Stackscript{}.Kind)
 			return err
 		}
 	}
