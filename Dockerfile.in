@@ -14,7 +14,7 @@
 
 FROM {ARG_FROM}
 
-LABEL org.opencontainers.image.source https://github.com/kubedb/mongodb
+LABEL org.opencontainers.image.source https://github.com/kubeform/provider-linode-controller
 
 ADD bin/{ARG_OS}_{ARG_ARCH}/{ARG_BIN} /{ARG_BIN}
 
