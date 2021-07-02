@@ -98,7 +98,7 @@ DOCKER_REPO_ROOT := /go/src/$(GO_PKG)/$(REPO)
 # If you want to build AND push all containers, see the 'all-push' rule.
 all: fmt build
 
-KUBE_NAMESPACE ?= kube-system
+KUBE_NAMESPACE ?= kubeform
 LICENSE_FILE   ?=
 
 # For the following OS/ARCH expansions, we transform OS/ARCH into OS_ARCH
