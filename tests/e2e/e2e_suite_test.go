@@ -28,7 +28,6 @@ import (
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/client-go/kubernetes"
 	clientSetScheme "k8s.io/client-go/kubernetes/scheme"
-	"k8s.io/client-go/rest"
 	"k8s.io/client-go/scale/scheme"
 	instanceScheme "kubeform.dev/provider-linode-api/apis/instance/v1alpha1"
 	linodeclient "kubeform.dev/provider-linode-api/client/clientset/versioned"
@@ -43,9 +42,7 @@ var (
 	root *framework.Framework
 )
 
-var cfg *rest.Config
 var k8sClient client.Client
-var k8sManager ctrl.Manager
 var testEnv *envtest.Environment
 
 func TestE2e(t *testing.T) {
@@ -80,6 +77,7 @@ var _ = BeforeSuite(func() {
 		Scheme: clientSetScheme.Scheme,
 	})
 	Expect(err).ToNot(HaveOccurred())
+	ctx := ctrl.SetupSignalHandler()
 
 	gvk := schema.GroupVersionKind{
 		Group:   "instance.linode.kubeform.com",
@@ -95,7 +93,7 @@ var _ = BeforeSuite(func() {
 		Provider: linode.Provider(),
 		Resource: linode.Provider().ResourcesMap["linode_instance"],
 		TypeName: "linode_instance",
-	}).SetupWithManager(k8sManager)
+	}).SetupWithManager(ctx, k8sManager, nil)
 	Expect(err).ToNot(HaveOccurred())
 
 	// Clients

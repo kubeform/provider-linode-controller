@@ -32,7 +32,6 @@ import (
 	"k8s.io/apimachinery/pkg/util/sets"
 	"k8s.io/client-go/kubernetes"
 	clientgoscheme "k8s.io/client-go/kubernetes/scheme"
-	kscheme "k8s.io/client-go/kubernetes/scheme"
 	admissionregistrationv1 "k8s.io/client-go/kubernetes/typed/admissionregistration/v1"
 	_ "k8s.io/client-go/plugin/pkg/client/auth/gcp"
 	"k8s.io/klog/v2"
@@ -45,7 +44,7 @@ import (
 )
 
 var (
-	scheme   = kscheme.Scheme
+	scheme   = clientgoscheme.Scheme
 	setupLog = ctrl.Log.WithName("setup")
 )
 
@@ -60,7 +59,6 @@ var (
 )
 
 func init() {
-	_ = clientgoscheme.AddToScheme(scheme)
 	_ = linodescheme.AddToScheme(scheme)
 	// +kubebuilder:scaffold:scheme
 }

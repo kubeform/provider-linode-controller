@@ -83,8 +83,8 @@ func (r *ImageReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl
 
 func (r *ImageReconciler) SetupWithManager(ctx context.Context, mgr ctrl.Manager, auditor *auditlib.EventPublisher) error {
 	if auditor != nil {
-		if err := auditor.SetupWithManager(ctx, mgr, &objectv1alpha1.StorageBucket{}); err != nil {
-			klog.Error(err, "unable to set up auditor", objectv1alpha1.StorageBucket{}.APIVersion, objectv1alpha1.StorageBucket{}.Kind)
+		if err := auditor.SetupWithManager(ctx, mgr, &imagev1alpha1.Image{}); err != nil {
+			klog.Error(err, "unable to set up auditor", imagev1alpha1.Image{}.APIVersion, imagev1alpha1.Image{}.Kind)
 			return err
 		}
 	}
