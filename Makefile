@@ -371,6 +371,7 @@ install:
 	helm install kubeform-provider-$(PROVIDER) charts/kubeform-provider-$(PROVIDER) --wait  \
 		--namespace=$(KUBE_NAMESPACE)        		\
 		--create-namespace					 		\
+		--set-file kubeform-provider.license=$(LICENSE_FILE)    \
 		--set kubeform-provider.operator.registry=$(REGISTRY)  		\
 		--set kubeform-provider.operator.repository=$(BIN)     		\
 		--set kubeform-provider.operator.tag=$(TAG)            		\
