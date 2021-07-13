@@ -17,110 +17,87 @@ limitations under the License.
 package e2e_test
 
 import (
+	"flag"
+	"os"
 	"path/filepath"
 	"testing"
 	"time"
 
-	"github.com/linode/terraform-provider-linode/linode"
+	kfclient "kubeform.dev/provider-linode-api/client/clientset/versioned"
+	"kubeform.dev/provider-linode-controller/tests/e2e/framework"
+
 	. "github.com/onsi/ginkgo"
 	"github.com/onsi/ginkgo/reporters"
 	. "github.com/onsi/gomega"
-	"k8s.io/apimachinery/pkg/runtime/schema"
+	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
 	"k8s.io/client-go/kubernetes"
 	clientSetScheme "k8s.io/client-go/kubernetes/scheme"
+	_ "k8s.io/client-go/plugin/pkg/client/auth"
 	"k8s.io/client-go/scale/scheme"
-	instanceScheme "kubeform.dev/provider-linode-api/apis/instance/v1alpha1"
-	linodeclient "kubeform.dev/provider-linode-api/client/clientset/versioned"
-	controllersinstance "kubeform.dev/provider-linode-controller/controllers/instance"
-	"kubeform.dev/provider-linode-controller/tests/e2e/framework"
-	ctrl "sigs.k8s.io/controller-runtime"
-	"sigs.k8s.io/controller-runtime/pkg/client"
-	"sigs.k8s.io/controller-runtime/pkg/envtest"
+	"k8s.io/client-go/util/homedir"
+	"kmodules.xyz/client-go/tools/clientcmd"
+)
+
+var (
+	kubeconfigPath = func() string {
+		kubecfg := os.Getenv("KUBECONFIG")
+		if kubecfg != "" {
+			return kubecfg
+		}
+		return filepath.Join(homedir.HomeDir(), ".kube", "config")
+	}()
+	kubeContext = ""
+)
+
+func init() {
+	utilruntime.Must(scheme.AddToScheme(clientSetScheme.Scheme))
+
+	//flag.StringVar(&kubeconfigPath, "kubeconfig", kubeconfigPath, "Path to kubeconfig file with authorization information (the master location is set by the master flag).")
+	flag.StringVar(&kubeContext, "kube-context", "", "Name of kube context")
+}
+
+const (
+	TIMEOUT = 20 * time.Minute
 )
 
 var (
 	root *framework.Framework
 )
 
-var k8sClient client.Client
-var testEnv *envtest.Environment
-
 func TestE2e(t *testing.T) {
 	RegisterFailHandler(Fail)
+	SetDefaultEventuallyTimeout(TIMEOUT)
 
 	junitReporter := reporters.NewJUnitReporter("junit.xml")
 	RunSpecsWithDefaultAndCustomReporters(t, "e2e Suite", []Reporter{junitReporter})
 }
 
 var _ = BeforeSuite(func() {
-	By("bootstrapping test environment")
-	testEnv = &envtest.Environment{
-		CRDDirectoryPaths:     []string{filepath.Join("..", "config", "crds")},
-		ErrorIfCRDPathMissing: true,
-	}
-	testEnv.ControlPlaneStopTimeout = 2 * time.Minute
-	cfg, err := testEnv.Start()
+	By("Using kubeconfig from " + kubeconfigPath)
+	config, err := clientcmd.BuildConfigFromContext(kubeconfigPath, kubeContext)
 	Expect(err).NotTo(HaveOccurred())
-	Expect(cfg).NotTo(BeNil())
-
-	err = scheme.AddToScheme(clientSetScheme.Scheme)
-	Expect(err).NotTo(HaveOccurred())
-
-	err = instanceScheme.AddToScheme(clientSetScheme.Scheme)
-	Expect(err).NotTo(HaveOccurred())
-
-	k8sClient, err = client.New(cfg, client.Options{Scheme: clientSetScheme.Scheme})
-	Expect(err).NotTo(HaveOccurred())
-	Expect(k8sClient).NotTo(BeNil())
-
-	k8sManager, err := ctrl.NewManager(cfg, ctrl.Options{
-		Scheme: clientSetScheme.Scheme,
-	})
-	Expect(err).ToNot(HaveOccurred())
-	ctx := ctrl.SetupSignalHandler()
-
-	gvk := schema.GroupVersionKind{
-		Group:   "instance.linode.kubeform.com",
-		Version: "v1alpha1",
-		Kind:    "Instance",
-	}
-
-	err = (&controllersinstance.InstanceReconciler{
-		Client:   k8sManager.GetClient(),
-		Log:      ctrl.Log.WithName("controllers").WithName("Instance"),
-		Scheme:   k8sManager.GetScheme(),
-		Gvk:      gvk,
-		Provider: linode.Provider(),
-		Resource: linode.Provider().ResourcesMap["linode_instance"],
-		TypeName: "linode_instance",
-	}).SetupWithManager(ctx, k8sManager, nil)
-	Expect(err).ToNot(HaveOccurred())
+	// raise throttling time. ref: https://github.com/appscode/voyager/issues/640
+	config.Burst = 100
+	config.QPS = 100
 
 	// Clients
-	kubeClient := kubernetes.NewForConfigOrDie(cfg)
-	linodeClient := linodeclient.NewForConfigOrDie(cfg)
+	kubeClient := kubernetes.NewForConfigOrDie(config)
+
+	kubeformClient := kfclient.NewForConfigOrDie(config)
 
 	// Framework
-	root = framework.New(cfg, kubeClient, linodeClient)
+	root = framework.New(config, kubeClient, kubeformClient)
 
 	// Create namespace
 	By("Using namespace " + root.Namespace())
 	err = root.CreateNamespace()
 	Expect(err).NotTo(HaveOccurred())
-	root.EventuallyCRD().Should(Succeed())
 
-	go func() {
-		err = k8sManager.Start(ctrl.SetupSignalHandler())
-		Expect(err).ToNot(HaveOccurred())
-	}()
-}, 60)
+	root.EventuallyCRD().Should(Succeed())
+})
 
 var _ = AfterSuite(func() {
 	By("Deleting Namespace")
 	err := root.DeleteNamespace()
-	Expect(err).NotTo(HaveOccurred())
-
-	By("tearing down the test environment")
-	err = testEnv.Stop()
 	Expect(err).NotTo(HaveOccurred())
 })
