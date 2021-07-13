@@ -368,14 +368,14 @@ chart-dependencies:
 .PHONY: install
 install:
 	cd ../installer; \
-	helm install kubeform-provider-$(PROVIDER) charts/kubeform-provider-$(PROVIDER) --wait  \
-		--namespace=$(KUBE_NAMESPACE)        		\
-		--create-namespace					 		\
-		--set-file kubeform-provider.license=$(LICENSE_FILE)    \
-		--set kubeform-provider.operator.registry=$(REGISTRY)  		\
-		--set kubeform-provider.operator.repository=$(BIN)     		\
-		--set kubeform-provider.operator.tag=$(TAG)            		\
-		--set imagePullPolicy=$(IMAGE_PULL_POLICY)	\
+	helm install kubeform-provider-$(PROVIDER) charts/kubeform-provider-$(PROVIDER) --wait \
+		--namespace=$(KUBE_NAMESPACE) \
+		--create-namespace \
+		--set-file kubeform-provider.license=$(LICENSE_FILE) \
+		--set kubeform-provider.operator.registry=$(REGISTRY) \
+		--set kubeform-provider.operator.repository=$(BIN) \
+		--set kubeform-provider.operator.tag=$(TAG) \
+		--set imagePullPolicy=$(IMAGE_PULL_POLICY) \
 		--set crds.instance=true \
 		$(IMAGE_PULL_SECRETS);
 

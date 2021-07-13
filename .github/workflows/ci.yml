@@ -120,4 +120,5 @@ jobs:
           mkdir -p hack/config
           echo -n "$TEST_CREDENTIALS" > hack/config/.env
           echo >> hack/config/.env
+          echo "GOOGLE_SERVICE_ACCOUNT_JSON_KEY=$(echo $GOOGLE_SERVICE_ACCOUNT_JSON_KEY)" >> hack/config/.env
           make e2e-tests GINKGO_ARGS="--flakeAttempts=2" || (kubectl describe deployment -n kubeform; kubectl logs -n kubeform -l app.kubernetes.io/name=kubeform-provider; exit 1;)
