@@ -17,6 +17,7 @@ limitations under the License.
 package framework
 
 import (
+	"bytes"
 	"context"
 	"time"
 
@@ -59,18 +60,61 @@ func (i *Invocation) Instance(name string, secretName string) *v1alpha1.Instance
 }
 
 func (f *Framework) CreateInstance(obj *v1alpha1.Instance) error {
-	_, err := f.linodeClient.InstanceV1alpha1().Instances(obj.Namespace).Create(context.TODO(), obj, metav1.CreateOptions{})
+	_, err := f.kfClient.InstanceV1alpha1().Instances(obj.Namespace).Create(context.TODO(), obj, metav1.CreateOptions{})
 	return err
 }
 
+func (f *Framework) UpdateInstance(obj *v1alpha1.Instance) error {
+	obj, err := f.kfClient.InstanceV1alpha1().Instances(obj.Namespace).Get(context.TODO(), obj.Name, metav1.GetOptions{})
+	if err != nil {
+		return err
+	}
+
+	updateName := *obj.Spec.Resource.Label + "-update"
+	obj.Spec.Resource.Label = &updateName
+
+	_, err = f.kfClient.InstanceV1alpha1().Instances(obj.Namespace).Update(context.TODO(), obj, metav1.UpdateOptions{})
+	return err
+}
+
+func (f *Framework) UpdateInstanceSensitive(secret *corev1.Secret) (error, *corev1.Secret) {
+	secret, err := f.kubeClient.CoreV1().Secrets(secret.Namespace).Get(context.TODO(), secret.Name, metav1.GetOptions{})
+	if err != nil {
+		return err, secret
+	}
+
+	secret.StringData = map[string]string{
+		"input": `{
+				"root_pass": "NewTestPassWord@123"
+		}`,
+	}
+
+	secret, err = f.kubeClient.CoreV1().Secrets(secret.Namespace).Update(context.TODO(), secret, metav1.UpdateOptions{})
+	return err, secret
+}
+
+func (f *Framework) EventuallySensitiveSecretUpdating(secret *corev1.Secret, data []byte) GomegaAsyncAssertion {
+	return Eventually(
+		func() bool {
+			secret, err := f.kubeClient.CoreV1().Secrets(secret.Namespace).Get(context.TODO(), secret.Name, metav1.GetOptions{})
+			Expect(err).NotTo(HaveOccurred())
+
+			eq := bytes.Compare(secret.Data["output"], data)
+			return eq != 0
+		},
+		time.Minute*5,
+		time.Second*30,
+	)
+}
+
 func (f *Framework) DeleteInstance(meta metav1.ObjectMeta) error {
-	return f.linodeClient.InstanceV1alpha1().Instances(meta.Namespace).Delete(context.TODO(), meta.Name, meta_util.DeleteInBackground())
+	return f.kfClient.InstanceV1alpha1().Instances(meta.Namespace).Delete(context.TODO(), meta.Name, meta_util.DeleteInBackground())
 }
 
 func (f *Framework) EventuallyInstanceRunning(meta metav1.ObjectMeta) GomegaAsyncAssertion {
 	return Eventually(
 		func() bool {
-			instance, err := f.linodeClient.InstanceV1alpha1().Instances(meta.Namespace).Get(context.TODO(), meta.Name, metav1.GetOptions{})
+			instance, err := f.kfClient.InstanceV1alpha1().Instances(meta.Namespace).Get(context.TODO(), meta.Name, metav1.GetOptions{})
 			Expect(err).NotTo(HaveOccurred())
 			return instance.Status.Phase == status.CurrentStatus
 		},
@@ -82,7 +126,7 @@ func (f *Framework) EventuallyInstanceRunning(meta metav1.ObjectMeta) GomegaAsyn
 func (f *Framework) EventuallyInstanceDeleted(meta metav1.ObjectMeta) GomegaAsyncAssertion {
 	return Eventually(
 		func() bool {
-			_, err := f.linodeClient.InstanceV1alpha1().Instances(meta.Namespace).Get(context.TODO(), meta.Name, metav1.GetOptions{})
+			_, err := f.kfClient.InstanceV1alpha1().Instances(meta.Namespace).Get(context.TODO(), meta.Name, metav1.GetOptions{})
 			return errors.IsNotFound(err)
 		},
 		time.Minute*15,

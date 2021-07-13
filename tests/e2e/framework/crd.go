@@ -26,17 +26,26 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-func (f *Framework) EventuallyCRD() GomegaAsyncAssertion {
+func (f *Framework) EventuallyCRD(whichController string) GomegaAsyncAssertion {
 	return Eventually(
 		func() error {
-			// Check Instances CRD
-			if _, err := f.linodeClient.InstanceV1alpha1().Instances(core.NamespaceAll).List(context.TODO(), metav1.ListOptions{}); err != nil {
-				return errors.New("CRD Instances is not ready")
+			if whichController == "all" || whichController == "instance" {
+				// Check Instances CRD
+				if _, err := f.kfClient.InstanceV1alpha1().Instances(core.NamespaceAll).List(context.TODO(), metav1.ListOptions{}); err != nil {
+					return errors.New("CRD Instances is not ready")
+				}
+			}
+
+			if whichController == "all" || whichController == "domain" {
+				// Check Domain CRD
+				if _, err := f.kfClient.DomainV1alpha1().Domains(core.NamespaceAll).List(context.TODO(), metav1.ListOptions{}); err != nil {
+					return errors.New("CRD Domain is not ready")
+				}
 			}
 
 			return nil
 		},
-		time.Minute*2,
-		time.Second*10,
+		time.Minute*4,
+		time.Second*20,
 	)
 }

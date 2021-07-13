@@ -17,6 +17,8 @@ limitations under the License.
 package e2e_test
 
 import (
+	"fmt"
+
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	core "k8s.io/api/core/v1"
@@ -31,6 +33,9 @@ var _ = Describe("Test", func() {
 	)
 	BeforeEach(func() {
 		f = root.Invoke()
+		if !framework.RunTest(framework.INSTANCE, whichController) {
+			Skip(fmt.Sprintf("`%s` test is applied only when whichController flag is either `all` or `%s` but got `%s`", framework.INSTANCE, framework.INSTANCE, whichController))
+		}
 	})
 
 	Describe("Linode", func() {
@@ -51,6 +56,18 @@ var _ = Describe("Test", func() {
 				instance = f.Instance(instanceName, secretName)
 			})
 
+			AfterEach(func() {
+				By("Deleting Instance")
+				err = f.DeleteInstance(instance.ObjectMeta)
+				Expect(err).NotTo(HaveOccurred())
+
+				By("Wait for Deleting instance")
+				f.EventuallyInstanceDeleted(instance.ObjectMeta).Should(BeTrue())
+
+				By("Deleting secret")
+				err = f.DeleteSecret(providerRef.ObjectMeta)
+			})
+
 			It("should create and delete instance successfully", func() {
 				By("Creating LinodeProviderRef")
 				err = f.CreateSecret(providerRef)
@@ -66,16 +83,57 @@ var _ = Describe("Test", func() {
 
 				By("Wait for Running Instance")
 				f.EventuallyInstanceRunning(instance.ObjectMeta).Should(BeTrue())
+			})
 
-				By("Deleting Instance")
-				err = f.DeleteInstance(instance.ObjectMeta)
+			It("should create, update and delete instance successfully", func() {
+				By("Creating LinodeProviderRef")
+				err = f.CreateSecret(providerRef)
 				Expect(err).NotTo(HaveOccurred())
 
-				By("Wait for Deleting instance")
-				f.EventuallyInstanceDeleted(instance.ObjectMeta).Should(BeTrue())
+				By("Creating Secret")
+				err = f.CreateSecret(sensitiveData)
+				Expect(err).NotTo(HaveOccurred())
 
-				By("Deleting secret")
-				err = f.DeleteSecret(providerRef.ObjectMeta)
+				By("Creating Instance")
+				err = f.CreateInstance(instance)
+				Expect(err).NotTo(HaveOccurred())
+
+				By("Wait for Running Instance")
+				f.EventuallyInstanceRunning(instance.ObjectMeta).Should(BeTrue())
+
+				By("Updating Instance")
+				err = f.UpdateInstance(instance)
+				Expect(err).NotTo(HaveOccurred())
+
+				By("Wait for Running Instance")
+				f.EventuallyInstanceRunning(instance.ObjectMeta).Should(BeTrue())
+			})
+
+			It("should create, update (sensitive field) and delete instance successfully", func() {
+				By("Creating LinodeProviderRef")
+				err = f.CreateSecret(providerRef)
+				Expect(err).NotTo(HaveOccurred())
+
+				By("Creating Secret")
+				err = f.CreateSecret(sensitiveData)
+				Expect(err).NotTo(HaveOccurred())
+
+				By("Creating Instance")
+				err = f.CreateInstance(instance)
+				Expect(err).NotTo(HaveOccurred())
+
+				By("Wait for Running Instance")
+				f.EventuallyInstanceRunning(instance.ObjectMeta).Should(BeTrue())
+
+				By("Updating Instance sensitive field")
+				err, secret := f.UpdateInstanceSensitive(sensitiveData)
+				Expect(err).NotTo(HaveOccurred())
+
+				By("Wait for updating sensitive secret")
+				f.EventuallySensitiveSecretUpdating(sensitiveData, secret.Data["output"]).Should(BeTrue())
+
+				By("Wait for Running Instance")
+				f.EventuallyInstanceRunning(instance.ObjectMeta).Should(BeTrue())
 			})
 		})
 	})

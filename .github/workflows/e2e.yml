@@ -58,6 +58,18 @@ jobs:
     steps:
       - uses: actions/checkout@v1
 
+      - name: Set up Go 1.16
+        uses: actions/setup-go@v1
+        with:
+          go-version: 1.16
+        id: go
+
+      # https://github.com/engineerd/setup-kind/issues/41
+      - name: Cleanup
+        run: |
+          kind delete cluster || true
+          rm -rf ../installer
+
       - name: Create Kubernetes ${{ matrix.k8s }} cluster
         id: kind
         uses: engineerd/setup-kind@v0.5.0
@@ -84,7 +96,7 @@ jobs:
 
       - name: Check out installer
         run: |
-          cd ..
+          cd .. || exit
           git clone https://github.com/kubeform/installer.git
           cd installer
           git checkout master
