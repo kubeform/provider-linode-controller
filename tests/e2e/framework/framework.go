@@ -20,28 +20,34 @@ import (
 	"gomodules.xyz/x/crypto/rand"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
-	linodeclient "kubeform.dev/provider-linode-api/client/clientset/versioned"
+	kfclient "kubeform.dev/provider-linode-api/client/clientset/versioned"
+)
+
+const (
+	ALL      = "all"
+	INSTANCE = "instance"
+	DOMAIN   = "domain"
 )
 
 type Framework struct {
-	restConfig   *rest.Config
-	kubeClient   kubernetes.Interface
-	linodeClient linodeclient.Interface
-	namespace    string
-	name         string
+	restConfig *rest.Config
+	kubeClient kubernetes.Interface
+	kfClient   kfclient.Interface
+	namespace  string
+	name       string
 }
 
 func New(
 	restConfig *rest.Config,
 	kubeClient kubernetes.Interface,
-	linodeClient linodeclient.Interface,
+	kfClient kfclient.Interface,
 ) *Framework {
 	return &Framework{
-		restConfig:   restConfig,
-		kubeClient:   kubeClient,
-		linodeClient: linodeClient,
-		name:         "kfc",
-		namespace:    rand.WithUniqSuffix("kubeform"),
+		restConfig: restConfig,
+		kubeClient: kubeClient,
+		kfClient:   kfClient,
+		name:       "kfc",
+		namespace:  rand.WithUniqSuffix("kubeform"),
 	}
 }
 
@@ -54,6 +60,14 @@ func (f *Framework) Invoke() *Invocation {
 
 func (fi *Invocation) GetRandomName(extraSuffix string) string {
 	return rand.WithUniqSuffix(fi.name + extraSuffix)
+}
+
+func RunTest(controller, whichController string) bool {
+	if whichController == ALL || controller == whichController {
+		return true
+	} else {
+		return false
+	}
 }
 
 type Invocation struct {

@@ -23,9 +23,6 @@ import (
 	"testing"
 	"time"
 
-	kfclient "kubeform.dev/provider-linode-api/client/clientset/versioned"
-	"kubeform.dev/provider-linode-controller/tests/e2e/framework"
-
 	. "github.com/onsi/ginkgo"
 	"github.com/onsi/ginkgo/reporters"
 	. "github.com/onsi/gomega"
@@ -36,6 +33,8 @@ import (
 	"k8s.io/client-go/scale/scheme"
 	"k8s.io/client-go/util/homedir"
 	"kmodules.xyz/client-go/tools/clientcmd"
+	kfclient "kubeform.dev/provider-linode-api/client/clientset/versioned"
+	"kubeform.dev/provider-linode-controller/tests/e2e/framework"
 )
 
 var (
@@ -46,7 +45,14 @@ var (
 		}
 		return filepath.Join(homedir.HomeDir(), ".kube", "config")
 	}()
-	kubeContext = ""
+	kubeContext     = ""
+	whichController = func() string {
+		whichCon := os.Getenv("WHICH_CONTROLLER")
+		if whichCon != "" {
+			return whichCon
+		}
+		return framework.DOMAIN
+	}()
 )
 
 func init() {
@@ -54,6 +60,7 @@ func init() {
 
 	//flag.StringVar(&kubeconfigPath, "kubeconfig", kubeconfigPath, "Path to kubeconfig file with authorization information (the master location is set by the master flag).")
 	flag.StringVar(&kubeContext, "kube-context", "", "Name of kube context")
+	flag.StringVar(&whichController, "which-controller", whichController, "Define which controller you want to check")
 }
 
 const (
@@ -93,7 +100,7 @@ var _ = BeforeSuite(func() {
 	err = root.CreateNamespace()
 	Expect(err).NotTo(HaveOccurred())
 
-	root.EventuallyCRD().Should(Succeed())
+	root.EventuallyCRD(whichController).Should(Succeed())
 })
 
 var _ = AfterSuite(func() {
