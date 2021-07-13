@@ -51,8 +51,8 @@ endif
 ### These variables should not need tweaking.
 ###
 
-SRC_PKGS := controllers tests
-SRC_DIRS := $(SRC_PKGS) *.go # directories which hold app source (not vendored)
+SRC_PKGS := controllers
+SRC_DIRS := $(SRC_PKGS) tests *.go # directories which hold app source (not vendored)
 
 DOCKER_PLATFORMS := linux/amd64 linux/arm64
 BIN_PLATFORMS    := $(DOCKER_PLATFORMS) windows/amd64 darwin/amd64
@@ -376,7 +376,7 @@ install:
 		--set kubeform-provider.operator.repository=$(BIN) \
 		--set kubeform-provider.operator.tag=$(TAG) \
 		--set imagePullPolicy=$(IMAGE_PULL_POLICY) \
-		--set crds.instance=true \
+		--set crds.domain=true \
 		$(IMAGE_PULL_SECRETS);
 
 .PHONY: uninstall
