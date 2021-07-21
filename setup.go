@@ -28,7 +28,7 @@ import (
 	"time"
 
 	"github.com/gobuffalo/flect"
-	"github.com/linode/terraform-provider-linode/linode"
+	linode "github.com/linode/terraform-provider-linode/linode"
 	auditlib "go.bytebuilders.dev/audit/lib"
 	arv1 "k8s.io/api/admissionregistration/v1"
 	"k8s.io/apiextensions-apiserver/pkg/client/clientset/clientset"
