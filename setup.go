@@ -69,6 +69,8 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/manager"
 )
 
+var _provider = linode.Provider()
+
 var runningControllers = struct {
 	sync.RWMutex
 	mp map[schema.GroupVersionKind]bool
@@ -258,8 +260,8 @@ func SetupManager(ctx context.Context, mgr manager.Manager, gvk schema.GroupVers
 			Log:              ctrl.Log.WithName("controllers").WithName("Domain"),
 			Scheme:           mgr.GetScheme(),
 			Gvk:              gvk,
-			Provider:         linode.Provider(),
-			Resource:         linode.Provider().ResourcesMap["linode_domain"],
+			Provider:         _provider,
+			Resource:         _provider.ResourcesMap["linode_domain"],
 			TypeName:         "linode_domain",
 			WatchOnlyDefault: watchOnlyDefault,
 		}).SetupWithManager(ctx, mgr, auditor); err != nil {
@@ -276,8 +278,8 @@ func SetupManager(ctx context.Context, mgr manager.Manager, gvk schema.GroupVers
 			Log:              ctrl.Log.WithName("controllers").WithName("Record"),
 			Scheme:           mgr.GetScheme(),
 			Gvk:              gvk,
-			Provider:         linode.Provider(),
-			Resource:         linode.Provider().ResourcesMap["linode_domain_record"],
+			Provider:         _provider,
+			Resource:         _provider.ResourcesMap["linode_domain_record"],
 			TypeName:         "linode_domain_record",
 			WatchOnlyDefault: watchOnlyDefault,
 		}).SetupWithManager(ctx, mgr, auditor); err != nil {
@@ -294,8 +296,8 @@ func SetupManager(ctx context.Context, mgr manager.Manager, gvk schema.GroupVers
 			Log:              ctrl.Log.WithName("controllers").WithName("Firewall"),
 			Scheme:           mgr.GetScheme(),
 			Gvk:              gvk,
-			Provider:         linode.Provider(),
-			Resource:         linode.Provider().ResourcesMap["linode_firewall"],
+			Provider:         _provider,
+			Resource:         _provider.ResourcesMap["linode_firewall"],
 			TypeName:         "linode_firewall",
 			WatchOnlyDefault: watchOnlyDefault,
 		}).SetupWithManager(ctx, mgr, auditor); err != nil {
@@ -312,8 +314,8 @@ func SetupManager(ctx context.Context, mgr manager.Manager, gvk schema.GroupVers
 			Log:              ctrl.Log.WithName("controllers").WithName("Image"),
 			Scheme:           mgr.GetScheme(),
 			Gvk:              gvk,
-			Provider:         linode.Provider(),
-			Resource:         linode.Provider().ResourcesMap["linode_image"],
+			Provider:         _provider,
+			Resource:         _provider.ResourcesMap["linode_image"],
 			TypeName:         "linode_image",
 			WatchOnlyDefault: watchOnlyDefault,
 		}).SetupWithManager(ctx, mgr, auditor); err != nil {
@@ -330,8 +332,8 @@ func SetupManager(ctx context.Context, mgr manager.Manager, gvk schema.GroupVers
 			Log:              ctrl.Log.WithName("controllers").WithName("Instance"),
 			Scheme:           mgr.GetScheme(),
 			Gvk:              gvk,
-			Provider:         linode.Provider(),
-			Resource:         linode.Provider().ResourcesMap["linode_instance"],
+			Provider:         _provider,
+			Resource:         _provider.ResourcesMap["linode_instance"],
 			TypeName:         "linode_instance",
 			WatchOnlyDefault: watchOnlyDefault,
 		}).SetupWithManager(ctx, mgr, auditor); err != nil {
@@ -348,8 +350,8 @@ func SetupManager(ctx context.Context, mgr manager.Manager, gvk schema.GroupVers
 			Log:              ctrl.Log.WithName("controllers").WithName("Ip"),
 			Scheme:           mgr.GetScheme(),
 			Gvk:              gvk,
-			Provider:         linode.Provider(),
-			Resource:         linode.Provider().ResourcesMap["linode_instance_ip"],
+			Provider:         _provider,
+			Resource:         _provider.ResourcesMap["linode_instance_ip"],
 			TypeName:         "linode_instance_ip",
 			WatchOnlyDefault: watchOnlyDefault,
 		}).SetupWithManager(ctx, mgr, auditor); err != nil {
@@ -366,8 +368,8 @@ func SetupManager(ctx context.Context, mgr manager.Manager, gvk schema.GroupVers
 			Log:              ctrl.Log.WithName("controllers").WithName("Cluster"),
 			Scheme:           mgr.GetScheme(),
 			Gvk:              gvk,
-			Provider:         linode.Provider(),
-			Resource:         linode.Provider().ResourcesMap["linode_lke_cluster"],
+			Provider:         _provider,
+			Resource:         _provider.ResourcesMap["linode_lke_cluster"],
 			TypeName:         "linode_lke_cluster",
 			WatchOnlyDefault: watchOnlyDefault,
 		}).SetupWithManager(ctx, mgr, auditor); err != nil {
@@ -384,8 +386,8 @@ func SetupManager(ctx context.Context, mgr manager.Manager, gvk schema.GroupVers
 			Log:              ctrl.Log.WithName("controllers").WithName("Nodebalancer"),
 			Scheme:           mgr.GetScheme(),
 			Gvk:              gvk,
-			Provider:         linode.Provider(),
-			Resource:         linode.Provider().ResourcesMap["linode_nodebalancer"],
+			Provider:         _provider,
+			Resource:         _provider.ResourcesMap["linode_nodebalancer"],
 			TypeName:         "linode_nodebalancer",
 			WatchOnlyDefault: watchOnlyDefault,
 		}).SetupWithManager(ctx, mgr, auditor); err != nil {
@@ -402,8 +404,8 @@ func SetupManager(ctx context.Context, mgr manager.Manager, gvk schema.GroupVers
 			Log:              ctrl.Log.WithName("controllers").WithName("Config"),
 			Scheme:           mgr.GetScheme(),
 			Gvk:              gvk,
-			Provider:         linode.Provider(),
-			Resource:         linode.Provider().ResourcesMap["linode_nodebalancer_config"],
+			Provider:         _provider,
+			Resource:         _provider.ResourcesMap["linode_nodebalancer_config"],
 			TypeName:         "linode_nodebalancer_config",
 			WatchOnlyDefault: watchOnlyDefault,
 		}).SetupWithManager(ctx, mgr, auditor); err != nil {
@@ -420,8 +422,8 @@ func SetupManager(ctx context.Context, mgr manager.Manager, gvk schema.GroupVers
 			Log:              ctrl.Log.WithName("controllers").WithName("Node"),
 			Scheme:           mgr.GetScheme(),
 			Gvk:              gvk,
-			Provider:         linode.Provider(),
-			Resource:         linode.Provider().ResourcesMap["linode_nodebalancer_node"],
+			Provider:         _provider,
+			Resource:         _provider.ResourcesMap["linode_nodebalancer_node"],
 			TypeName:         "linode_nodebalancer_node",
 			WatchOnlyDefault: watchOnlyDefault,
 		}).SetupWithManager(ctx, mgr, auditor); err != nil {
@@ -438,8 +440,8 @@ func SetupManager(ctx context.Context, mgr manager.Manager, gvk schema.GroupVers
 			Log:              ctrl.Log.WithName("controllers").WithName("StorageBucket"),
 			Scheme:           mgr.GetScheme(),
 			Gvk:              gvk,
-			Provider:         linode.Provider(),
-			Resource:         linode.Provider().ResourcesMap["linode_object_storage_bucket"],
+			Provider:         _provider,
+			Resource:         _provider.ResourcesMap["linode_object_storage_bucket"],
 			TypeName:         "linode_object_storage_bucket",
 			WatchOnlyDefault: watchOnlyDefault,
 		}).SetupWithManager(ctx, mgr, auditor); err != nil {
@@ -456,8 +458,8 @@ func SetupManager(ctx context.Context, mgr manager.Manager, gvk schema.GroupVers
 			Log:              ctrl.Log.WithName("controllers").WithName("StorageKey"),
 			Scheme:           mgr.GetScheme(),
 			Gvk:              gvk,
-			Provider:         linode.Provider(),
-			Resource:         linode.Provider().ResourcesMap["linode_object_storage_key"],
+			Provider:         _provider,
+			Resource:         _provider.ResourcesMap["linode_object_storage_key"],
 			TypeName:         "linode_object_storage_key",
 			WatchOnlyDefault: watchOnlyDefault,
 		}).SetupWithManager(ctx, mgr, auditor); err != nil {
@@ -474,8 +476,8 @@ func SetupManager(ctx context.Context, mgr manager.Manager, gvk schema.GroupVers
 			Log:              ctrl.Log.WithName("controllers").WithName("StorageObject"),
 			Scheme:           mgr.GetScheme(),
 			Gvk:              gvk,
-			Provider:         linode.Provider(),
-			Resource:         linode.Provider().ResourcesMap["linode_object_storage_object"],
+			Provider:         _provider,
+			Resource:         _provider.ResourcesMap["linode_object_storage_object"],
 			TypeName:         "linode_object_storage_object",
 			WatchOnlyDefault: watchOnlyDefault,
 		}).SetupWithManager(ctx, mgr, auditor); err != nil {
@@ -492,8 +494,8 @@ func SetupManager(ctx context.Context, mgr manager.Manager, gvk schema.GroupVers
 			Log:              ctrl.Log.WithName("controllers").WithName("Rdns"),
 			Scheme:           mgr.GetScheme(),
 			Gvk:              gvk,
-			Provider:         linode.Provider(),
-			Resource:         linode.Provider().ResourcesMap["linode_rdns"],
+			Provider:         _provider,
+			Resource:         _provider.ResourcesMap["linode_rdns"],
 			TypeName:         "linode_rdns",
 			WatchOnlyDefault: watchOnlyDefault,
 		}).SetupWithManager(ctx, mgr, auditor); err != nil {
@@ -510,8 +512,8 @@ func SetupManager(ctx context.Context, mgr manager.Manager, gvk schema.GroupVers
 			Log:              ctrl.Log.WithName("controllers").WithName("Sshkey"),
 			Scheme:           mgr.GetScheme(),
 			Gvk:              gvk,
-			Provider:         linode.Provider(),
-			Resource:         linode.Provider().ResourcesMap["linode_sshkey"],
+			Provider:         _provider,
+			Resource:         _provider.ResourcesMap["linode_sshkey"],
 			TypeName:         "linode_sshkey",
 			WatchOnlyDefault: watchOnlyDefault,
 		}).SetupWithManager(ctx, mgr, auditor); err != nil {
@@ -528,8 +530,8 @@ func SetupManager(ctx context.Context, mgr manager.Manager, gvk schema.GroupVers
 			Log:              ctrl.Log.WithName("controllers").WithName("Stackscript"),
 			Scheme:           mgr.GetScheme(),
 			Gvk:              gvk,
-			Provider:         linode.Provider(),
-			Resource:         linode.Provider().ResourcesMap["linode_stackscript"],
+			Provider:         _provider,
+			Resource:         _provider.ResourcesMap["linode_stackscript"],
 			TypeName:         "linode_stackscript",
 			WatchOnlyDefault: watchOnlyDefault,
 		}).SetupWithManager(ctx, mgr, auditor); err != nil {
@@ -546,8 +548,8 @@ func SetupManager(ctx context.Context, mgr manager.Manager, gvk schema.GroupVers
 			Log:              ctrl.Log.WithName("controllers").WithName("Token"),
 			Scheme:           mgr.GetScheme(),
 			Gvk:              gvk,
-			Provider:         linode.Provider(),
-			Resource:         linode.Provider().ResourcesMap["linode_token"],
+			Provider:         _provider,
+			Resource:         _provider.ResourcesMap["linode_token"],
 			TypeName:         "linode_token",
 			WatchOnlyDefault: watchOnlyDefault,
 		}).SetupWithManager(ctx, mgr, auditor); err != nil {
@@ -564,8 +566,8 @@ func SetupManager(ctx context.Context, mgr manager.Manager, gvk schema.GroupVers
 			Log:              ctrl.Log.WithName("controllers").WithName("User"),
 			Scheme:           mgr.GetScheme(),
 			Gvk:              gvk,
-			Provider:         linode.Provider(),
-			Resource:         linode.Provider().ResourcesMap["linode_user"],
+			Provider:         _provider,
+			Resource:         _provider.ResourcesMap["linode_user"],
 			TypeName:         "linode_user",
 			WatchOnlyDefault: watchOnlyDefault,
 		}).SetupWithManager(ctx, mgr, auditor); err != nil {
@@ -582,8 +584,8 @@ func SetupManager(ctx context.Context, mgr manager.Manager, gvk schema.GroupVers
 			Log:              ctrl.Log.WithName("controllers").WithName("Volume"),
 			Scheme:           mgr.GetScheme(),
 			Gvk:              gvk,
-			Provider:         linode.Provider(),
-			Resource:         linode.Provider().ResourcesMap["linode_volume"],
+			Provider:         _provider,
+			Resource:         _provider.ResourcesMap["linode_volume"],
 			TypeName:         "linode_volume",
 			WatchOnlyDefault: watchOnlyDefault,
 		}).SetupWithManager(ctx, mgr, auditor); err != nil {
