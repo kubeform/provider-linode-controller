@@ -38,6 +38,10 @@ func (r *Cluster) SetupWebhookWithManager(mgr ctrl.Manager) error {
 
 var _ webhook.Validator = &Cluster{}
 
+var clusterForceNewList = map[string]bool{
+	"region": true,
+}
+
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
 func (r *Cluster) ValidateCreate() error {
 	return nil

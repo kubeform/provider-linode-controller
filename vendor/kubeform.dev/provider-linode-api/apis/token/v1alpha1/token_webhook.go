@@ -38,6 +38,11 @@ func (r *Token) SetupWebhookWithManager(mgr ctrl.Manager) error {
 
 var _ webhook.Validator = &Token{}
 
+var tokenForceNewList = map[string]bool{
+	"expiry": true,
+	"scopes": true,
+}
+
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
 func (r *Token) ValidateCreate() error {
 	return nil

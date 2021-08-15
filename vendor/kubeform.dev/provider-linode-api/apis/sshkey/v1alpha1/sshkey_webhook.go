@@ -38,6 +38,10 @@ func (r *Sshkey) SetupWebhookWithManager(mgr ctrl.Manager) error {
 
 var _ webhook.Validator = &Sshkey{}
 
+var sshkeyForceNewList = map[string]bool{
+	"sshKey": true,
+}
+
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
 func (r *Sshkey) ValidateCreate() error {
 	return nil

@@ -38,6 +38,10 @@ func (r *Config) SetupWebhookWithManager(mgr ctrl.Manager) error {
 
 var _ webhook.Validator = &Config{}
 
+var configForceNewList = map[string]bool{
+	"nodebalancerID": true,
+}
+
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
 func (r *Config) ValidateCreate() error {
 	return nil

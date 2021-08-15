@@ -19,6 +19,7 @@ limitations under the License.
 package v1alpha1
 
 import (
+	"encoding/json"
 	"fmt"
 
 	base "kubeform.dev/apimachinery/api/v1alpha1"
@@ -26,6 +27,7 @@ import (
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/webhook"
+	"github.com/qri-io/jsonpointer"
 )
 
 func (r *Instance) SetupWebhookWithManager(mgr ctrl.Manager) error {
@@ -38,6 +40,25 @@ func (r *Instance) SetupWebhookWithManager(mgr ctrl.Manager) error {
 
 var _ webhook.Validator = &Instance{}
 
+var instanceForceNewList = map[string]bool{
+	"authorizedKeys":         true,
+	"authorizedUsers":        true,
+	"backupID":               true,
+	"disk/*/authorizedKeys":  true,
+	"disk/*/authorizedUsers": true,
+	"disk/*/filesystem":      true,
+	"disk/*/image":           true,
+	"disk/*/readOnly":        true,
+	"disk/*/rootPass":        true,
+	"disk/*/stackscriptData": true,
+	"disk/*/stackscriptID":   true,
+	"image":                  true,
+	"region":                 true,
+	"rootPass":               true,
+	"stackscriptData":        true,
+	"stackscriptID":          true,
+}
+
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
 func (r *Instance) ValidateCreate() error {
 	return nil
@@ -45,6 +66,36 @@ func (r *Instance) ValidateCreate() error {
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
 func (r *Instance) ValidateUpdate(old runtime.Object) error {
+	newObj := r.Spec.Resource
+	byteNew, err := json.Marshal(newObj)
+	if err != nil {
+		return err
+	}
+	tempNew := make(map[string]interface{})
+	err = json.Unmarshal(byteNew, &tempNew)
+	if err != nil {
+		return err
+	}
+
+	byteOld, err := json.Marshal(old)
+	if err != nil {
+		return err
+	}
+	tempOld := make(map[string]interface{})
+	err = json.Unmarshal(byteOld, &tempOld)
+	if err != nil {
+		return err
+	}
+
+	for key, _ := range instanceForceNewList {
+		ptr, _ := jsonpointer.Parse(key)
+		valueOld, _ := ptr.Eval(tempOld)
+		valueNew, _ := ptr.Eval(tempNew)
+
+		if valueNew != valueOld && r.Spec.UpdatePolicy == base.UpdatePolicyDoNotDestroy {
+			return fmt.Errorf(`instance "%v/%v" immutable field can't be updated. To update, change spec.updatePolicy to Destroy`, r.Namespace, r.Name)
+		}
+	}
 	return nil
 }
 

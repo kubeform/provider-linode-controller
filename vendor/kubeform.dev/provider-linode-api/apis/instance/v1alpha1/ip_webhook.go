@@ -38,6 +38,11 @@ func (r *Ip) SetupWebhookWithManager(mgr ctrl.Manager) error {
 
 var _ webhook.Validator = &Ip{}
 
+var ipForceNewList = map[string]bool{
+	"linodeID": true,
+	"public":   true,
+}
+
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
 func (r *Ip) ValidateCreate() error {
 	return nil

@@ -38,6 +38,10 @@ func (r *Volume) SetupWebhookWithManager(mgr ctrl.Manager) error {
 
 var _ webhook.Validator = &Volume{}
 
+var volumeForceNewList = map[string]bool{
+	"region": true,
+}
+
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
 func (r *Volume) ValidateCreate() error {
 	return nil

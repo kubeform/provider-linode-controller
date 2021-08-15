@@ -38,6 +38,10 @@ func (r *Domain) SetupWebhookWithManager(mgr ctrl.Manager) error {
 
 var _ webhook.Validator = &Domain{}
 
+var domainForceNewList = map[string]bool{
+	"type": true,
+}
+
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
 func (r *Domain) ValidateCreate() error {
 	return nil

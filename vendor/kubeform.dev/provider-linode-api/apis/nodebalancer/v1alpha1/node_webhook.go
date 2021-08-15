@@ -38,6 +38,11 @@ func (r *Node) SetupWebhookWithManager(mgr ctrl.Manager) error {
 
 var _ webhook.Validator = &Node{}
 
+var nodeForceNewList = map[string]bool{
+	"configID":       true,
+	"nodebalancerID": true,
+}
+
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
 func (r *Node) ValidateCreate() error {
 	return nil

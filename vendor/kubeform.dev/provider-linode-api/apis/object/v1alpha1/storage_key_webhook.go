@@ -38,6 +38,8 @@ func (r *StorageKey) SetupWebhookWithManager(mgr ctrl.Manager) error {
 
 var _ webhook.Validator = &StorageKey{}
 
+var storagekeyForceNewList = map[string]bool{}
+
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
 func (r *StorageKey) ValidateCreate() error {
 	return nil

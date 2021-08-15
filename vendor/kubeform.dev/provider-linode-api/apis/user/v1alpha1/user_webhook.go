@@ -38,6 +38,10 @@ func (r *User) SetupWebhookWithManager(mgr ctrl.Manager) error {
 
 var _ webhook.Validator = &User{}
 
+var userForceNewList = map[string]bool{
+	"email": true,
+}
+
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
 func (r *User) ValidateCreate() error {
 	return nil

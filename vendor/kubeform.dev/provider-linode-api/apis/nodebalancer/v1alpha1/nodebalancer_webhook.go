@@ -38,6 +38,10 @@ func (r *Nodebalancer) SetupWebhookWithManager(mgr ctrl.Manager) error {
 
 var _ webhook.Validator = &Nodebalancer{}
 
+var nodebalancerForceNewList = map[string]bool{
+	"region": true,
+}
+
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
 func (r *Nodebalancer) ValidateCreate() error {
 	return nil

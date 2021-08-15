@@ -38,6 +38,13 @@ func (r *Image) SetupWebhookWithManager(mgr ctrl.Manager) error {
 
 var _ webhook.Validator = &Image{}
 
+var imageForceNewList = map[string]bool{
+	"diskID":   true,
+	"fileHash": true,
+	"filePath": true,
+	"linodeID": true,
+}
+
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
 func (r *Image) ValidateCreate() error {
 	return nil

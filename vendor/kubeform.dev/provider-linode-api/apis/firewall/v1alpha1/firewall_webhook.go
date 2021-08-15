@@ -38,6 +38,8 @@ func (r *Firewall) SetupWebhookWithManager(mgr ctrl.Manager) error {
 
 var _ webhook.Validator = &Firewall{}
 
+var firewallForceNewList = map[string]bool{}
+
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
 func (r *Firewall) ValidateCreate() error {
 	return nil

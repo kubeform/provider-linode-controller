@@ -38,6 +38,10 @@ func (r *Stackscript) SetupWebhookWithManager(mgr ctrl.Manager) error {
 
 var _ webhook.Validator = &Stackscript{}
 
+var stackscriptForceNewList = map[string]bool{
+	"isPublic": true,
+}
+
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
 func (r *Stackscript) ValidateCreate() error {
 	return nil

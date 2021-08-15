@@ -38,6 +38,10 @@ func (r *Rdns) SetupWebhookWithManager(mgr ctrl.Manager) error {
 
 var _ webhook.Validator = &Rdns{}
 
+var rdnsForceNewList = map[string]bool{
+	"address": true,
+}
+
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
 func (r *Rdns) ValidateCreate() error {
 	return nil

@@ -38,6 +38,11 @@ func (r *StorageBucket) SetupWebhookWithManager(mgr ctrl.Manager) error {
 
 var _ webhook.Validator = &StorageBucket{}
 
+var storagebucketForceNewList = map[string]bool{
+	"cluster": true,
+	"label":   true,
+}
+
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
 func (r *StorageBucket) ValidateCreate() error {
 	return nil
