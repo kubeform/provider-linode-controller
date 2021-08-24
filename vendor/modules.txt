@@ -101,6 +101,7 @@ github.com/form3tech-oss/jwt-go
 # github.com/fsnotify/fsnotify v1.4.9
 github.com/fsnotify/fsnotify
 # github.com/go-errors/errors v1.0.1
+## explicit
 github.com/go-errors/errors
 # github.com/go-logr/logr v0.4.0
 ## explicit
@@ -132,7 +133,7 @@ github.com/golang/protobuf/ptypes/duration
 github.com/golang/protobuf/ptypes/timestamp
 # github.com/google/btree v1.0.0
 github.com/google/btree
-# github.com/google/go-cmp v0.5.4
+# github.com/google/go-cmp v0.5.5
 github.com/google/go-cmp/cmp
 github.com/google/go-cmp/cmp/internal/diff
 github.com/google/go-cmp/cmp/internal/flags
@@ -315,6 +316,8 @@ github.com/prometheus/common/model
 github.com/prometheus/procfs
 github.com/prometheus/procfs/internal/fs
 github.com/prometheus/procfs/internal/util
+# github.com/qri-io/jsonpointer v0.1.1
+github.com/qri-io/jsonpointer
 # github.com/sergi/go-diff v1.1.0
 github.com/sergi/go-diff/diffmatchpatch
 # github.com/spf13/cobra v1.1.3
@@ -951,6 +954,7 @@ kmodules.xyz/client-go/tools/cli
 kmodules.xyz/client-go/tools/clientcache
 kmodules.xyz/client-go/tools/clientcmd
 kmodules.xyz/client-go/tools/clusterid
+kmodules.xyz/client-go/tools/queue
 # kmodules.xyz/constants v0.0.0-20210218100002-2c304bfda278
 ## explicit
 kmodules.xyz/constants/linode
@@ -965,7 +969,7 @@ kmodules.xyz/resource-metadata/pkg/graph
 # kubeform.dev/apimachinery v0.0.0-20210629153539-7bcd34a30eb5
 ## explicit
 kubeform.dev/apimachinery/api/v1alpha1
-# kubeform.dev/provider-linode-api v0.3.1-0.20210804230521-568198851a2d
+# kubeform.dev/provider-linode-api v0.3.1-0.20210824062510-225ef060cc42
 ## explicit
 kubeform.dev/provider-linode-api/api/provider
 kubeform.dev/provider-linode-api/apis/domain
@@ -1009,6 +1013,7 @@ kubeform.dev/provider-linode-api/client/clientset/versioned/typed/stackscript/v1
 kubeform.dev/provider-linode-api/client/clientset/versioned/typed/token/v1alpha1
 kubeform.dev/provider-linode-api/client/clientset/versioned/typed/user/v1alpha1
 kubeform.dev/provider-linode-api/client/clientset/versioned/typed/volume/v1alpha1
+kubeform.dev/provider-linode-api/util
 # sigs.k8s.io/cli-utils v0.25.0
 ## explicit
 sigs.k8s.io/cli-utils/pkg/kstatus/status

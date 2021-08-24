@@ -4,6 +4,7 @@ go 1.16
 
 require (
 	github.com/fatih/structs v1.1.0
+	github.com/go-errors/errors v1.0.1
 	github.com/go-logr/logr v0.4.0
 	github.com/gobuffalo/flect v0.2.3
 	github.com/hashicorp/go-cty v1.4.1-0.20200414143053-d3edf31b6320
@@ -29,7 +30,7 @@ require (
 	kmodules.xyz/client-go v0.0.0-20210617233340-13d22e91512b
 	kmodules.xyz/constants v0.0.0-20210218100002-2c304bfda278
 	kubeform.dev/apimachinery v0.0.0-20210629153539-7bcd34a30eb5
-	kubeform.dev/provider-linode-api v0.3.1-0.20210804230521-568198851a2d
+	kubeform.dev/provider-linode-api v0.3.1-0.20210824062510-225ef060cc42
 	sigs.k8s.io/cli-utils v0.25.0
 	sigs.k8s.io/controller-runtime v0.9.0
 )
