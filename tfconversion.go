@@ -46,12 +46,10 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/client-go/dynamic"
-	clientgoscheme "k8s.io/client-go/kubernetes/scheme"
 	"k8s.io/client-go/tools/clientcmd"
 	"k8s.io/client-go/util/homedir"
 	"kmodules.xyz/client-go/meta"
 	instancev1alpha1 "kubeform.dev/provider-linode-api/apis/instance/v1alpha1"
-	linodescheme "kubeform.dev/provider-linode-api/client/clientset/versioned/scheme"
 	"kubeform.dev/provider-linode-controller/controllers"
 	"kubeform.dev/terraform-backend-sdk/backend"
 	"kubeform.dev/terraform-backend-sdk/backend/remote-state/artifactory"
@@ -71,14 +69,14 @@ import (
 	"kubeform.dev/terraform-backend-sdk/states/statefile"
 )
 
-var (
-	scheme = clientgoscheme.Scheme
-)
-
-func init() {
-	_ = linodescheme.AddToScheme(scheme)
-	// +kubebuilder:scaffold:scheme
-}
+//var (
+//	scheme = clientgoscheme.Scheme
+//)
+//
+//func init() {
+//	_ = linodescheme.AddToScheme(scheme)
+//	// +kubebuilder:scaffold:scheme
+//}
 
 const safeChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_"
 
@@ -248,8 +246,13 @@ type stateV4 struct {
 func main2() {
 	router := mux.NewRouter().StrictSlash(true)
 
+	dClient, err := getDynamicClient()
+	if err != nil {
+		panic(err)
+	}
+
 	router.HandleFunc("/home", welcomeHome).Methods("GET")
-	router.HandleFunc("/tf", getTF).Methods("GET")
+	router.Handle("/tf", getTF(dClient)).Methods("GET")
 	//router.HandleFunc("/tfstate", getTFstate).Methods("GET")
 
 	fmt.Println("let's start the server : ")
@@ -262,131 +265,128 @@ func welcomeHome(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("Welcome to Kubeform..."))
 }
 
-func getTF(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
+func getTF(dClient dynamic.Interface) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
 
-	reqBody, err := ioutil.ReadAll(r.Body)
-	var temp map[string]interface{}
+		reqBody, err := ioutil.ReadAll(r.Body)
+		var temp map[string]interface{}
 
-	err = json.Unmarshal(reqBody, &temp)
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte(err.Error()))
-		return
-	}
+		err = json.Unmarshal(reqBody, &temp)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(err.Error()))
+			return
+		}
 
-	namespace := temp["namespace"].(string)
-	resourceName := temp["resource"].(string)
+		namespace := temp["namespace"].(string)
+		resourceName := temp["resource"].(string)
 
-	dClient, obj, jsonit, err := getdClientObjJsonit(namespace, resourceName)
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte(err.Error()))
-		return
-	}
+		dClient, obj, jsonit, err := getdClientObjJsonit(dClient, namespace, resourceName)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(err.Error()))
+			return
+		}
 
-	status, _, err := unstructured.NestedString(obj.Object, "status", "phase")
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte(err.Error()))
-		return
-	}
-	if status != "Current" {
-		w.WriteHeader(http.StatusNotAcceptable)
-		w.Write([]byte("Resource is not in current state yet"))
-		return
-	}
+		status, _, err := unstructured.NestedString(obj.Object, "status", "phase")
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(err.Error()))
+			return
+		}
+		if status != "Current" {
+			w.WriteHeader(http.StatusNotAcceptable)
+			w.Write([]byte("Resource is not in current state yet"))
+			return
+		}
 
-	tfstate, err := getTfstate(dClient, obj, jsonit)
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte(err.Error()))
-		return
-	}
+		tfstate, err := getTfstate(dClient, obj, jsonit)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(err.Error()))
+			return
+		}
 
-	mp := make(map[string]string)
+		mp := make(map[string]string)
 
-	mp["tfstate"] = string(tfstate)
+		mp["tfstate"] = string(tfstate)
 
-	gv := obj.GroupVersionKind().GroupVersion()
+		gv := obj.GroupVersionKind().GroupVersion()
 
-	// resource part
-	resourceBlock, err := getResourceBlock(gv, dClient, obj, jsonit)
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte(err.Error()))
-		return
-	}
+		// resource part
+		resourceBlock, err := getResourceBlock(gv, dClient, obj, jsonit)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(err.Error()))
+			return
+		}
 
-	// provider secret block part
-	providerCredBlock, err := getProviderCredBlock(dClient, obj)
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte(err.Error()))
-		return
-	}
+		// provider secret block part
+		providerCredBlock, err := getProviderCredBlock(dClient, obj)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(err.Error()))
+			return
+		}
 
-	// provider block with backend(if there are any)
-	providerBlock, err := getProviderBlock(dClient, obj)
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte(err.Error()))
-		return
-	}
+		// provider block with backend(if there are any)
+		providerBlock, err := getProviderBlock(dClient, obj)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(err.Error()))
+			return
+		}
 
-	var combine []byte
-	combine = append(combine, providerBlock...)
-	combine = append(combine, []byte("\n\n")...)
-	combine = append(combine, providerCredBlock...)
-	combine = append(combine, []byte("\n\n")...)
-	combine = append(combine, resourceBlock...)
-	combine = append(combine, []byte("\n\n")...)
+		var combine []byte
+		combine = append(combine, providerBlock...)
+		combine = append(combine, []byte("\n\n")...)
+		combine = append(combine, providerCredBlock...)
+		combine = append(combine, []byte("\n\n")...)
+		combine = append(combine, resourceBlock...)
+		combine = append(combine, []byte("\n\n")...)
 
-	mp["tf"] = string(combine)
+		mp["tf"] = string(combine)
 
-	jsn, err := json.Marshal(mp)
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte(err.Error()))
-		return
-	}
+		jsn, err := json.Marshal(mp)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(err.Error()))
+			return
+		}
 
-	w.WriteHeader(http.StatusOK)
-	w.Write(jsn)
+		w.WriteHeader(http.StatusOK)
+		w.Write(jsn)
 
-	// generate in local files
-	var tempTfstate interface{}
-	err = json.Unmarshal(tfstate, &tempTfstate)
-	if err != nil {
-		fmt.Println(err.Error())
-		os.Exit(1)
-	}
-	tfstate, err = json.MarshalIndent(tempTfstate, "", "\t")
-	if err != nil {
-		fmt.Println(err.Error())
-		os.Exit(1)
-	}
+		// generate in local files
+		var tempTfstate interface{}
+		err = json.Unmarshal(tfstate, &tempTfstate)
+		if err != nil {
+			fmt.Println(err.Error())
+			os.Exit(1)
+		}
+		tfstate, err = json.MarshalIndent(tempTfstate, "", "\t")
+		if err != nil {
+			fmt.Println(err.Error())
+			os.Exit(1)
+		}
 
-	err = os.WriteFile("./generated/main.tf", combine, 0777)
-	if err != nil {
-		fmt.Println(err.Error())
-		os.Exit(1)
-	}
+		err = os.WriteFile("./generated/main.tf", combine, 0777)
+		if err != nil {
+			fmt.Println(err.Error())
+			os.Exit(1)
+		}
 
-	err = os.WriteFile("./generated/terraform.tfstate", tfstate, 0777)
-	if err != nil {
-		fmt.Println(err.Error())
-		os.Exit(1)
-	}
-	fmt.Println("done...")
+		err = os.WriteFile("./generated/terraform.tfstate", tfstate, 0777)
+		if err != nil {
+			fmt.Println(err.Error())
+			os.Exit(1)
+		}
+		fmt.Println("done...")
+	})
 }
 
-func getdClientObjJsonit(namespace, resourceName string) (dynamic.Interface, *unstructured.Unstructured, jsoniter.API, error) {
-	dClient, err := getDynamicClient()
-	if err != nil {
-		return nil, nil, nil, err
-	}
-
+func getdClientObjJsonit(dClient dynamic.Interface, namespace, resourceName string) (dynamic.Interface, *unstructured.Unstructured, jsoniter.API, error) {
 	instanceRes := schema.GroupVersionResource{
 		Group:    "instance.linode.kubeform.com",
 		Version:  "v1alpha1",
