@@ -21,6 +21,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"time"
 
 	// +kubebuilder:scaffold:imports
 
@@ -31,6 +32,7 @@ import (
 	"k8s.io/apiextensions-apiserver/pkg/client/clientset/clientset"
 	"k8s.io/apimachinery/pkg/util/sets"
 	"k8s.io/client-go/dynamic"
+	"k8s.io/client-go/informers"
 	"k8s.io/client-go/kubernetes"
 	clientgoscheme "k8s.io/client-go/kubernetes/scheme"
 	admissionregistrationv1 "k8s.io/client-go/kubernetes/typed/admissionregistration/v1"
@@ -121,6 +123,13 @@ func NewCmdRun(version string) *cobra.Command {
 				auditor = auditlib.NewResilientEventPublisher(func() (*auditlib.NatsConfig, error) {
 					return auditlib.NewNatsConfig(kc.CoreV1().Namespaces(), licenseFile)
 				}, mapper, fn.CreateEvent)
+
+				kubeInformerFactory := informers.NewSharedInformerFactory(kc, 10*time.Minute)
+				kubeInformerFactory.Start(ctx.Done())
+				if err := auditor.SetupSiteInfoPublisher(cfg, kc, kubeInformerFactory); err != nil {
+					setupLog.Error(err, "unable to setup site info publisher")
+					os.Exit(1)
+				}
 			}
 
 			dClient := dynamic.NewForConfigOrDie(cfg)
