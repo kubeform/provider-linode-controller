@@ -1362,7 +1362,7 @@ kmodules.xyz/resource-metrics/api
 ## explicit
 kubeform.dev/apimachinery/api/v1alpha1
 kubeform.dev/apimachinery/pkg/util
-# kubeform.dev/provider-linode-api v0.3.1-0.20211029111215-e7d272d15964
+# kubeform.dev/provider-linode-api v0.4.0
 ## explicit
 kubeform.dev/provider-linode-api/api/provider
 kubeform.dev/provider-linode-api/apis/domain
