@@ -42,162 +42,160 @@ type Data struct {
 	ResourceType string
 }
 
-var (
-	allJsonIt = map[schema.GroupVersionResource]Data{
-		{
-			Group:    "domain.linode.kubeform.com",
-			Version:  "v1alpha1",
-			Resource: "domains",
-		}: {
-			JsonIt:       controllers.GetJSONItr(domainv1alpha1.GetEncoder(), domainv1alpha1.GetDecoder()),
-			ResourceType: "linode_domain",
-		},
-		{
-			Group:    "domain.linode.kubeform.com",
-			Version:  "v1alpha1",
-			Resource: "records",
-		}: {
-			JsonIt:       controllers.GetJSONItr(domainv1alpha1.GetEncoder(), domainv1alpha1.GetDecoder()),
-			ResourceType: "linode_domain_record",
-		},
-		{
-			Group:    "firewall.linode.kubeform.com",
-			Version:  "v1alpha1",
-			Resource: "firewalls",
-		}: {
-			JsonIt:       controllers.GetJSONItr(firewallv1alpha1.GetEncoder(), firewallv1alpha1.GetDecoder()),
-			ResourceType: "linode_firewall",
-		},
-		{
-			Group:    "image.linode.kubeform.com",
-			Version:  "v1alpha1",
-			Resource: "images",
-		}: {
-			JsonIt:       controllers.GetJSONItr(imagev1alpha1.GetEncoder(), imagev1alpha1.GetDecoder()),
-			ResourceType: "linode_image",
-		},
-		{
-			Group:    "instance.linode.kubeform.com",
-			Version:  "v1alpha1",
-			Resource: "instances",
-		}: {
-			JsonIt:       controllers.GetJSONItr(instancev1alpha1.GetEncoder(), instancev1alpha1.GetDecoder()),
-			ResourceType: "linode_instance",
-		},
-		{
-			Group:    "instance.linode.kubeform.com",
-			Version:  "v1alpha1",
-			Resource: "ips",
-		}: {
-			JsonIt:       controllers.GetJSONItr(instancev1alpha1.GetEncoder(), instancev1alpha1.GetDecoder()),
-			ResourceType: "linode_instance_ip",
-		},
-		{
-			Group:    "lke.linode.kubeform.com",
-			Version:  "v1alpha1",
-			Resource: "clusters",
-		}: {
-			JsonIt:       controllers.GetJSONItr(lkev1alpha1.GetEncoder(), lkev1alpha1.GetDecoder()),
-			ResourceType: "linode_lke_cluster",
-		},
-		{
-			Group:    "nodebalancer.linode.kubeform.com",
-			Version:  "v1alpha1",
-			Resource: "nodebalancers",
-		}: {
-			JsonIt:       controllers.GetJSONItr(nodebalancerv1alpha1.GetEncoder(), nodebalancerv1alpha1.GetDecoder()),
-			ResourceType: "linode_nodebalancer",
-		},
-		{
-			Group:    "nodebalancer.linode.kubeform.com",
-			Version:  "v1alpha1",
-			Resource: "configs",
-		}: {
-			JsonIt:       controllers.GetJSONItr(nodebalancerv1alpha1.GetEncoder(), nodebalancerv1alpha1.GetDecoder()),
-			ResourceType: "linode_nodebalancer_config",
-		},
-		{
-			Group:    "nodebalancer.linode.kubeform.com",
-			Version:  "v1alpha1",
-			Resource: "nodes",
-		}: {
-			JsonIt:       controllers.GetJSONItr(nodebalancerv1alpha1.GetEncoder(), nodebalancerv1alpha1.GetDecoder()),
-			ResourceType: "linode_nodebalancer_node",
-		},
-		{
-			Group:    "object.linode.kubeform.com",
-			Version:  "v1alpha1",
-			Resource: "storagebuckets",
-		}: {
-			JsonIt:       controllers.GetJSONItr(objectv1alpha1.GetEncoder(), objectv1alpha1.GetDecoder()),
-			ResourceType: "linode_object_storage_bucket",
-		},
-		{
-			Group:    "object.linode.kubeform.com",
-			Version:  "v1alpha1",
-			Resource: "storagekeys",
-		}: {
-			JsonIt:       controllers.GetJSONItr(objectv1alpha1.GetEncoder(), objectv1alpha1.GetDecoder()),
-			ResourceType: "linode_object_storage_key",
-		},
-		{
-			Group:    "object.linode.kubeform.com",
-			Version:  "v1alpha1",
-			Resource: "storageobjects",
-		}: {
-			JsonIt:       controllers.GetJSONItr(objectv1alpha1.GetEncoder(), objectv1alpha1.GetDecoder()),
-			ResourceType: "linode_object_storage_object",
-		},
-		{
-			Group:    "rdns.linode.kubeform.com",
-			Version:  "v1alpha1",
-			Resource: "rdns",
-		}: {
-			JsonIt:       controllers.GetJSONItr(rdnsv1alpha1.GetEncoder(), rdnsv1alpha1.GetDecoder()),
-			ResourceType: "linode_rdns",
-		},
-		{
-			Group:    "sshkey.linode.kubeform.com",
-			Version:  "v1alpha1",
-			Resource: "sshkeys",
-		}: {
-			JsonIt:       controllers.GetJSONItr(sshkeyv1alpha1.GetEncoder(), sshkeyv1alpha1.GetDecoder()),
-			ResourceType: "linode_sshkey",
-		},
-		{
-			Group:    "stackscript.linode.kubeform.com",
-			Version:  "v1alpha1",
-			Resource: "stackscripts",
-		}: {
-			JsonIt:       controllers.GetJSONItr(stackscriptv1alpha1.GetEncoder(), stackscriptv1alpha1.GetDecoder()),
-			ResourceType: "linode_stackscript",
-		},
-		{
-			Group:    "token.linode.kubeform.com",
-			Version:  "v1alpha1",
-			Resource: "tokens",
-		}: {
-			JsonIt:       controllers.GetJSONItr(tokenv1alpha1.GetEncoder(), tokenv1alpha1.GetDecoder()),
-			ResourceType: "linode_token",
-		},
-		{
-			Group:    "user.linode.kubeform.com",
-			Version:  "v1alpha1",
-			Resource: "users",
-		}: {
-			JsonIt:       controllers.GetJSONItr(userv1alpha1.GetEncoder(), userv1alpha1.GetDecoder()),
-			ResourceType: "linode_user",
-		},
-		{
-			Group:    "volume.linode.kubeform.com",
-			Version:  "v1alpha1",
-			Resource: "volumes",
-		}: {
-			JsonIt:       controllers.GetJSONItr(volumev1alpha1.GetEncoder(), volumev1alpha1.GetDecoder()),
-			ResourceType: "linode_volume",
-		},
-	}
-)
+var allJsonIt = map[schema.GroupVersionResource]Data{
+	{
+		Group:    "domain.linode.kubeform.com",
+		Version:  "v1alpha1",
+		Resource: "domains",
+	}: {
+		JsonIt:       controllers.GetJSONItr(domainv1alpha1.GetEncoder(), domainv1alpha1.GetDecoder()),
+		ResourceType: "linode_domain",
+	},
+	{
+		Group:    "domain.linode.kubeform.com",
+		Version:  "v1alpha1",
+		Resource: "records",
+	}: {
+		JsonIt:       controllers.GetJSONItr(domainv1alpha1.GetEncoder(), domainv1alpha1.GetDecoder()),
+		ResourceType: "linode_domain_record",
+	},
+	{
+		Group:    "firewall.linode.kubeform.com",
+		Version:  "v1alpha1",
+		Resource: "firewalls",
+	}: {
+		JsonIt:       controllers.GetJSONItr(firewallv1alpha1.GetEncoder(), firewallv1alpha1.GetDecoder()),
+		ResourceType: "linode_firewall",
+	},
+	{
+		Group:    "image.linode.kubeform.com",
+		Version:  "v1alpha1",
+		Resource: "images",
+	}: {
+		JsonIt:       controllers.GetJSONItr(imagev1alpha1.GetEncoder(), imagev1alpha1.GetDecoder()),
+		ResourceType: "linode_image",
+	},
+	{
+		Group:    "instance.linode.kubeform.com",
+		Version:  "v1alpha1",
+		Resource: "instances",
+	}: {
+		JsonIt:       controllers.GetJSONItr(instancev1alpha1.GetEncoder(), instancev1alpha1.GetDecoder()),
+		ResourceType: "linode_instance",
+	},
+	{
+		Group:    "instance.linode.kubeform.com",
+		Version:  "v1alpha1",
+		Resource: "ips",
+	}: {
+		JsonIt:       controllers.GetJSONItr(instancev1alpha1.GetEncoder(), instancev1alpha1.GetDecoder()),
+		ResourceType: "linode_instance_ip",
+	},
+	{
+		Group:    "lke.linode.kubeform.com",
+		Version:  "v1alpha1",
+		Resource: "clusters",
+	}: {
+		JsonIt:       controllers.GetJSONItr(lkev1alpha1.GetEncoder(), lkev1alpha1.GetDecoder()),
+		ResourceType: "linode_lke_cluster",
+	},
+	{
+		Group:    "nodebalancer.linode.kubeform.com",
+		Version:  "v1alpha1",
+		Resource: "nodebalancers",
+	}: {
+		JsonIt:       controllers.GetJSONItr(nodebalancerv1alpha1.GetEncoder(), nodebalancerv1alpha1.GetDecoder()),
+		ResourceType: "linode_nodebalancer",
+	},
+	{
+		Group:    "nodebalancer.linode.kubeform.com",
+		Version:  "v1alpha1",
+		Resource: "configs",
+	}: {
+		JsonIt:       controllers.GetJSONItr(nodebalancerv1alpha1.GetEncoder(), nodebalancerv1alpha1.GetDecoder()),
+		ResourceType: "linode_nodebalancer_config",
+	},
+	{
+		Group:    "nodebalancer.linode.kubeform.com",
+		Version:  "v1alpha1",
+		Resource: "nodes",
+	}: {
+		JsonIt:       controllers.GetJSONItr(nodebalancerv1alpha1.GetEncoder(), nodebalancerv1alpha1.GetDecoder()),
+		ResourceType: "linode_nodebalancer_node",
+	},
+	{
+		Group:    "object.linode.kubeform.com",
+		Version:  "v1alpha1",
+		Resource: "storagebuckets",
+	}: {
+		JsonIt:       controllers.GetJSONItr(objectv1alpha1.GetEncoder(), objectv1alpha1.GetDecoder()),
+		ResourceType: "linode_object_storage_bucket",
+	},
+	{
+		Group:    "object.linode.kubeform.com",
+		Version:  "v1alpha1",
+		Resource: "storagekeys",
+	}: {
+		JsonIt:       controllers.GetJSONItr(objectv1alpha1.GetEncoder(), objectv1alpha1.GetDecoder()),
+		ResourceType: "linode_object_storage_key",
+	},
+	{
+		Group:    "object.linode.kubeform.com",
+		Version:  "v1alpha1",
+		Resource: "storageobjects",
+	}: {
+		JsonIt:       controllers.GetJSONItr(objectv1alpha1.GetEncoder(), objectv1alpha1.GetDecoder()),
+		ResourceType: "linode_object_storage_object",
+	},
+	{
+		Group:    "rdns.linode.kubeform.com",
+		Version:  "v1alpha1",
+		Resource: "rdns",
+	}: {
+		JsonIt:       controllers.GetJSONItr(rdnsv1alpha1.GetEncoder(), rdnsv1alpha1.GetDecoder()),
+		ResourceType: "linode_rdns",
+	},
+	{
+		Group:    "sshkey.linode.kubeform.com",
+		Version:  "v1alpha1",
+		Resource: "sshkeys",
+	}: {
+		JsonIt:       controllers.GetJSONItr(sshkeyv1alpha1.GetEncoder(), sshkeyv1alpha1.GetDecoder()),
+		ResourceType: "linode_sshkey",
+	},
+	{
+		Group:    "stackscript.linode.kubeform.com",
+		Version:  "v1alpha1",
+		Resource: "stackscripts",
+	}: {
+		JsonIt:       controllers.GetJSONItr(stackscriptv1alpha1.GetEncoder(), stackscriptv1alpha1.GetDecoder()),
+		ResourceType: "linode_stackscript",
+	},
+	{
+		Group:    "token.linode.kubeform.com",
+		Version:  "v1alpha1",
+		Resource: "tokens",
+	}: {
+		JsonIt:       controllers.GetJSONItr(tokenv1alpha1.GetEncoder(), tokenv1alpha1.GetDecoder()),
+		ResourceType: "linode_token",
+	},
+	{
+		Group:    "user.linode.kubeform.com",
+		Version:  "v1alpha1",
+		Resource: "users",
+	}: {
+		JsonIt:       controllers.GetJSONItr(userv1alpha1.GetEncoder(), userv1alpha1.GetDecoder()),
+		ResourceType: "linode_user",
+	},
+	{
+		Group:    "volume.linode.kubeform.com",
+		Version:  "v1alpha1",
+		Resource: "volumes",
+	}: {
+		JsonIt:       controllers.GetJSONItr(volumev1alpha1.GetEncoder(), volumev1alpha1.GetDecoder()),
+		ResourceType: "linode_volume",
+	},
+}
 
 func getJsonItAndResType(gvr schema.GroupVersionResource) Data {
 	return allJsonIt[gvr]
