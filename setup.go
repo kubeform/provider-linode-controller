@@ -303,6 +303,23 @@ func SetupManager(ctx context.Context, mgr manager.Manager, gvk schema.GroupVers
 			return err
 		}
 	case schema.GroupVersionKind{
+		Group:   "firewall.linode.kubeform.com",
+		Version: "v1alpha1",
+		Kind:    "Device",
+	}:
+		if err := (&controllersfirewall.DeviceReconciler{
+			Client:   mgr.GetClient(),
+			Log:      ctrl.Log.WithName("controllers").WithName("Device"),
+			Scheme:   mgr.GetScheme(),
+			Gvk:      gvk,
+			Provider: _provider,
+			Resource: _provider.ResourcesMap["linode_firewall_device"],
+			TypeName: "linode_firewall_device",
+		}).SetupWithManager(ctx, mgr, auditor, restrictToNamespace); err != nil {
+			setupLog.Error(err, "unable to create controller", "controller", "Device")
+			return err
+		}
+	case schema.GroupVersionKind{
 		Group:   "image.linode.kubeform.com",
 		Version: "v1alpha1",
 		Kind:    "Image",
@@ -609,6 +626,15 @@ func SetupWebhook(mgr manager.Manager, gvk schema.GroupVersionKind) error {
 	}:
 		if err := (&firewallv1alpha1.Firewall{}).SetupWebhookWithManager(mgr); err != nil {
 			setupLog.Error(err, "unable to create webhook", "webhook", "Firewall")
+			return err
+		}
+	case schema.GroupVersionKind{
+		Group:   "firewall.linode.kubeform.com",
+		Version: "v1alpha1",
+		Kind:    "Device",
+	}:
+		if err := (&firewallv1alpha1.Device{}).SetupWebhookWithManager(mgr); err != nil {
+			setupLog.Error(err, "unable to create webhook", "webhook", "Device")
 			return err
 		}
 	case schema.GroupVersionKind{

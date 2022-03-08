@@ -2,7 +2,6 @@ package linodego
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
@@ -259,25 +258,12 @@ func (client Client) WaitForLKEClusterConditions(
 // nolint
 func (client Client) WaitForEventFinished(ctx context.Context, id interface{}, entityType EntityType, action EventAction, minStart time.Time, timeoutSeconds int) (*Event, error) {
 	titledEntityType := strings.Title(string(entityType))
-	filterStruct := map[string]interface{}{
-		// Nor is action
-		//"action": action,
-
-		// Created is not correctly filtered by the API
-		// We'll have to verify these values manually, for now.
-		//"created": map[string]interface{}{
-		//	"+gte": minStart.Format(time.RFC3339),
-		//},
-
-		// With potentially 1000+ events coming back, we should filter on something
-		// Warning: This optimization has the potential to break if users are clearing
-		// events before we see them.
-		"seen": false,
-
-		// Float the latest events to page 1
-		"+order_by": "created",
-		"+order":    "desc",
+	filter := Filter{
+		Order:   Descending,
+		OrderBy: "created",
 	}
+	filter.AddField(Eq, "action", action)
+	filter.AddField(Gte, "created", minStart.UTC().Format("2006-01-02T15:04:05"))
 
 	// Optimistically restrict results to page 1.  We should remove this when more
 	// precise filtering options exist.
@@ -292,8 +278,8 @@ func (client Client) WaitForEventFinished(ctx context.Context, id interface{}, e
 		if err != nil {
 			return nil, fmt.Errorf("Error parsing Entity ID %q for optimized WaitForEventFinished EventType %q: %s", id, entityType, err)
 		}
-		filterStruct["entity.id"] = filterableEntityID
-		filterStruct["entity.type"] = entityType
+		filter.AddField(Eq, "entity.id", filterableEntityID)
+		filter.AddField(Eq, "entity.type", entityType)
 
 		// TODO: are we conformatable with pages = 0 with the event type and id filter?
 	}
@@ -318,16 +304,15 @@ func (client Client) WaitForEventFinished(ctx context.Context, id interface{}, e
 		select {
 		case <-ticker.C:
 			if lastEventID > 0 {
-				filterStruct["id"] = map[string]interface{}{
-					"+gte": lastEventID,
-				}
+				filter.AddField(Gte, "id", lastEventID)
 			}
 
-			filter, err := json.Marshal(filterStruct)
+			filterStr, err := filter.MarshalJSON()
 			if err != nil {
 				return nil, err
 			}
-			listOptions := NewListOptions(pages, string(filter))
+
+			listOptions := NewListOptions(pages, string(filterStr))
 
 			events, err := client.ListEvents(ctx, listOptions)
 			if err != nil {
@@ -338,10 +323,6 @@ func (client Client) WaitForEventFinished(ctx context.Context, id interface{}, e
 			for _, event := range events {
 				event := event
 
-				if event.Action != action {
-					// log.Println("action mismatch", event.Action, action)
-					continue
-				}
 				if event.Entity == nil || event.Entity.Type != entityType {
 					// log.Println("type mismatch", event.Entity.Type, entityType)
 					continue
@@ -377,10 +358,6 @@ func (client Client) WaitForEventFinished(ctx context.Context, id interface{}, e
 				// that the ListEvents method is not populating it correctly
 				if event.Created == nil {
 					log.Printf("[WARN] event.Created is nil when API returned: %#+v", event.Created)
-				} else if *event.Created != minStart && !event.Created.After(minStart) {
-					// Not the event we were looking for
-					// log.Println(event.Created, "is not >=", minStart)
-					continue
 				}
 
 				// This is the event we are looking for. Save our place.

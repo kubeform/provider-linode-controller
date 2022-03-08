@@ -56,12 +56,17 @@ type RdnsSpec struct {
 }
 
 type RdnsSpecResource struct {
+	Timeouts *base.ResourceTimeout `json:"timeouts,omitempty" tf:"timeouts"`
+
 	ID string `json:"id,omitempty" tf:"id,omitempty"`
 
 	// The public Linode IPv4 or IPv6 address to operate on.
 	Address *string `json:"address" tf:"address"`
 	// The reverse DNS assigned to this address. For public IPv4 addresses, this will be set to a default value provided by Linode if not explicitly set.
 	Rdns *string `json:"rdns" tf:"rdns"`
+	// If true, the RDNS assignment will be retried within the operation timeout period.
+	// +optional
+	WaitForAvailable *bool `json:"waitForAvailable,omitempty" tf:"wait_for_available"`
 }
 
 type RdnsStatus struct {
