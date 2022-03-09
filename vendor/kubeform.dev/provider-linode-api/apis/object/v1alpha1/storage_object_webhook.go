@@ -86,7 +86,7 @@ func (r *StorageObject) ValidateUpdate(old runtime.Object) error {
 		return err
 	}
 
-	for key := range storageobjectForceNewList {
+	for key, _ := range storageobjectForceNewList {
 		keySplit := strings.Split(key, "/*")
 		length := len(keySplit)
 		checkIfAnyDif := false

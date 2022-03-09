@@ -68,6 +68,14 @@ var allJsonIt = map[schema.GroupVersionResource]Data{
 		ResourceType: "linode_firewall",
 	},
 	{
+		Group:    "firewall.linode.kubeform.com",
+		Version:  "v1alpha1",
+		Resource: "devices",
+	}: {
+		JsonIt:       controllers.GetJSONItr(firewallv1alpha1.GetEncoder(), firewallv1alpha1.GetDecoder()),
+		ResourceType: "linode_firewall_device",
+	},
+	{
 		Group:    "image.linode.kubeform.com",
 		Version:  "v1alpha1",
 		Resource: "images",

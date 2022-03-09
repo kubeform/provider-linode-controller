@@ -60,7 +60,7 @@ github.com/apparentlymart/go-versions/versions/constraints
 github.com/armon/go-metrics
 # github.com/armon/go-radix v1.0.0
 github.com/armon/go-radix
-# github.com/aws/aws-sdk-go v1.40.25
+# github.com/aws/aws-sdk-go v1.42.16
 github.com/aws/aws-sdk-go/aws
 github.com/aws/aws-sdk-go/aws/arn
 github.com/aws/aws-sdk-go/aws/awserr
@@ -256,10 +256,10 @@ github.com/hashicorp/go-cty/cty/gocty
 github.com/hashicorp/go-cty/cty/json
 github.com/hashicorp/go-cty/cty/msgpack
 github.com/hashicorp/go-cty/cty/set
-# github.com/hashicorp/go-getter v1.5.2
+# github.com/hashicorp/go-getter v1.5.3
 github.com/hashicorp/go-getter
 github.com/hashicorp/go-getter/helper/url
-# github.com/hashicorp/go-hclog v0.15.0
+# github.com/hashicorp/go-hclog v0.16.1
 github.com/hashicorp/go-hclog
 # github.com/hashicorp/go-immutable-radix v1.0.0
 github.com/hashicorp/go-immutable-radix
@@ -271,10 +271,10 @@ github.com/hashicorp/go-retryablehttp
 github.com/hashicorp/go-rootcerts
 # github.com/hashicorp/go-safetemp v1.0.0
 github.com/hashicorp/go-safetemp
-# github.com/hashicorp/go-uuid v1.0.1
+# github.com/hashicorp/go-uuid v1.0.2
 ## explicit
 github.com/hashicorp/go-uuid
-# github.com/hashicorp/go-version v1.2.1
+# github.com/hashicorp/go-version v1.3.0
 github.com/hashicorp/go-version
 # github.com/hashicorp/golang-lru v0.5.4
 github.com/hashicorp/golang-lru
@@ -306,11 +306,14 @@ github.com/hashicorp/hcl/v2/json
 github.com/hashicorp/logutils
 # github.com/hashicorp/serf v0.9.5
 github.com/hashicorp/serf/coordinate
-# github.com/hashicorp/terraform-plugin-go v0.3.0
+# github.com/hashicorp/terraform-plugin-go v0.5.0
 ## explicit
 github.com/hashicorp/terraform-plugin-go/tfprotov5
 github.com/hashicorp/terraform-plugin-go/tftypes
-# github.com/hashicorp/terraform-plugin-sdk/v2 v2.6.0
+# github.com/hashicorp/terraform-plugin-log v0.2.0
+github.com/hashicorp/terraform-plugin-log/internal/logging
+github.com/hashicorp/terraform-plugin-log/tfsdklog
+# github.com/hashicorp/terraform-plugin-sdk/v2 v2.10.1
 ## explicit
 github.com/hashicorp/terraform-plugin-sdk/v2/diag
 github.com/hashicorp/terraform-plugin-sdk/v2/helper/logging
@@ -368,16 +371,49 @@ github.com/lib/pq/scram
 github.com/liggitt/tabwriter
 # github.com/likexian/gokit v0.20.15
 github.com/likexian/gokit/assert
-# github.com/linode/linodego v0.28.5
+# github.com/linode/linodego v1.2.1
 github.com/linode/linodego
 github.com/linode/linodego/internal/duration
 github.com/linode/linodego/internal/parseabletime
 # github.com/linode/linodego/k8s v0.0.0-20200831124119-58d5d5bb7947
 github.com/linode/linodego/k8s
 github.com/linode/linodego/k8s/pkg/condition
-# github.com/linode/terraform-provider-linode v1.19.1
+# github.com/linode/terraform-provider-linode v1.25.2
 ## explicit
 github.com/linode/terraform-provider-linode/linode
+github.com/linode/terraform-provider-linode/linode/account
+github.com/linode/terraform-provider-linode/linode/backup
+github.com/linode/terraform-provider-linode/linode/domain
+github.com/linode/terraform-provider-linode/linode/domainrecord
+github.com/linode/terraform-provider-linode/linode/firewall
+github.com/linode/terraform-provider-linode/linode/firewalldevice
+github.com/linode/terraform-provider-linode/linode/helper
+github.com/linode/terraform-provider-linode/linode/image
+github.com/linode/terraform-provider-linode/linode/images
+github.com/linode/terraform-provider-linode/linode/instance
+github.com/linode/terraform-provider-linode/linode/instanceip
+github.com/linode/terraform-provider-linode/linode/instancetype
+github.com/linode/terraform-provider-linode/linode/instancetypes
+github.com/linode/terraform-provider-linode/linode/kernel
+github.com/linode/terraform-provider-linode/linode/lke
+github.com/linode/terraform-provider-linode/linode/nb
+github.com/linode/terraform-provider-linode/linode/nbconfig
+github.com/linode/terraform-provider-linode/linode/nbnode
+github.com/linode/terraform-provider-linode/linode/networkingip
+github.com/linode/terraform-provider-linode/linode/obj
+github.com/linode/terraform-provider-linode/linode/objbucket
+github.com/linode/terraform-provider-linode/linode/objcluster
+github.com/linode/terraform-provider-linode/linode/objkey
+github.com/linode/terraform-provider-linode/linode/profile
+github.com/linode/terraform-provider-linode/linode/rdns
+github.com/linode/terraform-provider-linode/linode/region
+github.com/linode/terraform-provider-linode/linode/sshkey
+github.com/linode/terraform-provider-linode/linode/stackscript
+github.com/linode/terraform-provider-linode/linode/stackscripts
+github.com/linode/terraform-provider-linode/linode/token
+github.com/linode/terraform-provider-linode/linode/user
+github.com/linode/terraform-provider-linode/linode/vlan
+github.com/linode/terraform-provider-linode/linode/volume
 github.com/linode/terraform-provider-linode/version
 # github.com/lusis/go-artifactory v0.0.0-20160115162124-7e4ce345df82
 github.com/lusis/go-artifactory/src/artifactory.v401
@@ -395,11 +431,11 @@ github.com/matttproud/golang_protobuf_extensions/pbutil
 github.com/mitchellh/cli
 # github.com/mitchellh/colorstring v0.0.0-20190213212951-d06e56a500db
 github.com/mitchellh/colorstring
-# github.com/mitchellh/copystructure v1.0.0
+# github.com/mitchellh/copystructure v1.2.0
 github.com/mitchellh/copystructure
 # github.com/mitchellh/go-homedir v1.1.0
 github.com/mitchellh/go-homedir
-# github.com/mitchellh/go-testing-interface v1.0.4
+# github.com/mitchellh/go-testing-interface v1.14.1
 github.com/mitchellh/go-testing-interface
 # github.com/mitchellh/go-wordwrap v1.0.0
 github.com/mitchellh/go-wordwrap
@@ -407,7 +443,7 @@ github.com/mitchellh/go-wordwrap
 github.com/mitchellh/mapstructure
 # github.com/mitchellh/panicwrap v1.0.0
 github.com/mitchellh/panicwrap
-# github.com/mitchellh/reflectwalk v1.0.1
+# github.com/mitchellh/reflectwalk v1.0.2
 github.com/mitchellh/reflectwalk
 # github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd
 github.com/modern-go/concurrent
@@ -495,7 +531,7 @@ github.com/prometheus/procfs/internal/fs
 github.com/prometheus/procfs/internal/util
 # github.com/qri-io/jsonpointer v0.1.1
 github.com/qri-io/jsonpointer
-# github.com/sergi/go-diff v1.1.0
+# github.com/sergi/go-diff v1.2.0
 github.com/sergi/go-diff/diffmatchpatch
 # github.com/spf13/afero v1.2.2
 github.com/spf13/afero
@@ -604,12 +640,13 @@ go.uber.org/zap/internal/bufferpool
 go.uber.org/zap/internal/color
 go.uber.org/zap/internal/exit
 go.uber.org/zap/zapcore
-# golang.org/x/crypto v0.0.0-20210322153248-0c34fe9e7dc2
+# golang.org/x/crypto v0.0.0-20210616213533-5ff15b29337e
 golang.org/x/crypto/bcrypt
 golang.org/x/crypto/blowfish
 golang.org/x/crypto/cast5
 golang.org/x/crypto/chacha20
 golang.org/x/crypto/curve25519
+golang.org/x/crypto/curve25519/internal/field
 golang.org/x/crypto/ed25519
 golang.org/x/crypto/ed25519/internal/edwards25519
 golang.org/x/crypto/internal/subtle
@@ -1362,7 +1399,7 @@ kmodules.xyz/resource-metrics/api
 ## explicit
 kubeform.dev/apimachinery/api/v1alpha1
 kubeform.dev/apimachinery/pkg/util
-# kubeform.dev/provider-linode-api v0.4.1-0.20220126223102-3417a3bd62a7
+# kubeform.dev/provider-linode-api v0.4.1-0.20220308120956-ee173c92f6b2
 ## explicit
 kubeform.dev/provider-linode-api/api/provider
 kubeform.dev/provider-linode-api/apis/domain
